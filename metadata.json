@@ -1,0 +1,10 @@
+{
+  "name": "Remix: ITIS Guardian Platform",
+  "description": "Integrated Technology Intelligence \u0026 Safety platform for South African public safety, connecting parents, schools, and emergency dispatch.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

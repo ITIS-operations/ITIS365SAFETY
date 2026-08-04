@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #07162c;
+  --color-brand-navy: #0e223d;
+  --color-brand-navy-light: #163255;
+  --color-brand-navy-heavy: #040d1a;
+  --color-brand-gold: #C8A646;
+  --color-brand-gold-dark: #A5822E;
+  --color-brand-silver: #D9D9D9;
+  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    background-color: #050e1b;
+    color: #f1f5f9;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom glassmorphism panels with executive borders */
+  .glass-panel {
+    background: rgba(14, 34, 61, 0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(200, 166, 70, 0.2);
+  }
+  
+  .glass-panel-heavy {
+    background: rgba(7, 22, 44, 0.90);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(200, 166, 70, 0.25);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 15px rgba(200, 166, 70, 0.2);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.35);
+  }
+
+  /* Executive Ambient Grid */
+  .bg-grid-ambient {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(200, 166, 70, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(200, 166, 70, 0.03) 1px, transparent 1px);
+  }
+
+  /* Smooth Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #07162c;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(200, 166, 70, 0.3);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(200, 166, 70, 0.6);
+  }
+}
+
