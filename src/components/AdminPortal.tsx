@@ -972,7 +972,7 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                 <input 
                   type="email" 
                   required
-                  placeholder="e.g. s.mokoena@itis.gov.za" 
+                  placeholder="e.g. mthokozisi@live.co.za" 
                   value={newUser.email}
                   onChange={e => setNewUser({...newUser, email: e.target.value})}
                   className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
@@ -1121,7 +1121,7 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                   <label className="block text-slate-400 mb-1">Emergency Phone</label>
                   <input 
                     type="text" 
-                    placeholder="+27 82 123 4567" 
+                    placeholder="0624304906" 
                     value={newLearner.emergencyPhone}
                     onChange={e => setNewLearner({...newLearner, emergencyPhone: e.target.value})}
                     className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"

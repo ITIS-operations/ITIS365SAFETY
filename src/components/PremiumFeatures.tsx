@@ -205,10 +205,10 @@ export function PremiumFeatures({
   const [hasNotificationPermission, setHasNotificationPermission] = useState('default');
   const [outboundLogs, setOutboundLogs] = useState<Array<{ id: string; time: string; type: 'SMS' | 'WHATSAPP' | 'PUSH'; status: 'DELIVERED' | 'DISPATCHED' | 'FAILED'; text: string; recipient: string }>>([
     { id: 'log-1', time: '13:02:11', type: 'PUSH', status: 'DELIVERED', text: 'Sipho Ndlovu has entered Home (Randburg) safe zone.', recipient: 'Parent Device Applet' },
-    { id: 'log-2', time: '11:15:32', type: 'SMS', status: 'DELIVERED', text: '[ITIS Guardian] ALERT: Tracker battery at 15%. Please charge immediately.', recipient: '+27 82 123 4567' },
-    { id: 'log-3', time: '07:38:12', type: 'WHATSAPP', status: 'DELIVERED', text: '✅ Gauteng High School Arrival confirmed for learner Sipho Ndlovu at 07:38.', recipient: '+27 83 765 4321' }
+    { id: 'log-2', time: '11:15:32', type: 'SMS', status: 'DELIVERED', text: '[ITIS Guardian] ALERT: Tracker battery at 15%. Please charge immediately.', recipient: '0624304906' },
+    { id: 'log-3', time: '07:38:12', type: 'WHATSAPP', status: 'DELIVERED', text: '✅ Gauteng High School Arrival confirmed for learner Sipho Ndlovu at 07:38.', recipient: '0624304906' }
   ]);
-  const [smsTestNumber, setSmsTestNumber] = useState('+27 82 123 4567');
+  const [smsTestNumber, setSmsTestNumber] = useState('0624304906');
   const [smsGatewayProvider, setSmsGatewayProvider] = useState<'AfricaTalking' | 'BulkSMS' | 'Simulated'>('AfricaTalking');
   const [isSendingTestSMS, setIsSendingTestSMS] = useState(false);
   const [whatsappSimulationMessage, setWhatsappSimulationMessage] = useState('🚨 [ITIS Emergency] IMMEDIATE ACTION REQUIRED. Sipho Ndlovu has triggered an SOS alert. Click to track live.');
@@ -306,9 +306,9 @@ export function PremiumFeatures({
   // MODULE 4: EMERGENCY CONTACT PRIORITIES DRAG/SORT
   // ==========================================
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([
-    { id: 'c1', name: 'Lerato Ndlovu', relation: 'Mother', phone: '+27 82 123 4567', priority: 1, channels: { sms: true, whatsapp: true, voice: true } },
-    { id: 'c2', name: 'Thabo Ndlovu', relation: 'Father', phone: '+27 83 765 4321', priority: 2, channels: { sms: true, whatsapp: true, voice: false } },
-    { id: 'c3', name: 'Aunt Sibongile', relation: 'Aunt / Alternate', phone: '+27 71 888 9911', priority: 3, channels: { sms: true, whatsapp: false, voice: false } },
+    { id: 'c1', name: 'Lerato Ndlovu', relation: 'Mother', phone: '0624304906', priority: 1, channels: { sms: true, whatsapp: true, voice: true } },
+    { id: 'c2', name: 'Thabo Ndlovu', relation: 'Father', phone: '0624304906', priority: 2, channels: { sms: true, whatsapp: true, voice: false } },
+    { id: 'c3', name: 'Aunt Sibongile', relation: 'Aunt / Alternate', phone: '0624304906', priority: 3, channels: { sms: true, whatsapp: false, voice: false } },
     { id: 'c4', name: 'SAPS National Command', relation: 'Emergency Desk', phone: '10111', priority: 4, channels: { sms: false, whatsapp: false, voice: true } }
   ]);
 
@@ -585,7 +585,7 @@ export function PremiumFeatures({
             <div class="footer">
               <div>
                 <span>EMERGENCY CONTACTS:</span><br/>
-                <span class="footer-strong">Mother: +27 82 123 4567</span>
+                <span class="footer-strong">Mother: 0624304906</span>
               </div>
               <div style="text-align: right;">
                 <span>HOTLINE DISPATCH:</span><br/>
@@ -620,7 +620,7 @@ export function PremiumFeatures({
   // ==========================================
   // MODULE 6: WEEKLY REPORTS SCHEDULER
   // ==========================================
-  const [reportEmail, setReportEmail] = useState('parent.ndlovu@itismail.co.za');
+  const [reportEmail, setReportEmail] = useState('mthokozisi@live.co.za');
   const [reportDay, setReportDay] = useState<'Monday' | 'Friday' | 'Sunday'>('Monday');
   const [reportIncludedMetrics, setReportIncludedMetrics] = useState({
     gpsBreadcrumbs: true,
@@ -1313,7 +1313,7 @@ export function PremiumFeatures({
                       required
                       value={newContactPhone} 
                       onChange={(e) => setNewContactPhone(e.target.value)}
-                      placeholder="+27 82 111 2222"
+                      placeholder="0624304906"
                       className="w-full bg-brand-navy border border-brand-gold/20 px-3 py-1.5 rounded focus:border-brand-gold focus:outline-none text-white text-xs font-mono"
                     />
                   </div>
@@ -1547,7 +1547,7 @@ export function PremiumFeatures({
                   <div className="border-t border-brand-gold/15 pt-2 flex justify-between items-center text-[8px] font-mono text-slate-400">
                     <div>
                       <span className="block text-[6px]">EMERGENCY CONTACTS:</span>
-                      <span className="text-white">Mother: +27 82 123 4567</span>
+                      <span className="text-white">Mother: 0624304906</span>
                     </div>
                     <div className="text-right">
                       <span className="block text-[6px]">HOTLINE DISPATCH:</span>
@@ -1911,7 +1911,7 @@ export function PremiumFeatures({
                   <button 
                     onClick={() => {
                       setBillingPlanSelected('sub-school');
-                      alert("Please contact our sales desk at sales@itisguardian.co.za to set up custom School Safe-Net billing agreements.");
+                      alert("Please contact our sales desk at mthokozisi@live.co.za to set up custom School Safe-Net billing agreements.");
                     }}
                     className="w-full py-1.5 bg-brand-navy hover:bg-brand-navy-light text-slate-300 border border-slate-800 rounded font-mono font-bold uppercase cursor-pointer"
                   >

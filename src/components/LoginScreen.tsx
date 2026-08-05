@@ -479,7 +479,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                         required
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
-                        placeholder="e.g. t.ndlovu@itis.gov.za"
+                        placeholder="e.g. mthokozisi@live.co.za"
                         className="w-full bg-brand-dark border border-brand-gold/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-gold"
                       />
                     </div>

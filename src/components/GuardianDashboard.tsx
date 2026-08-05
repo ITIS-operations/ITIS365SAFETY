@@ -572,7 +572,7 @@ export function GuardianDashboard({
               <div className="flex items-center gap-2 self-end md:self-auto">
                 <span className="text-[10px] text-slate-300 font-mono">Emergency Hotline:</span>
                 <a 
-                  href="tel:+27119834000"
+                  href="tel:0624304906"
                   className="px-3.5 py-2 bg-brand-gold text-brand-dark font-extrabold rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 shadow hover:bg-brand-gold-dark transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5" /> Call Operations Centre
@@ -698,7 +698,7 @@ export function GuardianDashboard({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
                 <a
-                  href="tel:+27119834000"
+                  href="tel:0624304906"
                   className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
                 >
                   <div className="p-2 bg-brand-gold text-brand-dark rounded-lg font-bold">
@@ -706,12 +706,12 @@ export function GuardianDashboard({
                   </div>
                   <div>
                     <strong className="text-white block font-sans">Command Centre</strong>
-                    <span className="text-brand-gold text-[11px]">+27 11 983 4000</span>
+                    <span className="text-brand-gold text-[11px]">0624304906</span>
                   </div>
                 </a>
 
                 <a
-                  href="tel:+27115550199"
+                  href="tel:0624304906"
                   className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
                 >
                   <div className="p-2 bg-blue-600 text-white rounded-lg font-bold">
@@ -719,7 +719,7 @@ export function GuardianDashboard({
                   </div>
                   <div>
                     <strong className="text-white block font-sans">School Admin</strong>
-                    <span className="text-blue-300 text-[11px]">+27 11 555 0199</span>
+                    <span className="text-blue-300 text-[11px]">0624304906</span>
                   </div>
                 </a>
 
@@ -1196,7 +1196,7 @@ export function GuardianDashboard({
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
                 <h4 className="text-lg font-bold text-white">Payment Approved & Subscriptions Secured</h4>
                 <p className="text-xs text-emerald-200 leading-relaxed font-mono">
-                  Receipt dispatched successfully to bravomtho@gmail.com.<br />
+                  Receipt dispatched successfully to mthokozisi@live.co.za.<br />
                   Your ITIS GPS Tracker IMEI {currentLearner.trackerImei} is active on the Premium Guardian Tier.
                 </p>
                 <button 
