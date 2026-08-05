@@ -16,6 +16,7 @@ import { CommandCentre } from './components/CommandCentre';
 import { TechnicianPortal } from './components/TechnicianPortal';
 import { GovernmentPortal } from './components/GovernmentPortal';
 import { ExecutivePortal } from './components/ExecutivePortal';
+import { AdminPortal } from './components/AdminPortal';
 import { UserSessionPanel } from './components/UserSessionPanel';
 import { AccessDeniedView } from './components/AccessDeniedView';
 import { AIChat } from './components/AIChat';
@@ -194,6 +195,10 @@ export default function App() {
 
   const handleNewIncidentLogged = (newIncident: IncidentTicket) => {
     setIncidents(prev => [newIncident, ...prev]);
+  };
+
+  const handleAddLearner = (newLearner: Learner) => {
+    setLearners(prev => [newLearner, ...prev]);
   };
 
   // Render Emergency SOS Bypass Profile view
@@ -378,7 +383,11 @@ export default function App() {
             )}
 
             {userRole === 'Admin' && (
-              <GovernmentPortal />
+              <AdminPortal 
+                learners={learners}
+                onAddLearner={handleAddLearner}
+                onUpdateLearnerStatus={handleUpdateLearnerStatus}
+              />
             )}
           </>
         )}

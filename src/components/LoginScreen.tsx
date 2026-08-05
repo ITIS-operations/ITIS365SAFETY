@@ -136,10 +136,10 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                   >
                     {role === 'Parent' ? '🛡️ Guardian' : 
                      role === 'School' ? '🏫 School' : 
-                     role === 'Command' ? '🛰️ Dispatch' : 
+                     role === 'Command' ? '🛰️ Command Center' : 
                      role === 'Technician' ? '🔧 Tech' : 
                      role === 'Government' ? '🏛️ Gov' : 
-                     role === 'Executive' ? '📊 Exec' : '⚡ Admin'}
+                     role === 'Executive' ? '📊 Exec' : '⚙️ Admin Portal'}
                   </button>
                 ))}
               </div>

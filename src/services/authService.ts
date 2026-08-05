@@ -97,8 +97,8 @@ export const DEFAULT_PERSONAS: Record<UserRole, {
   Command: {
     name: 'Officer Sarah Mthembu',
     email: 's.mthembu@saps.gov.za',
-    roleTitle: 'Senior Tactical Dispatch Controller',
-    organization: 'SAPS National Operations Centre (Console 04)',
+    roleTitle: 'Command Center Controller & Senior Dispatcher',
+    organization: 'SAPS National Operations Command Centre (Console 04)',
     tenantId: 'TENANT-COMMAND-SAPS10111',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
     claims: ['command:dispatch', 'command:gis_live', 'command:communications', 'command:pursuit_nav', 'command:ems_triage'],
@@ -141,12 +141,12 @@ export const DEFAULT_PERSONAS: Record<UserRole, {
   Admin: {
     name: 'SysAdmin Lead',
     email: 'admin.enclave@itis.gov.za',
-    roleTitle: 'Enclave Security Officer',
-    organization: 'ITIS Core Security Infrastructure Unit',
-    tenantId: 'TENANT-ADMIN-ENCLAVE',
+    roleTitle: 'Master Infrastructure & Enrollment Administrator',
+    organization: 'ITIS Central Security & Enrollment Authority',
+    tenantId: 'TENANT-ADMIN-MASTER',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face',
-    claims: ['admin:enclave', 'admin:audit_logs', 'admin:system_rules'],
-    permissions: ['SYSTEM_ENCLAVE_ACCESS', 'AUDIT_ALL_TRANSACTIONS', 'MANAGE_ENCRYPTION_KEYS'],
+    claims: ['admin:enrollment', 'admin:users', 'admin:learners', 'admin:devices', 'admin:idcards', 'admin:audit_logs'],
+    permissions: ['ENROLL_USERS', 'ENROLL_LEARNERS', 'ASSIGN_TRACKER_IMEI', 'ISSUE_SCHOOL_ID_CARDS', 'SYSTEM_AUDIT'],
     mfaRequired: true,
   }
 };

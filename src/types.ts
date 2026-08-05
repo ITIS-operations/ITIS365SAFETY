@@ -164,6 +164,269 @@ export const initialLearners: Learner[] = [
     status: 'En Route',
     latitude: -26.1824,
     longitude: 28.0210
+  },
+  {
+    id: 'l3',
+    name: 'Thandi Khumalo',
+    photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
+    school: 'Gauteng High School',
+    grade: 'Grade 10-C',
+    medicalConditions: 'None (Severe Peanut Allergy)',
+    bloodGroup: 'B-Positive',
+    emergencyContacts: ['+27 82 444 3322 (Father)', '+27 83 999 1100 (Mother)'],
+    trackerSerial: 'ITIS-TRK-77109',
+    trackerImei: '861099238471128',
+    deviceBattery: 91,
+    deviceSignal: 'Strong',
+    simNumber: '+27 72 888 1928',
+    assignedGuardian: 'Principal M. Khumalo',
+    attendanceRate: 99.1,
+    safetyScore: 97,
+    heartRate: 72,
+    temperature: 36.5,
+    lastConnection: 'Just now',
+    status: 'In School',
+    latitude: -26.1955,
+    longitude: 28.0345
+  },
+  {
+    id: 'l4',
+    name: 'Junior Mokoena',
+    photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face',
+    school: 'Parktown Boys High',
+    grade: 'Grade 8-B',
+    medicalConditions: 'Diabetes Type 1',
+    bloodGroup: 'AB-Positive',
+    emergencyContacts: ['+27 84 555 7766 (Mother)'],
+    trackerSerial: 'ITIS-TRK-11204',
+    trackerImei: '861055663728190',
+    deviceBattery: 68,
+    deviceSignal: 'Strong',
+    simNumber: '+27 76 333 9081',
+    assignedGuardian: 'Sipho Mokoena',
+    attendanceRate: 95.0,
+    safetyScore: 92,
+    heartRate: 78,
+    temperature: 36.7,
+    lastConnection: '1 min ago',
+    status: 'In School',
+    latitude: -26.1850,
+    longitude: 28.0310
+  }
+];
+
+export interface EnrolledUser {
+  id: string;
+  fullName: string;
+  email: string;
+  role: 'Parent' | 'School' | 'Technician' | 'Command' | 'Government' | 'Executive' | 'Admin';
+  phone: string;
+  rsaIdNumber: string;
+  organization: string;
+  status: 'Active' | 'Pending Verification' | 'Suspended';
+  enrolledDate: string;
+  assignedChildrenCount?: number;
+}
+
+export interface DeviceAssignment {
+  id: string;
+  imei: string; // Tracker IMEI Number
+  serialNumber: string;
+  model: 'ITIS Smart Band v4' | 'ITIS GeoPendant Pro' | 'ITIS Beacon Tag x1' | 'ITIS Smart Card Badge';
+  simIccid: string;
+  simPhoneNumber: string;
+  assignedLearnerId: string;
+  assignedLearnerName: string;
+  batteryLevel: number;
+  firmwareVersion: string;
+  pairingStatus: 'Paired & Active' | 'Unassigned' | 'Maintenance' | 'Decommissioned';
+  lastPing: string;
+}
+
+export interface SchoolIDCard {
+  cardId: string; // e.g., "IDC-GHS-2026-001"
+  learnerId: string;
+  learnerName: string;
+  schoolName: string;
+  grade: string;
+  photoUrl: string;
+  trackerImei: string; // Mandatory Tracker IMEI Number on school ID card
+  trackerSerial: string;
+  nfcSerial: string;
+  bloodGroup: string;
+  emergencyPhone: string;
+  issueDate: string;
+  expiryDate: string;
+  status: 'Active Issued' | 'Pending Print' | 'Revoked' | 'Replacement Requested';
+}
+
+export const initialEnrolledUsers: EnrolledUser[] = [
+  {
+    id: 'USR-8801',
+    fullName: 'Thabo Ndlovu',
+    email: 't.ndlovu@itis.gov.za',
+    role: 'Parent',
+    phone: '+27 82 123 4567',
+    rsaIdNumber: '8204125890087',
+    organization: 'Ndlovu Family (Gauteng)',
+    status: 'Active',
+    enrolledDate: '2026-01-15',
+    assignedChildrenCount: 1
+  },
+  {
+    id: 'USR-8802',
+    fullName: 'Principal M. Khumalo',
+    email: 'principal@gautenghigh.edu.za',
+    role: 'School',
+    phone: '+27 11 482 1000',
+    rsaIdNumber: '7509185412089',
+    organization: 'Gauteng High School',
+    status: 'Active',
+    enrolledDate: '2026-01-10'
+  },
+  {
+    id: 'USR-8803',
+    fullName: 'Officer Sarah Mthembu',
+    email: 's.mthembu@saps.gov.za',
+    role: 'Command',
+    phone: '+27 11 10111',
+    rsaIdNumber: '8611025891084',
+    organization: 'SAPS National Operations Centre',
+    status: 'Active',
+    enrolledDate: '2026-01-05'
+  },
+  {
+    id: 'USR-8804',
+    fullName: 'Bhengu Sithole',
+    email: 'bhengu.tech@itis.gov.za',
+    role: 'Technician',
+    phone: '+27 83 777 9012',
+    rsaIdNumber: '9003225812081',
+    organization: 'Gauteng Hardware Support & Logistics',
+    status: 'Active',
+    enrolledDate: '2026-01-12'
+  },
+  {
+    id: 'USR-8805',
+    fullName: 'Lerato Dlamini',
+    email: 'l.dlamini@itis.gov.za',
+    role: 'Parent',
+    phone: '+27 82 999 8888',
+    rsaIdNumber: '8507205412086',
+    organization: 'Dlamini Family (Sandton)',
+    status: 'Active',
+    assignedChildrenCount: 1,
+    enrolledDate: '2026-02-01'
+  }
+];
+
+export const initialDevices: DeviceAssignment[] = [
+  {
+    id: 'DEV-99081',
+    imei: '861023948571239',
+    serialNumber: 'ITIS-TRK-99081',
+    model: 'ITIS Smart Band v4',
+    simIccid: '8927010499201928374',
+    simPhoneNumber: '+27 71 445 9012',
+    assignedLearnerId: 'l1',
+    assignedLearnerName: 'Sipho Ndlovu',
+    batteryLevel: 82,
+    firmwareVersion: 'v4.2.1-RSA',
+    pairingStatus: 'Paired & Active',
+    lastPing: '2026-08-04 21:05:12'
+  },
+  {
+    id: 'DEV-44122',
+    imei: '861044558273941',
+    serialNumber: 'ITIS-TRK-44122',
+    model: 'ITIS GeoPendant Pro',
+    simIccid: '8927010499201990812',
+    simPhoneNumber: '+27 81 223 3445',
+    assignedLearnerId: 'l2',
+    assignedLearnerName: 'Zama Dlamini',
+    batteryLevel: 45,
+    firmwareVersion: 'v4.2.1-RSA',
+    pairingStatus: 'Paired & Active',
+    lastPing: '2026-08-04 21:03:40'
+  },
+  {
+    id: 'DEV-77109',
+    imei: '861099238471128',
+    serialNumber: 'ITIS-TRK-77109',
+    model: 'ITIS Smart Card Badge',
+    simIccid: '8927010499201911223',
+    simPhoneNumber: '+27 72 888 1928',
+    assignedLearnerId: 'l3',
+    assignedLearnerName: 'Thandi Khumalo',
+    batteryLevel: 91,
+    firmwareVersion: 'v4.3.0-RSA',
+    pairingStatus: 'Paired & Active',
+    lastPing: '2026-08-04 21:08:00'
+  },
+  {
+    id: 'DEV-11204',
+    imei: '861055663728190',
+    serialNumber: 'ITIS-TRK-11204',
+    model: 'ITIS Beacon Tag x1',
+    simIccid: '8927010499201944556',
+    simPhoneNumber: '+27 76 333 9081',
+    assignedLearnerId: 'l4',
+    assignedLearnerName: 'Junior Mokoena',
+    batteryLevel: 68,
+    firmwareVersion: 'v4.1.8-RSA',
+    pairingStatus: 'Paired & Active',
+    lastPing: '2026-08-04 21:07:22'
+  }
+];
+
+export const initialIDCards: SchoolIDCard[] = [
+  {
+    cardId: 'IDC-GHS-2026-001',
+    learnerId: 'l1',
+    learnerName: 'Sipho Ndlovu',
+    schoolName: 'Gauteng High School',
+    grade: 'Grade 9-A',
+    photoUrl: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=150&h=150&fit=crop&crop=face',
+    trackerImei: '861023948571239',
+    trackerSerial: 'ITIS-TRK-99081',
+    nfcSerial: 'NFC-8809-771A',
+    bloodGroup: 'O-Positive',
+    emergencyPhone: '+27 82 123 4567',
+    issueDate: '2026-01-18',
+    expiryDate: '2026-12-31',
+    status: 'Active Issued'
+  },
+  {
+    cardId: 'IDC-PGP-2026-002',
+    learnerId: 'l2',
+    learnerName: 'Zama Dlamini',
+    schoolName: 'Parktown Girls Primary',
+    grade: 'Grade 5-B',
+    photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
+    trackerImei: '861044558273941',
+    trackerSerial: 'ITIS-TRK-44122',
+    nfcSerial: 'NFC-8809-994B',
+    bloodGroup: 'A-Negative',
+    emergencyPhone: '+27 82 999 8888',
+    issueDate: '2026-01-20',
+    expiryDate: '2026-12-31',
+    status: 'Active Issued'
+  },
+  {
+    cardId: 'IDC-GHS-2026-003',
+    learnerId: 'l3',
+    learnerName: 'Thandi Khumalo',
+    schoolName: 'Gauteng High School',
+    grade: 'Grade 10-C',
+    photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
+    trackerImei: '861099238471128',
+    trackerSerial: 'ITIS-TRK-77109',
+    nfcSerial: 'NFC-8809-112C',
+    bloodGroup: 'B-Positive',
+    emergencyPhone: '+27 82 444 3322',
+    issueDate: '2026-02-01',
+    expiryDate: '2026-12-31',
+    status: 'Active Issued'
   }
 ];
 
