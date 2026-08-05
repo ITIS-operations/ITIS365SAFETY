@@ -3,13 +3,16 @@ import {
   Shield, Users, UserPlus, CreditCard, Radio, QrCode, Cpu, Search, 
   Plus, CheckCircle2, AlertTriangle, FileText, Printer, Download, RefreshCw, 
   Trash2, Lock, Smartphone, Check, Eye, ChevronRight, Layers, Building2, 
-  Heart, Activity, Hash, Zap, Sparkles, Filter
+  Heart, Activity, Hash, Zap, Sparkles, Filter, Mail, Send, Unlock, KeyRound
 } from 'lucide-react';
 import { 
   Learner, EnrolledUser, DeviceAssignment, SchoolIDCard,
   initialDevices, initialIDCards
 } from '../types';
 import { authService, ProductionUserRecord } from '../services/authService';
+import { EmailInspectorModal } from './EmailInspectorModal';
+import { EmailNotificationFactory } from '../services/emailService';
+import { requestPasswordResetLink, unlockAccount, setAccountStatus } from '../services/identityEngine';
 
 interface AdminPortalProps {
   learners: Learner[];
@@ -18,7 +21,9 @@ interface AdminPortalProps {
 }
 
 export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: AdminPortalProps) {
-  const [activeTab, setActiveTab] = useState<'users' | 'learners' | 'devices' | 'idcards' | 'audit'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'learners' | 'devices' | 'idcards' | 'audit' | 'emails'>('users');
+  const [isEmailInspectorOpen, setIsEmailInspectorOpen] = useState(false);
+  const [actionNotice, setActionNotice] = useState<string | null>(null);
 
   // Enrolled Users State from authService
   const [users, setUsers] = useState<ProductionUserRecord[]>(() => authService.getUsers());
@@ -304,6 +309,14 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
         {/* Action Button Bar */}
         <div className="flex flex-wrap items-center gap-2 z-10">
           <button
+            onClick={() => setIsEmailInspectorOpen(true)}
+            className="px-3 py-2 bg-emerald-950/80 border border-emerald-500/40 hover:bg-emerald-900 text-emerald-300 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-lg"
+          >
+            <Mail className="w-4 h-4 text-emerald-400" />
+            <span>Outbound Email Queue Inspector</span>
+          </button>
+
+          <button
             onClick={() => setShowAddUserModal(true)}
             className="px-3 py-2 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold text-brand-gold hover:text-white rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-lg"
           >
@@ -437,6 +450,18 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
           <Lock className="w-4 h-4" />
           <span>Audit & Compliance Logs</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('emails')}
+          className={`px-4 py-2 rounded-xl font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'emails' 
+              ? 'bg-emerald-500 text-brand-dark shadow-lg' 
+              : 'bg-emerald-950/40 text-emerald-300 hover:text-white border border-emerald-500/30'
+          }`}
+        >
+          <Mail className="w-4 h-4 text-emerald-400" />
+          <span>Enterprise Email Queue</span>
+        </button>
       </div>
 
       {/* TAB 1: USERS & PARENT ENROLLMENT */}
@@ -564,18 +589,47 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                         )}
                       </td>
                       <td className="p-3.5 text-right space-x-2">
-                        {user.activationToken ? (
-                          <button 
-                            onClick={() => {
-                              navigator.clipboard.writeText(user.activationToken!);
-                              alert(`Activation token ${user.activationToken} copied to clipboard!`);
+                        <button
+                          onClick={async () => {
+                            const actionUrl = `${window.location.origin}/accept-invite?token=${user.activationToken || 'act_token_123'}`;
+                            await EmailNotificationFactory.sendInvitationEmail(
+                              user.email,
+                              user.fullName,
+                              user.role,
+                              user.activationToken || 'ACT-990812',
+                              actionUrl
+                            );
+                            setActionNotice(`Invitation email re-dispatched to ${user.email}`);
+                            setTimeout(() => setActionNotice(null), 3000);
+                          }}
+                          className="text-brand-gold hover:underline text-[10px] uppercase font-bold cursor-pointer"
+                        >
+                          Resend Invite
+                        </button>
+
+                        <button
+                          onClick={async () => {
+                            await requestPasswordResetLink(user.email);
+                            setActionNotice(`Password reset link dispatched to ${user.email}`);
+                            setTimeout(() => setActionNotice(null), 3000);
+                          }}
+                          className="text-cyan-400 hover:underline text-[10px] uppercase font-bold cursor-pointer"
+                        >
+                          Force Reset
+                        </button>
+
+                        {user.status === 'LOCKED' && (
+                          <button
+                            onClick={async () => {
+                              await unlockAccount(user.email);
+                              setUsers(users.map(u => u.id === user.id ? { ...u, status: 'ACTIVE' } : u));
+                              setActionNotice(`Account ${user.fullName} unlocked.`);
+                              setTimeout(() => setActionNotice(null), 3000);
                             }}
-                            className="text-brand-gold hover:underline text-[10px] uppercase font-bold cursor-pointer"
+                            className="text-emerald-400 hover:underline text-[10px] uppercase font-bold cursor-pointer"
                           >
-                            Copy Token
+                            Unlock Account
                           </button>
-                        ) : (
-                          <span className="text-slate-500 text-[10px] font-bold">Verified POPIA</span>
                         )}
                       </td>
                     </tr>
@@ -942,6 +996,105 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
         </div>
       )}
 
+      {/* TAB 6: ENTERPRISE OUTBOUND EMAIL QUEUE & SERVICE INSPECTOR */}
+      {activeTab === 'emails' && (
+        <div className="bg-brand-navy-heavy border border-emerald-500/40 rounded-2xl p-6 space-y-6 font-mono shadow-2xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-500/20 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-5 h-5 text-emerald-400" />
+                <h2 className="text-lg font-bold text-white uppercase tracking-wider">
+                  Outbound SMTP / Transactional Email Queue
+                </h2>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Integrated Email Notification Factory for invitation dispatches, POPIA account activations, password resets, and automated guardian alert digests.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setIsEmailInspectorOpen(true)}
+              className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-brand-dark font-extrabold rounded-xl text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg cursor-pointer"
+            >
+              <Send className="w-4 h-4" />
+              <span>Launch Full Modal Queue Inspector</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-4 bg-brand-dark/80 rounded-xl border border-emerald-500/30 space-y-2">
+              <span className="text-slate-400 text-[10px] uppercase font-bold">Queue Delivery Status</span>
+              <div className="text-xl font-extrabold text-emerald-400 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5" />
+                <span>ACTIVE / ONLINE</span>
+              </div>
+              <p className="text-[10px] text-slate-400">Zero-latency dispatch simulation pipeline active</p>
+            </div>
+
+            <div className="p-4 bg-brand-dark/80 rounded-xl border border-brand-gold/30 space-y-2">
+              <span className="text-slate-400 text-[10px] uppercase font-bold">Registered Target Accounts</span>
+              <div className="text-xl font-extrabold text-brand-gold">{users.length} Enrolled Users</div>
+              <p className="text-[10px] text-slate-400">Guardian emails, School Admins & Command Dispatchers</p>
+            </div>
+
+            <div className="p-4 bg-brand-dark/80 rounded-xl border border-cyan-500/30 space-y-2">
+              <span className="text-slate-400 text-[10px] uppercase font-bold">Supported Token Flows</span>
+              <div className="text-xs text-cyan-300 font-bold space-y-0.5">
+                <div>• User Activation & Onboarding</div>
+                <div>• Emergency Guardian Invite</div>
+                <div>• Self-Service Password Reset</div>
+                <div>• Account Lockout Unlock Links</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Dispatch Controls for Admin */}
+          <div className="p-4 bg-brand-dark/90 rounded-xl border border-slate-800 space-y-3">
+            <h3 className="text-xs font-bold text-brand-gold uppercase tracking-wider flex items-center gap-2">
+              <Send className="w-4 h-4" />
+              <span>Admin Direct Action Link Generator</span>
+            </h3>
+            <p className="text-[11px] text-slate-400">
+              Select an enrolled user from the list below to trigger immediate email notification dispatch or copy their action token:
+            </p>
+
+            <div className="divide-y divide-slate-800/80 border border-slate-800 rounded-xl overflow-hidden max-h-80 overflow-y-auto">
+              {users.map(u => (
+                <div key={u.id} className="p-3 bg-brand-navy/40 hover:bg-brand-navy flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                  <div>
+                    <div className="font-bold text-white flex items-center gap-2">
+                      <span>{u.fullName}</span>
+                      <span className="px-1.5 py-0.5 bg-brand-gold/20 text-brand-gold rounded text-[10px]">{u.role}</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400 font-mono">{u.email}</div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={async () => {
+                        const actionUrl = `${window.location.origin}/accept-invite?token=${u.activationToken || 'act_token_123'}`;
+                        await EmailNotificationFactory.sendInvitationEmail(
+                          u.email,
+                          u.fullName,
+                          u.role,
+                          u.activationToken || 'ACT-990812',
+                          actionUrl
+                        );
+                        setIsEmailInspectorOpen(true);
+                      }}
+                      className="px-3 py-1.5 bg-emerald-950 border border-emerald-500/50 hover:bg-emerald-900 text-emerald-300 rounded-lg text-[10px] font-bold uppercase transition-all flex items-center gap-1 cursor-pointer"
+                    >
+                      <Mail className="w-3 h-3 text-emerald-400" />
+                      <span>Dispatch & Inspect</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MODAL 1: ADD USER MODAL */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 bg-brand-dark/90 backdrop-blur-md flex items-center justify-center p-4">
@@ -1291,6 +1444,12 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
           </div>
         </div>
       )}
+
+      {/* Email Service Inspector Modal */}
+      <EmailInspectorModal
+        isOpen={isEmailInspectorOpen}
+        onClose={() => setIsEmailInspectorOpen(false)}
+      />
 
     </div>
   );

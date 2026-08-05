@@ -22,6 +22,7 @@ import { AccessDeniedView } from './components/AccessDeniedView';
 import { AIChat } from './components/AIChat';
 import { PanicConsole } from './components/PanicConsole';
 import { EmergencyBypassProfile } from './components/EmergencyBypassProfile';
+import { AccountSecurityModal } from './components/AccountSecurityModal';
 import itisLogo from './assets/images/itis_logo_1783562386226.jpg';
 
 import { 
@@ -53,6 +54,9 @@ export default function App() {
 
   // Floating AI Chat open state
   const [isAIChatOpen, setIsAIChatOpen] = useState<boolean>(false);
+
+  // Identity & Security Modal
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState<boolean>(false);
 
   // Connect and subscribe to WebSocket topics on load
   useEffect(() => {
@@ -272,10 +276,19 @@ export default function App() {
         </div>
 
         {/* Authenticated User Panel in Header - NO INSTANT SWITCHER! */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           {activeSession && (
             <UserSessionPanel session={activeSession} onLogout={handleLogout} />
           )}
+
+          <button
+            onClick={() => setIsSecurityModalOpen(true)}
+            className="p-2 bg-brand-navy border border-brand-gold/30 hover:border-brand-gold text-brand-gold hover:text-white rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1"
+            title="Account Security & Identity Hub"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="hidden lg:inline">Security</span>
+          </button>
 
           {/* Quick Dial 10111 South Africa emergency button */}
           <a
@@ -421,6 +434,14 @@ export default function App() {
 
       {/* AIChat Sidebar Container */}
       <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+
+      {/* Account Security Self-Service Hub Modal */}
+      <AccountSecurityModal
+        isOpen={isSecurityModalOpen}
+        onClose={() => setIsSecurityModalOpen(false)}
+        currentUserEmail={activeSession?.email}
+        currentUserName={activeSession?.name}
+      />
 
       {/* Footer system ribbon */}
       <footer className="bg-brand-navy-heavy border-t border-brand-gold/15 py-1.5 px-6 text-center text-[9px] text-slate-500 font-mono flex flex-col sm:flex-row justify-between shrink-0">

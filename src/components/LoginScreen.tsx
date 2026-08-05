@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { 
   Shield, Fingerprint, Lock, Mail, AlertTriangle, Cpu, X, Key, CheckCircle2, Sliders,
-  UserCheck, ArrowRight, ShieldCheck, Check, FileText, HelpCircle, RefreshCw
+  UserCheck, ArrowRight, ShieldCheck, Check, FileText, HelpCircle, RefreshCw, Send, Settings
 } from 'lucide-react';
 import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import { LandingPage } from './LandingPage';
 import { UserRole, DEFAULT_PERSONAS, authService, validatePasswordPolicy } from '../services/authService';
+import { AccountSecurityModal } from './AccountSecurityModal';
+import { AuthFlowScreens } from './AuthFlowScreens';
+import { registerFailedLoginAttempt, evaluatePasswordStrength } from '../services/identityEngine';
 
 interface LoginScreenProps {
   onLoginSuccess: (role: UserRole | 'EmergencyBypass') => void;
@@ -34,6 +37,11 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [resetNewPassword, setResetNewPassword] = useState('');
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
   
+  // Modals & Identity Auth Flow States
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
+  const [authFlowMode, setAuthFlowMode] = useState<'ACCEPT_INVITE' | 'VERIFY_EMAIL' | 'RESET_PASSWORD' | 'UNLOCK_ACCOUNT' | 'MFA_CHALLENGE' | null>(null);
+  const [activeToken, setActiveToken] = useState('');
+
   // Feedback states
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -47,7 +55,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     setSuccessMessage(null);
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
@@ -62,7 +70,28 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     if (result.success && result.session) {
       onLoginSuccess(selectedRole);
     } else {
-      setError(result.error || 'Authentication failed. Please check your credentials.');
+      // Track failed attempt & check for lockout threshold
+      const failedRes = await registerFailedLoginAttempt(email);
+      if (failedRes.accountLocked) {
+        setError(failedRes.message);
+      } else {
+        setError(`${result.error || 'Authentication failed.'} (${failedRes.attemptsRemaining} attempts remaining before account security lockout)`);
+      }
+    }
+  };
+
+  const handleSimulateActionToken = (url: string, token: string, category: string) => {
+    setActiveToken(token);
+    if (category === 'INVITATION' || category === 'GUARDIAN_INVITATION' || category === 'TECHNICIAN_INVITATION' || category === 'SCHOOL_ADMIN_INVITATION') {
+      setAuthFlowMode('ACCEPT_INVITE');
+    } else if (category === 'VERIFICATION') {
+      setAuthFlowMode('VERIFY_EMAIL');
+    } else if (category === 'PASSWORD_RESET') {
+      setAuthFlowMode('RESET_PASSWORD');
+    } else if (category === 'ACCOUNT_LOCKED') {
+      setAuthFlowMode('UNLOCK_ACCOUNT');
+    } else {
+      setAuthFlowMode('VERIFY_EMAIL');
     }
   };
 
@@ -552,7 +581,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             )}
 
             {/* Footer Quick Options */}
-            <div className="mt-4 pt-3 border-t border-brand-gold/15 flex items-center justify-between text-[10px] font-mono">
+            <div className="mt-4 pt-3 border-t border-brand-gold/15 flex items-center justify-between text-[10px] font-mono flex-wrap gap-2">
               <button
                 type="button"
                 onClick={triggerBiometric}
@@ -560,15 +589,16 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                 className="text-brand-gold hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50"
               >
                 <Fingerprint className="w-3.5 h-3.5" /> 
-                <span>{isBiometricPending ? 'Verifying Biometrics...' : 'Biometric Auth'}</span>
+                <span>{isBiometricPending ? 'Verifying...' : 'Biometric Auth'}</span>
               </button>
 
               <button
                 type="button"
-                onClick={toggleDemoMode}
-                className="text-slate-400 hover:text-white underline cursor-pointer"
+                onClick={() => setIsSecurityModalOpen(true)}
+                className="text-brand-gold hover:underline flex items-center gap-1 cursor-pointer"
               >
-                {isDemoMode ? 'Demo Mode Active' : 'Enable Demo Mode'}
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Account Security</span>
               </button>
 
               <button
@@ -582,6 +612,29 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
           </div>
         </div>
+      )}
+
+      {/* Guardian & Enterprise User Self-Service Security Hub */}
+      <AccountSecurityModal
+        isOpen={isSecurityModalOpen}
+        onClose={() => setIsSecurityModalOpen(false)}
+        currentUserEmail={email}
+        currentUserName={DEFAULT_PERSONAS[selectedRole]?.name || 'ITIS Enterprise User'}
+      />
+
+      {/* Dynamic Identity Auth Flow Screen */}
+      {authFlowMode && (
+        <AuthFlowScreens
+          mode={authFlowMode}
+          token={activeToken}
+          email={email}
+          onSuccess={(msg) => {
+            setSuccessMessage(msg);
+            setAuthFlowMode(null);
+            setIsModalOpen(true);
+          }}
+          onCancel={() => setAuthFlowMode(null)}
+        />
       )}
     </div>
   );
