@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Building2, Users, AlertTriangle, Radio, Send, CheckSquare, Calendar, Bus, Watch, Search, PlusCircle, Volume2 
+  Building2, Users, AlertTriangle, Radio, Send, CheckSquare, Calendar, Bus, Watch, Search, PlusCircle, Volume2, ShieldAlert 
 } from 'lucide-react';
 import { Learner, SafetyAlert } from '../types';
+import { LearnerInterventionModal } from './LearnerInterventionModal';
 
 interface SchoolPortalProps {
   learners: Learner[];
@@ -13,6 +14,7 @@ interface SchoolPortalProps {
 }
 
 export function SchoolPortal({ learners, alerts, onTriggerSOS, onUpdateLearnerStatus, onAddAlert }: SchoolPortalProps) {
+  const [selectedLearnerForIntervention, setSelectedLearnerForIntervention] = useState<Learner | null>(null);
   const [attendanceRecords, setAttendanceRecords] = useState<Record<string, 'present' | 'absent' | 'late'>>({
     'l1': 'present',
     'l2': 'late'
@@ -177,6 +179,14 @@ export function SchoolPortal({ learners, alerts, onTriggerSOS, onUpdateLearnerSt
                     >
                       Absent
                     </button>
+                    <button
+                      onClick={() => setSelectedLearnerForIntervention(l)}
+                      title="Initiate Safety Intervention"
+                      className="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500/40 text-red-300 font-mono text-[10px] uppercase font-bold rounded flex items-center gap-1 cursor-pointer"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+                      <span>Intervene</span>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -252,6 +262,31 @@ export function SchoolPortal({ learners, alerts, onTriggerSOS, onUpdateLearnerSt
         </div>
 
       </div>
+
+      {/* Designated Learner Safety Intervention & Escalation Modal */}
+      {selectedLearnerForIntervention && (
+        <LearnerInterventionModal
+          learner={selectedLearnerForIntervention}
+          isOpen={!!selectedLearnerForIntervention}
+          onClose={() => setSelectedLearnerForIntervention(null)}
+          onResolveAlert={(learnerId, notes) => {
+            onAddAlert({
+              id: `school-res-${Date.now()}`,
+              type: 'School Intervention Resolved',
+              severity: 'low',
+              message: notes,
+              time: new Date().toISOString(),
+              learnerId,
+              resolved: true
+            });
+            setSelectedLearnerForIntervention(null);
+          }}
+          onEscalateDispatch={(incident) => {
+            onTriggerSOS(selectedLearnerForIntervention);
+            setSelectedLearnerForIntervention(null);
+          }}
+        />
+      )}
 
     </div>
   );

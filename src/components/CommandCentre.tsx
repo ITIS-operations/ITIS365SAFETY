@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Learner, IncidentTicket, NationalStats, mockNationalStats, SafeZone, SafetyAlert } from '../types';
 import { LivePursuitNavigation } from './LivePursuitNavigation';
+import { LearnerInterventionModal } from './LearnerInterventionModal';
 
 interface CommandCentreProps {
   learners: Learner[];
@@ -32,6 +33,7 @@ export function CommandCentre({
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubTab, setActiveSubTab] = useState<'incidents' | 'national' | 'risk' | 'supervisor'>('incidents');
   const [isLivePursuitActive, setIsLivePursuitActive] = useState(false);
+  const [interventionLearner, setInterventionLearner] = useState<Learner | null>(null);
 
   // Stage state for current selected incident (1 to 9)
   const [incidentStages, setIncidentStages] = useState<Record<string, number>>({});
@@ -374,7 +376,15 @@ export function CommandCentre({
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => setInterventionLearner(matchedLearner)}
+                    className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all flex items-center gap-2 cursor-pointer border bg-red-600 hover:bg-red-500 border-red-400 text-white shadow-lg glow-red"
+                  >
+                    <ShieldAlert className="w-4 h-4 text-white animate-pulse" />
+                    <span>Safety Intervention & Escalation</span>
+                  </button>
+
                   <button
                     onClick={() => setIsLivePursuitActive(!isLivePursuitActive)}
                     className={`px-3 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all flex items-center gap-2 cursor-pointer border ${
@@ -1056,6 +1066,23 @@ export function CommandCentre({
         )}
 
       </main>
+
+      {/* Designated Learner Safety Intervention & Escalation Modal */}
+      {interventionLearner && (
+        <LearnerInterventionModal
+          learner={interventionLearner}
+          isOpen={!!interventionLearner}
+          onClose={() => setInterventionLearner(null)}
+          onResolveAlert={(learnerId, notes) => {
+            onResolveIncident(selectedIncident.id, notes);
+            setInterventionLearner(null);
+          }}
+          onEscalateDispatch={(incident) => {
+            onUpdateIncidentStatus(selectedIncident.id, 'Dispatched');
+            setInterventionLearner(null);
+          }}
+        />
+      )}
     </div>
   );
 }

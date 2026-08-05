@@ -9,6 +9,7 @@ import { Learner, SafeZone, SafetyAlert, SubscriptionPlan, BusTransport, Inciden
 import { InteractiveRouteMap } from './InteractiveRouteMap';
 import { LivePursuitNavigation } from './LivePursuitNavigation';
 import { PremiumFeatures } from './PremiumFeatures';
+import { LearnerInterventionModal } from './LearnerInterventionModal';
 
 interface GuardianDashboardProps {
   learners: Learner[];
@@ -36,6 +37,7 @@ export function GuardianDashboard({
   const [activeTab, setActiveTab] = useState<'home' | 'mychildren' | 'map' | 'sos' | 'alerts' | 'history' | 'devices' | 'messages' | 'subscription' | 'premium' | 'documents' | 'support' | 'profile' | 'settings'>('home');
   const [language, setLanguage] = useState<'en' | 'zu' | 'xh' | 'af' | 'so'>('en');
   const [selectedLearnerId, setSelectedLearnerId] = useState<string>(learners[0]?.id || '');
+  const [interventionLearner, setInterventionLearner] = useState<Learner | null>(null);
   
   // Custom mock data for parent messages, profile, documents, etc.
   const [parentMessages, setParentMessages] = useState([
@@ -310,6 +312,14 @@ export function GuardianDashboard({
                           </button>
                         ))}
                       </div>
+
+                      <button
+                        onClick={() => setInterventionLearner(currentLearner)}
+                        className="mt-3 px-3 py-1.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-[10px] uppercase rounded-lg shadow flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <ShieldAlert className="w-3.5 h-3.5 text-white animate-pulse" />
+                        <span>Initiate Safety Intervention & Escalation</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1586,6 +1596,31 @@ export function GuardianDashboard({
         )}
 
       </main>
+
+      {/* Designated Learner Safety Intervention & Escalation Modal */}
+      {interventionLearner && (
+        <LearnerInterventionModal
+          learner={interventionLearner}
+          isOpen={!!interventionLearner}
+          onClose={() => setInterventionLearner(null)}
+          onResolveAlert={(learnerId, notes) => {
+            onAddAlert({
+              id: `al-${Date.now()}`,
+              type: 'Intervention Resolved',
+              message: notes,
+              time: new Date().toISOString(),
+              severity: 'low',
+              learnerId,
+              resolved: true
+            });
+            setInterventionLearner(null);
+          }}
+          onEscalateDispatch={(incident) => {
+            onAddIncident(incident);
+            setInterventionLearner(null);
+          }}
+        />
+      )}
     </div>
   );
 }

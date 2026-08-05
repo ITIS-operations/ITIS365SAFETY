@@ -51,7 +51,9 @@ export interface SafetyAlert {
     | 'High Risk Area' 
     | 'Police Alert' 
     | 'Weather Alert' 
-    | 'Road Accident';
+    | 'Road Accident'
+    | 'Intervention Resolved'
+    | 'School Intervention Resolved';
   severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   time: string;
