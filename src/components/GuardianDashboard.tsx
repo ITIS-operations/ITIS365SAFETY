@@ -3,41 +3,44 @@ import {
   Home, Map, Bell, Shield, ShieldAlert, Award, User, Settings, CreditCard, Activity,
   MapPin, Plus, Trash2, Battery, Signal, Zap, AlertTriangle, Bus, ChevronRight, CheckCircle2,
   Download, Calendar, Sliders, Volume2, HelpCircle, Phone, Heart, Info, Eye, Languages, Sparkles,
-  Users, MessageSquare, FileText
+  Users, MessageSquare, FileText, CheckSquare, RefreshCw, Send, FileCheck, Clock, School
 } from 'lucide-react';
 import { Learner, SafeZone, SafetyAlert, SubscriptionPlan, BusTransport, IncidentTicket, mockBuses, mockSubscriptionPlans } from '../types';
 import { InteractiveRouteMap } from './InteractiveRouteMap';
-import { LivePursuitNavigation } from './LivePursuitNavigation';
 import { PremiumFeatures } from './PremiumFeatures';
-import { LearnerInterventionModal } from './LearnerInterventionModal';
+import { GuardianLocationMap } from './GuardianLocationMap';
+import { GuardianIncidentView } from './GuardianIncidentView';
 
 interface GuardianDashboardProps {
   learners: Learner[];
   safeZones: SafeZone[];
   alerts: SafetyAlert[];
+  incidents?: IncidentTicket[];
   onTriggerSOS: (learner: Learner) => void;
   onAddSafeZone: (zone: SafeZone) => void;
   onDeleteSafeZone: (id: string) => void;
   onUpdateLearnerStatus: (id: string, newStatus: 'In School' | 'En Route' | 'At Home' | 'Emergency') => void;
   onAddAlert: (alert: SafetyAlert) => void;
   onAddIncident: (incident: IncidentTicket) => void;
+  onUpdateIncident?: (incident: IncidentTicket) => void;
 }
 
 export function GuardianDashboard({
   learners,
   safeZones,
   alerts,
+  incidents = [],
   onTriggerSOS,
   onAddSafeZone,
   onDeleteSafeZone,
   onUpdateLearnerStatus,
   onAddAlert,
-  onAddIncident
+  onAddIncident,
+  onUpdateIncident
 }: GuardianDashboardProps) {
   const [activeTab, setActiveTab] = useState<'home' | 'mychildren' | 'map' | 'sos' | 'alerts' | 'history' | 'devices' | 'messages' | 'subscription' | 'premium' | 'documents' | 'support' | 'profile' | 'settings'>('home');
   const [language, setLanguage] = useState<'en' | 'zu' | 'xh' | 'af' | 'so'>('en');
   const [selectedLearnerId, setSelectedLearnerId] = useState<string>(learners[0]?.id || '');
-  const [interventionLearner, setInterventionLearner] = useState<Learner | null>(null);
   
   // Custom mock data for parent messages, profile, documents, etc.
   const [parentMessages, setParentMessages] = useState([
@@ -66,6 +69,13 @@ export function GuardianDashboard({
     speed: true
   });
 
+  // Guardian Incident View State
+  const [guardianNoteInput, setGuardianNoteInput] = useState('');
+  const [guardianNoteSuccess, setGuardianNoteSuccess] = useState(false);
+  const [editingMedical, setEditingMedical] = useState(false);
+  const [medicalConditionsText, setMedicalConditionsText] = useState('Emergency inhaler situated in front backpack pocket. Mild peanut allergy. Chronic asthma.');
+  const [identityConfirmed, setIdentityConfirmed] = useState(false);
+
   // Safe zone form fields
   const [newZoneName, setNewZoneName] = useState('');
   const [newZoneType, setNewZoneType] = useState<'home' | 'school' | 'grandparents' | 'sports_field' | 'church' | 'library' | 'mall'>('home');
@@ -83,6 +93,20 @@ export function GuardianDashboard({
 
   // Find currently active learner in view
   const currentLearner = learners.find(l => l.id === selectedLearnerId) || learners[0];
+
+  // Plain language incident stages for Guardian Incident View
+  const incidentStagesList = [
+    { id: 1, label: 'SOS Received', desc: 'We have received your child\'s emergency alert.' },
+    { id: 2, label: 'Verifying Location', desc: 'Our Operations Centre is verifying the situation.' },
+    { id: 3, label: 'Guardian Contacted', desc: 'Guardian contact confirmed.' },
+    { id: 4, label: 'Emergency Services Notified', desc: 'Emergency responders have been notified.' },
+    { id: 5, label: 'Responder En Route', desc: 'A responder is travelling to your child\'s location.' },
+    { id: 6, label: 'Responder On Scene', desc: 'Emergency responders have arrived on scene.' },
+    { id: 7, label: 'Child Located', desc: 'Your child has been safely located.' },
+    { id: 8, label: 'Incident Resolved', desc: 'The situation is fully resolved.' }
+  ];
+
+  const currentStageId = currentLearner.status === 'Emergency' ? 4 : 8;
 
   const handleCreateSafeZone = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,6 +133,26 @@ export function GuardianDashboard({
     setNewZoneCurfew('');
   };
 
+  const handleSendGuardianNote = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!guardianNoteInput.trim()) return;
+
+    onAddAlert({
+      id: `gn-${Date.now()}`,
+      type: 'SOS Activated',
+      message: `Guardian Note from ${profileName}: ${guardianNoteInput}`,
+      time: new Date().toISOString(),
+      severity: 'low',
+      learnerId: currentLearner.id,
+      learnerName: currentLearner.name,
+      resolved: false
+    });
+
+    setGuardianNoteSuccess(true);
+    setGuardianNoteInput('');
+    setTimeout(() => setGuardianNoteSuccess(false), 5000);
+  };
+
   return (
     <div className="flex-1 flex flex-col md:flex-row bg-brand-dark min-h-screen" id="guardian-dashboard-layout">
       {/* Sidebar Navigation */}
@@ -122,12 +166,12 @@ export function GuardianDashboard({
                 <button
                   key={l.id}
                   onClick={() => setSelectedLearnerId(l.id)}
-                  className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all ${selectedLearnerId === l.id ? 'bg-brand-navy-light/80 border-brand-gold' : 'bg-brand-dark/40 border-slate-800/80 hover:border-slate-700'}`}
+                  className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all cursor-pointer ${selectedLearnerId === l.id ? 'bg-brand-navy-light/80 border-brand-gold' : 'bg-brand-dark/40 border-slate-800/80 hover:border-slate-700'}`}
                 >
                   <img src={l.photoUrl} alt={l.name} className="w-9 h-9 rounded-full object-cover border border-brand-gold/30" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-bold text-white truncate">{l.name}</p>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${l.status === 'In School' ? 'bg-green-950 text-green-300 border border-green-500/20' : l.status === 'Emergency' ? 'bg-red-950 text-red-300 border border-red-500/30' : 'bg-brand-gold/15 text-brand-gold border border-brand-gold/20'}`}>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${l.status === 'In School' ? 'bg-green-950 text-green-300 border border-green-500/20' : l.status === 'Emergency' ? 'bg-red-950 text-red-300 border border-red-500/30 font-bold animate-pulse' : 'bg-brand-gold/15 text-brand-gold border border-brand-gold/20'}`}>
                       {l.status}
                     </span>
                   </div>
@@ -140,31 +184,36 @@ export function GuardianDashboard({
           <nav className="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-240px)] custom-sidebar-scroll">
             <button
               onClick={() => setActiveTab('home')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'home' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'home' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Home className="w-3.5 h-3.5" /> Dashboard
             </button>
             <button
               onClick={() => setActiveTab('mychildren')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'mychildren' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'mychildren' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Users className="w-3.5 h-3.5" /> My Children
             </button>
             <button
               onClick={() => setActiveTab('map')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'map' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'map' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
-              <Map className="w-3.5 h-3.5" /> Live Tracking
+              <Map className="w-3.5 h-3.5" /> Child Location Map
             </button>
             <button
               onClick={() => setActiveTab('sos')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'sos' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'sos' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> SOS & Emergency
+              {currentLearner.status === 'Emergency' && (
+                <span className="ml-auto bg-red-600 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold animate-pulse">
+                  ACTIVE
+                </span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab('alerts')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'alerts' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'alerts' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Bell className="w-3.5 h-3.5" /> Notifications
               {alerts.filter(a => !a.resolved).length > 0 && (
@@ -175,19 +224,19 @@ export function GuardianDashboard({
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'history' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'history' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Calendar className="w-3.5 h-3.5" /> Journey History
             </button>
             <button
               onClick={() => setActiveTab('devices')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'devices' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'devices' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Activity className="w-3.5 h-3.5" /> Device Status
             </button>
             <button
               onClick={() => setActiveTab('messages')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'messages' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'messages' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <MessageSquare className="w-3.5 h-3.5" /> Messages
               {parentMessages.filter(m => !m.read).length > 0 && (
@@ -198,31 +247,31 @@ export function GuardianDashboard({
             </button>
             <button
               onClick={() => setActiveTab('premium')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all border border-brand-gold/15 ${activeTab === 'premium' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-brand-gold bg-brand-navy-light/10 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all border border-brand-gold/15 cursor-pointer ${activeTab === 'premium' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-brand-gold bg-brand-navy-light/10 hover:bg-brand-navy-light'}`}
             >
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" /> Membership Card
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'documents' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'documents' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <FileText className="w-3.5 h-3.5" /> Documents
             </button>
             <button
               onClick={() => setActiveTab('support')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'support' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'support' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <HelpCircle className="w-3.5 h-3.5" /> Support
             </button>
             <button
               onClick={() => setActiveTab('profile')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'profile' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'profile' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <User className="w-3.5 h-3.5" /> Profile
             </button>
             <button
               onClick={() => setActiveTab('settings')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all ${activeTab === 'settings' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'settings' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Settings className="w-3.5 h-3.5" /> Settings
             </button>
@@ -231,12 +280,16 @@ export function GuardianDashboard({
 
         {/* Global Emergency SOS Quick-Button */}
         <div className="p-4 border-t border-brand-gold/10 bg-brand-dark/20 text-center space-y-3">
-          <p className="text-[10px] text-slate-400">EMERGENCY BYPASS HOTLINE</p>
+          <p className="text-[10px] text-slate-400 font-mono uppercase">EMERGENCY ASSISTANCE</p>
           <button
-            onClick={() => onTriggerSOS(currentLearner)}
+            onClick={() => {
+              onTriggerSOS(currentLearner);
+              onUpdateLearnerStatus(currentLearner.id, 'Emergency');
+              setActiveTab('sos');
+            }}
             className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs uppercase tracking-widest cursor-pointer shadow-lg hover:shadow-red-500/20 active:scale-95 transition-all animate-pulse"
           >
-            🚨 QUICK PANIC SOS
+            🚨 TRIGGER EMERGENCY SOS ALERT
           </button>
         </div>
       </aside>
@@ -251,7 +304,7 @@ export function GuardianDashboard({
               Good Morning, Guardian
             </h2>
             <p className="text-xs text-brand-silver">
-              System active · Telemetry secured with <strong className="text-brand-gold">POPIA Encryption</strong>
+              Guardian Portal Active · Verified Security for <strong className="text-brand-gold">{currentLearner.name}</strong>
             </p>
           </div>
           
@@ -274,8 +327,8 @@ export function GuardianDashboard({
             </div>
 
             <div className="flex items-center gap-3 bg-brand-navy border border-brand-gold/10 px-4 py-2.5 rounded-xl text-xs font-mono">
-              <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-              <span>ITIS Command Centre: <strong className="text-brand-gold">CONNECTED</strong></span>
+              <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
+              <span>Operations Centre: <strong className="text-brand-gold">CONNECTED</strong></span>
             </div>
           </div>
         </div>
@@ -283,6 +336,21 @@ export function GuardianDashboard({
         {/* ==================================== TAB 1: HOME ==================================== */}
         {activeTab === 'home' && (
           <div className="space-y-6" id="guardian-home-tab">
+            {/* Synchronized Guardian Incident View for active incidents */}
+            {(() => {
+              const activeInc = incidents.find(inc => inc.learnerName === currentLearner.name) || incidents[0];
+              if (activeInc && (currentLearner.status === 'Emergency' || activeInc.status !== 'Resolved')) {
+                return (
+                  <GuardianIncidentView 
+                    incident={activeInc}
+                    learner={currentLearner}
+                    onUpdateIncident={onUpdateIncident}
+                  />
+                );
+              }
+              return null;
+            })()}
+
             {/* Child Status Spotlight Card */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
@@ -290,7 +358,7 @@ export function GuardianDashboard({
               <div className="md:col-span-2 glass-panel p-5 rounded-2xl relative overflow-hidden border-t-2 border-brand-gold flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-brand-gold">Child Status Spotlight</span>
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-brand-gold">Child Safety Spotlight</span>
                     <span className="text-[9px] bg-brand-navy px-2 py-0.5 rounded border border-brand-gold/15 text-brand-silver font-mono">ID: {currentLearner.trackerSerial}</span>
                   </div>
 
@@ -300,13 +368,13 @@ export function GuardianDashboard({
                       <h3 className="text-xl font-bold text-white">{currentLearner.name}</h3>
                       <p className="text-xs text-slate-300">{currentLearner.school} · {currentLearner.grade}</p>
                       
-                      {/* Interactive Fast Status Swapper */}
+                      {/* Interactive Status Display */}
                       <div className="flex gap-1.5 mt-2">
                         {(['In School', 'En Route', 'At Home'] as const).map((st) => (
                           <button
                             key={st}
                             onClick={() => onUpdateLearnerStatus(currentLearner.id, st)}
-                            className={`text-[9px] font-mono px-2 py-1 rounded transition-colors ${currentLearner.status === st ? 'bg-brand-gold text-brand-dark font-bold' : 'bg-brand-navy hover:bg-brand-navy-light text-slate-300 border border-slate-800'}`}
+                            className={`text-[9px] font-mono px-2 py-1 rounded transition-colors cursor-pointer ${currentLearner.status === st ? 'bg-brand-gold text-brand-dark font-bold' : 'bg-brand-navy hover:bg-brand-navy-light text-slate-300 border border-slate-800'}`}
                           >
                             {st}
                           </button>
@@ -314,11 +382,15 @@ export function GuardianDashboard({
                       </div>
 
                       <button
-                        onClick={() => setInterventionLearner(currentLearner)}
-                        className="mt-3 px-3 py-1.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-[10px] uppercase rounded-lg shadow flex items-center gap-1.5 cursor-pointer"
+                        onClick={() => {
+                          onTriggerSOS(currentLearner);
+                          onUpdateLearnerStatus(currentLearner.id, 'Emergency');
+                          setActiveTab('sos');
+                        }}
+                        className="mt-3 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white font-mono font-bold text-[11px] uppercase rounded-lg shadow flex items-center gap-2 cursor-pointer transition-colors"
                       >
-                        <ShieldAlert className="w-3.5 h-3.5 text-white animate-pulse" />
-                        <span>Initiate Safety Intervention & Escalation</span>
+                        <ShieldAlert className="w-4 h-4 text-white" />
+                        <span>Request Emergency SOS Support</span>
                       </button>
                     </div>
                   </div>
@@ -347,10 +419,9 @@ export function GuardianDashboard({
               <div className="glass-panel p-5 rounded-2xl flex flex-col justify-between">
                 <div>
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono mb-2 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-brand-gold" /> GPS Geofence Check
+                    <MapPin className="w-3.5 h-3.5 text-brand-gold" /> Safe Zone Boundary Status
                   </h4>
                   <div className="relative bg-brand-dark h-32 rounded-xl overflow-hidden border border-brand-gold/10 flex items-center justify-center">
-                    {/* Mock satellite preview map */}
                     <div className="absolute inset-0 bg-cover bg-center opacity-45" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400')` }} />
                     <div className="absolute w-10 h-10 rounded-full bg-brand-gold/20 border border-brand-gold flex items-center justify-center animate-pulse">
                       <MapPin className="w-5 h-5 text-brand-gold" />
@@ -364,9 +435,9 @@ export function GuardianDashboard({
                   </div>
                   <button 
                     onClick={() => setActiveTab('map')}
-                    className="w-full mt-2 py-2 bg-brand-navy-light text-brand-gold border border-brand-gold/20 hover:bg-brand-navy text-xs font-mono uppercase tracking-widest rounded-lg flex items-center justify-center gap-1.5 transition-colors"
+                    className="w-full mt-2 py-2 bg-brand-navy-light text-brand-gold border border-brand-gold/20 hover:bg-brand-navy text-xs font-mono uppercase tracking-widest rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    Launch Interactive Satellite <ChevronRight className="w-3.5 h-3.5" />
+                    View Full Location Map <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -404,11 +475,11 @@ export function GuardianDashboard({
               <div className="glass-panel p-5 rounded-2xl space-y-3">
                 <div className="flex justify-between items-center">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
-                    <Bell className="w-4 h-4 text-brand-gold" /> Latest Agency Security Alerts
+                    <Bell className="w-4 h-4 text-brand-gold" /> Reassurance & Security Updates
                   </h4>
                   <button 
                     onClick={() => setActiveTab('alerts')}
-                    className="text-[10px] text-brand-gold hover:underline font-mono uppercase"
+                    className="text-[10px] text-brand-gold hover:underline font-mono uppercase cursor-pointer"
                   >
                     View All
                   </button>
@@ -438,17 +509,408 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 2: LIVE GPS ==================================== */}
+        {/* ==================================== TAB 2: CHILD LOCATION MAP ==================================== */}
         {activeTab === 'map' && (
-          <LivePursuitNavigation 
-            learners={learners} 
-            safeZones={safeZones} 
-            alerts={alerts} 
-            onTriggerSOS={onTriggerSOS} 
-          />
+          <div className="space-y-6" id="guardian-map-tab">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Map className="w-5 h-5 text-brand-gold" /> Child Location & Safe Zone View
+                </h3>
+                <p className="text-xs text-brand-silver">Verified position, school, home, and registered safe zone perimeters</p>
+              </div>
+            </div>
+
+            <GuardianLocationMap 
+              learner={currentLearner} 
+              safeZones={safeZones} 
+              showEtaMarker={currentLearner.status === 'Emergency'}
+              etaMinutes={7}
+              height="h-[480px]"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 bg-brand-navy rounded-xl border border-brand-gold/15 space-y-1">
+                <span className="text-[10px] text-slate-400 font-mono uppercase">Verified Location</span>
+                <strong className="text-white block font-sans">Empire Road Junction, Empire Rd, Johannesburg</strong>
+                <span className="text-[10px] text-emerald-400 font-mono">GPS Accuracy: ± 2.4 meters</span>
+              </div>
+              <div className="p-4 bg-brand-navy rounded-xl border border-brand-gold/15 space-y-1">
+                <span className="text-[10px] text-slate-400 font-mono uppercase">Assigned School</span>
+                <strong className="text-white block font-sans">{currentLearner.school}</strong>
+                <span className="text-[10px] text-brand-gold font-mono">Boundary Active (07:30 - 14:30)</span>
+              </div>
+              <div className="p-4 bg-brand-navy rounded-xl border border-brand-gold/15 space-y-1">
+                <span className="text-[10px] text-slate-400 font-mono uppercase">Primary Safe Zone</span>
+                <strong className="text-white block font-sans">Home Safe Zone (200m Radius)</strong>
+                <span className="text-[10px] text-emerald-400 font-mono">Arrival/Departure Notifications Active</span>
+              </div>
+            </div>
+          </div>
         )}
 
-        {/* ==================================== TAB 3: SAFEZONES ==================================== */}
+        {/* ==================================== TAB 3: GUARDIAN INCIDENT VIEW (SOS) ==================================== */}
+        {activeTab === 'sos' && (
+          <div className="space-y-6" id="guardian-sos-tab">
+            {/* Header Banner */}
+            <div className="p-5 bg-gradient-to-r from-red-950/80 via-brand-navy to-brand-navy border-2 border-red-500/40 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <ShieldAlert className="w-6 h-6 text-red-500 animate-pulse" />
+                  <h3 className="text-lg font-bold text-white font-sans uppercase tracking-wide">
+                    Child Emergency Safety View
+                  </h3>
+                  <span className="px-2.5 py-0.5 bg-red-600 text-white rounded text-[10px] font-mono font-bold uppercase animate-pulse">
+                    SOS Active
+                  </span>
+                </div>
+                <p className="text-xs text-brand-silver">
+                  Operations Command Centre Reference: <strong className="text-brand-gold font-mono">REF-2026-0805-4912</strong>
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 self-end md:self-auto">
+                <span className="text-[10px] text-slate-300 font-mono">Emergency Hotline:</span>
+                <a 
+                  href="tel:+27119834000"
+                  className="px-3.5 py-2 bg-brand-gold text-brand-dark font-extrabold rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 shadow hover:bg-brand-gold-dark transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5" /> Call Operations Centre
+                </a>
+              </div>
+            </div>
+
+            {/* Plain Language Incident Stage Progress */}
+            <div className="glass-panel p-5 rounded-2xl space-y-4 border-t-2 border-brand-gold">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-brand-gold" /> Current Incident Progress
+                </h4>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-500/20">
+                  Stage {currentStageId} of 8: {incidentStagesList.find(s => s.id === currentStageId)?.label}
+                </span>
+              </div>
+
+              {/* Progress Steps */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 font-mono text-[10px]">
+                {incidentStagesList.map((st) => {
+                  const isPast = st.id < currentStageId;
+                  const isCurrent = st.id === currentStageId;
+                  return (
+                    <div 
+                      key={st.id} 
+                      className={`p-2 rounded-lg border text-center flex flex-col justify-between transition-all ${
+                        isCurrent ? 'bg-brand-gold text-brand-dark font-bold border-brand-gold shadow-md' :
+                        isPast ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30' :
+                        'bg-brand-dark/40 text-slate-500 border-slate-800'
+                      }`}
+                    >
+                      <span className="block text-[9px] opacity-75">Step {st.id}</span>
+                      <strong className="block text-[10px] leading-tight mt-1">{st.label}</strong>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Reassurance Statement Box */}
+              <div className="p-4 bg-brand-navy border border-brand-gold/20 rounded-xl space-y-1">
+                <span className="text-[10px] text-brand-gold font-mono uppercase font-bold block">
+                  Latest Verified Update from Operations Centre:
+                </span>
+                <p className="text-xs text-white leading-relaxed font-sans">
+                  "We have received your child's emergency alert. Our Operations Centre is verifying the situation and emergency responders have been notified."
+                </p>
+                <div className="pt-2 flex items-center gap-4 text-[10px] text-slate-400 font-mono border-t border-slate-800/80 mt-2">
+                  <span>Time SOS Received: <strong className="text-white">14:02:15 UTC+2</strong></span>
+                  <span>Estimated Responder Arrival: <strong className="text-emerald-400 font-bold">~7 minutes</strong></span>
+                </div>
+              </div>
+            </div>
+
+            {/* Child Spotlight & Map Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              {/* Child Photograph & Details Card */}
+              <div className="glass-panel p-5 rounded-2xl space-y-4">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-2">
+                  Child Details
+                </h4>
+
+                <div className="flex items-center gap-4">
+                  <img src={currentLearner.photoUrl} alt={currentLearner.name} className="w-20 h-20 rounded-2xl object-cover border-2 border-brand-gold shadow-lg" />
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-bold text-white">{currentLearner.name}</h4>
+                    <p className="text-xs text-slate-300">{currentLearner.school}</p>
+                    <span className="inline-block px-2 py-0.5 bg-red-950 text-red-300 border border-red-500/30 rounded text-[9px] font-mono font-bold uppercase">
+                      Safety Status: Emergency
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-xs font-mono pt-2 border-t border-slate-800">
+                  <div className="flex justify-between text-slate-300">
+                    <span>Grade / Class:</span>
+                    <strong className="text-white font-sans">{currentLearner.grade}</strong>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Verified Location:</span>
+                    <strong className="text-brand-gold">{currentLearner.latitude.toFixed(4)}, {currentLearner.longitude.toFixed(4)}</strong>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Tracker Serial:</span>
+                    <strong className="text-white">{currentLearner.trackerSerial}</strong>
+                  </div>
+                  <div className="flex justify-between text-slate-300">
+                    <span>Wearable Battery:</span>
+                    <strong className="text-emerald-400">{currentLearner.deviceBattery}%</strong>
+                  </div>
+                </div>
+
+                {/* Confirm Identity Button */}
+                <button
+                  onClick={() => setIdentityConfirmed(true)}
+                  disabled={identityConfirmed}
+                  className={`w-full py-2.5 rounded-xl font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-all flex items-center justify-center gap-2 ${identityConfirmed ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' : 'bg-brand-gold text-brand-dark hover:bg-brand-gold-dark'}`}
+                >
+                  <CheckSquare className="w-4 h-4" />
+                  {identityConfirmed ? 'Identity Confirmed by Guardian' : 'Confirm Child Identity Details'}
+                </button>
+              </div>
+
+              {/* Map Showing Child Location */}
+              <div className="lg:col-span-2 space-y-4">
+                <GuardianLocationMap 
+                  learner={currentLearner} 
+                  safeZones={safeZones} 
+                  showEtaMarker={true} 
+                  etaMinutes={7} 
+                  height="h-[320px]" 
+                />
+              </div>
+
+            </div>
+
+            {/* Emergency Contact Buttons */}
+            <div className="glass-panel p-5 rounded-2xl space-y-4">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                Direct Emergency Contacts
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
+                <a
+                  href="tel:+27119834000"
+                  className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
+                >
+                  <div className="p-2 bg-brand-gold text-brand-dark rounded-lg font-bold">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-sans">Command Centre</strong>
+                    <span className="text-brand-gold text-[11px]">+27 11 983 4000</span>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:+27115550199"
+                  className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
+                >
+                  <div className="p-2 bg-blue-600 text-white rounded-lg font-bold">
+                    <School className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-sans">School Admin</strong>
+                    <span className="text-blue-300 text-[11px]">+27 11 555 0199</span>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:10111"
+                  className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
+                >
+                  <div className="p-2 bg-red-600 text-white rounded-lg font-bold">
+                    <Shield className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-sans">SAPS Flying Squad</strong>
+                    <span className="text-red-300 text-[11px]">10111</span>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:10177"
+                  className="p-3.5 bg-brand-navy hover:bg-brand-navy-light border border-brand-gold/30 rounded-xl flex items-center gap-3 transition-colors cursor-pointer"
+                >
+                  <div className="p-2 bg-amber-600 text-white rounded-lg font-bold">
+                    <Heart className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-sans">EMS / Ambulance</strong>
+                    <span className="text-amber-300 text-[11px]">10177</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            {/* Guardian Information & Medical Field Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Guardian Additional Notes Field */}
+              <div className="glass-panel p-5 rounded-2xl space-y-4">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Send className="w-4 h-4 text-brand-gold" /> Send Information to Command Centre
+                </h4>
+
+                {guardianNoteSuccess && (
+                  <div className="p-3 bg-emerald-950/60 border border-emerald-500/30 rounded-lg text-xs text-emerald-300 font-mono flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>Information transmitted securely to Command Centre coordinators.</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleSendGuardianNote} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-mono text-[10px] uppercase">
+                      Additional Guardian Notes / Sightings / Instructions
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={guardianNoteInput}
+                      onChange={(e) => setGuardianNoteInput(e.target.value)}
+                      placeholder="e.g. Sipho was wearing his navy school jacket. Grandmother is nearby in Sandton."
+                      className="w-full bg-brand-dark border border-brand-gold/25 rounded-lg px-3 py-2 text-white text-xs leading-relaxed focus:outline-none focus:border-brand-gold"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-brand-gold hover:bg-brand-gold-dark text-brand-dark font-mono font-bold rounded-lg text-xs uppercase tracking-wider cursor-pointer transition-colors"
+                  >
+                    Send Additional Note to Command Centre
+                  </button>
+                </form>
+              </div>
+
+              {/* Medical Information */}
+              <div className="glass-panel p-5 rounded-2xl space-y-4">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-red-400" /> Child Medical Information
+                  </h4>
+                  <button
+                    onClick={() => setEditingMedical(!editingMedical)}
+                    className="text-[10px] font-mono text-brand-gold hover:underline cursor-pointer uppercase"
+                  >
+                    {editingMedical ? 'Cancel' : 'Update Medical Notes'}
+                  </button>
+                </div>
+
+                {editingMedical ? (
+                  <div className="space-y-3 text-xs">
+                    <textarea
+                      rows={3}
+                      value={medicalConditionsText}
+                      onChange={(e) => setMedicalConditionsText(e.target.value)}
+                      className="w-full bg-brand-dark border border-brand-gold/25 rounded-lg px-3 py-2 text-white font-sans text-xs"
+                    />
+                    <button
+                      onClick={() => setEditingMedical(false)}
+                      className="px-4 py-2 bg-brand-gold text-brand-dark font-mono font-bold text-xs uppercase rounded cursor-pointer"
+                    >
+                      Save Medical Notes
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-3 font-mono text-[11px]">
+                      <div className="p-2.5 bg-brand-dark/40 border border-slate-800 rounded-lg">
+                        <span className="text-[10px] text-slate-400 block uppercase">Blood Type</span>
+                        <strong className="text-red-400 font-bold">{currentLearner.bloodGroup || 'O+'}</strong>
+                      </div>
+                      <div className="p-2.5 bg-brand-dark/40 border border-slate-800 rounded-lg">
+                        <span className="text-[10px] text-slate-400 block uppercase">Allergies</span>
+                        <strong className="text-amber-300">Registered</strong>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-red-950/20 border border-red-500/20 rounded-xl">
+                      <span className="text-[10px] font-mono text-red-300 uppercase block mb-1">Medical Conditions / Inhaler Notes:</span>
+                      <p className="text-xs text-slate-200 leading-relaxed font-sans">{medicalConditionsText}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Emergency Contacts & Incident Summary Downloads */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Emergency Contacts */}
+              <div className="glass-panel p-5 rounded-2xl space-y-3 text-xs">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-2">
+                  Verified Emergency Contacts
+                </h4>
+
+                <div className="space-y-2">
+                  <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl flex justify-between items-center">
+                    <div>
+                      <strong className="text-white block font-sans">Thabo Ndlovu (Primary Guardian)</strong>
+                      <span className="text-slate-400 font-mono text-[11px]">+27 82 123 4567 · Father</span>
+                    </div>
+                    <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/20 rounded text-[9px] font-mono uppercase">
+                      Verified
+                    </span>
+                  </div>
+
+                  <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl flex justify-between items-center">
+                    <div>
+                      <strong className="text-white block font-sans">Lindiwe Ndlovu (Secondary Contact)</strong>
+                      <span className="text-slate-400 font-mono text-[11px]">+27 71 987 6543 · Mother</span>
+                    </div>
+                    <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/20 rounded text-[9px] font-mono uppercase">
+                      Verified
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Incident History & Download Summary */}
+              <div className="glass-panel p-5 rounded-2xl space-y-3 text-xs">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-2">
+                  Child Incident Records & Summaries
+                </h4>
+
+                <div className="space-y-2.5 font-mono text-[11px]">
+                  <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl flex justify-between items-center">
+                    <div>
+                      <strong className="text-white block font-sans">Incident REF-2026-0805-4912</strong>
+                      <span className="text-slate-400 text-[10px]">Today, 14:02 · Active SOS Event</span>
+                    </div>
+                    <span className="text-amber-400 font-bold uppercase text-[9px]">
+                      In Progress
+                    </span>
+                  </div>
+
+                  <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl flex justify-between items-center">
+                    <div>
+                      <strong className="text-white block font-sans">Geofence Boundary Alert (Resolved)</strong>
+                      <span className="text-slate-400 text-[10px]">12 Jan 2026 · Safe resolution confirmed</span>
+                    </div>
+                    <button
+                      onClick={() => alert("Downloading Final Incident Summary PDF for REF-2026-0112-1082...")}
+                      className="px-2.5 py-1 bg-brand-navy hover:bg-brand-navy-light text-brand-gold border border-brand-gold/20 rounded text-[10px] uppercase cursor-pointer flex items-center gap-1"
+                    >
+                      <Download className="w-3 h-3" /> Summary PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* ==================================== TAB 4: SAFEZONES ==================================== */}
         {activeTab === 'safezones' && (
           <div className="space-y-6" id="guardian-safezones-tab">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -565,7 +1027,7 @@ export function GuardianDashboard({
                         </div>
                         <button
                           onClick={() => onDeleteSafeZone(zone.id)}
-                          className="text-slate-400 hover:text-red-400 p-1 rounded hover:bg-red-950/20 transition-colors"
+                          className="text-slate-400 hover:text-red-400 p-1 rounded hover:bg-red-950/20 transition-colors cursor-pointer"
                           title="Delete Zone"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -589,7 +1051,7 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 4: ALERTS ==================================== */}
+        {/* ==================================== TAB 5: ALERTS ==================================== */}
         {activeTab === 'alerts' && (
           <div className="glass-panel p-5 rounded-2xl space-y-4" id="guardian-alerts-tab">
             <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2 border-b border-slate-800 pb-3">
@@ -629,14 +1091,14 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 5: HISTORY ==================================== */}
+        {/* ==================================== TAB 6: HISTORY ==================================== */}
         {activeTab === 'history' && (
           <div className="space-y-6" id="guardian-history-tab">
             <InteractiveRouteMap learner={currentLearner} safeZones={safeZones} />
           </div>
         )}
 
-        {/* ==================================== TAB 6: DEVICES ==================================== */}
+        {/* ==================================== TAB 7: DEVICES ==================================== */}
         {activeTab === 'devices' && (
           <div className="space-y-6" id="guardian-devices-tab">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -644,7 +1106,7 @@ export function GuardianDashboard({
               {/* Device Spec details */}
               <div className="md:col-span-2 glass-panel p-5 rounded-2xl space-y-4">
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-brand-gold" /> Wearable OS Hardware Diagnostics
+                  <Activity className="w-5 h-5 text-brand-gold" /> Wearable OS Diagnostics
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
@@ -669,13 +1131,13 @@ export function GuardianDashboard({
                 <div className="pt-4 border-t border-brand-navy-light/60 flex flex-wrap gap-2">
                   <button 
                     onClick={() => alert("Sent remote ping cascade. Telemetry calibration check OK.")}
-                    className="px-4 py-2 bg-brand-navy-light hover:bg-brand-navy text-brand-gold border border-brand-gold/25 text-xs font-mono rounded"
+                    className="px-4 py-2 bg-brand-navy-light hover:bg-brand-navy text-brand-gold border border-brand-gold/25 text-xs font-mono rounded cursor-pointer"
                   >
                     ⚙ Run Diagnostics calibration
                   </button>
                   <button 
                     onClick={() => alert("Simulating firmware over-the-air update check. Firmware is already up to date.")}
-                    className="px-4 py-2 bg-brand-navy-light hover:bg-brand-navy text-slate-300 border border-slate-800 text-xs font-mono rounded"
+                    className="px-4 py-2 bg-brand-navy-light hover:bg-brand-navy text-slate-300 border border-slate-800 text-xs font-mono rounded cursor-pointer"
                   >
                     ↓ Check OTA Firmware update
                   </button>
@@ -722,7 +1184,7 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 7: SUBSCRIPTION ==================================== */}
+        {/* ==================================== TAB 8: SUBSCRIPTION ==================================== */}
         {activeTab === 'subscription' && (
           <div className="space-y-6" id="guardian-billing-tab">
             <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-3 flex items-center gap-2">
@@ -739,7 +1201,7 @@ export function GuardianDashboard({
                 </p>
                 <button 
                   onClick={() => setIsPaid(false)}
-                  className="px-4 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-200 font-mono rounded text-xs"
+                  className="px-4 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-200 font-mono rounded text-xs cursor-pointer"
                 >
                   Configure billing options
                 </button>
@@ -859,7 +1321,7 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 8: PREMIUM SUITE ==================================== */}
+        {/* ==================================== TAB 9: PREMIUM SUITE ==================================== */}
         {activeTab === 'premium' && (
           <PremiumFeatures 
             learners={learners}
@@ -872,20 +1334,20 @@ export function GuardianDashboard({
           />
         )}
 
-        {/* ==================================== TAB 9: MY CHILDREN ==================================== */}
+        {/* ==================================== TAB 10: MY CHILDREN ==================================== */}
         {activeTab === 'mychildren' && (
           <div className="space-y-6" id="guardian-my-children-tab">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <div>
                 <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Users className="w-5 h-5 text-brand-gold" /> Children Profiles & Tactical Safety Data
+                  <Users className="w-5 h-5 text-brand-gold" /> Children Safety Profiles & Information
                 </h3>
-                <p className="text-xs text-brand-silver">Manage demographics, medical history, transit, and tracker links</p>
+                <p className="text-xs text-brand-silver">Manage demographics, medical history, transit, and tracker links for your enrolled children</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column: List of profiles with deep specifications */}
+              {/* Left Column: Profile details */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="glass-panel p-6 rounded-2xl border-t-2 border-brand-gold space-y-4">
                   <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start border-b border-slate-800 pb-5">
@@ -913,21 +1375,47 @@ export function GuardianDashboard({
 
                   {/* Medical notes and Allergies */}
                   <div className="space-y-2">
-                    <h5 className="text-xs font-mono font-bold uppercase text-red-400 tracking-wider flex items-center gap-1.5">
-                      <Heart className="w-4 h-4" /> Crucial Medical Telemetry
-                    </h5>
-                    <div className="p-4 bg-red-950/20 border border-red-500/20 rounded-xl">
-                      <p className="text-xs text-red-200 leading-relaxed font-sans">
-                        <strong className="text-white block font-mono text-[10px] uppercase mb-1">Medical Diagnosis / Notes:</strong>
-                        {currentLearner.medicalConditions || "No chronic alerts. Registered standard allergies. Emergency inhaler situated in front backpack pocket."}
-                      </p>
+                    <div className="flex justify-between items-center">
+                      <h5 className="text-xs font-mono font-bold uppercase text-red-400 tracking-wider flex items-center gap-1.5">
+                        <Heart className="w-4 h-4" /> Crucial Medical Information
+                      </h5>
+                      <button
+                        onClick={() => setEditingMedical(!editingMedical)}
+                        className="text-[10px] font-mono text-brand-gold hover:underline cursor-pointer uppercase"
+                      >
+                        {editingMedical ? 'Cancel' : 'Update Medical Notes'}
+                      </button>
                     </div>
+
+                    {editingMedical ? (
+                      <div className="space-y-2">
+                        <textarea
+                          rows={3}
+                          value={medicalConditionsText}
+                          onChange={(e) => setMedicalConditionsText(e.target.value)}
+                          className="w-full bg-brand-dark border border-brand-gold/25 rounded-lg px-3 py-2 text-white font-sans text-xs"
+                        />
+                        <button
+                          onClick={() => setEditingMedical(false)}
+                          className="px-3.5 py-1.5 bg-brand-gold text-brand-dark font-mono font-bold text-xs uppercase rounded cursor-pointer"
+                        >
+                          Save Medical Notes
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-red-950/20 border border-red-500/20 rounded-xl">
+                        <p className="text-xs text-red-200 leading-relaxed font-sans">
+                          <strong className="text-white block font-mono text-[10px] uppercase mb-1">Medical Diagnosis & Instructions:</strong>
+                          {medicalConditionsText}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Guardian / Next of Kin Contacts */}
                   <div className="space-y-2 pt-2">
                     <h5 className="text-xs font-mono font-bold uppercase text-brand-gold tracking-wider">
-                      Secondary Emergency Escorts & Authors
+                      Secondary Emergency Contacts
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                       <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl">
@@ -935,7 +1423,7 @@ export function GuardianDashboard({
                         <span className="text-slate-400 font-mono text-[11px]">+27 82 123 4567 · Father</span>
                       </div>
                       <div className="p-3 bg-brand-dark/40 border border-slate-800 rounded-xl">
-                        <strong className="text-white block">Lindiwe Ndlovu (Backup Escort)</strong>
+                        <strong className="text-white block">Lindiwe Ndlovu (Backup Contact)</strong>
                         <span className="text-slate-400 font-mono text-[11px]">+27 71 987 6543 · Mother</span>
                       </div>
                     </div>
@@ -945,7 +1433,7 @@ export function GuardianDashboard({
                 {/* Daily transit & attendance logs */}
                 <div className="glass-panel p-6 rounded-2xl space-y-4">
                   <h4 className="text-xs font-bold text-white uppercase tracking-widest font-mono flex items-center gap-2">
-                    <Bus className="w-4 h-4 text-brand-gold" /> Transport Manifest & Attendance Logs
+                    <Bus className="w-4 h-4 text-brand-gold" /> Transport Manifest & Attendance
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
@@ -987,7 +1475,7 @@ export function GuardianDashboard({
                     <div className="p-3 bg-brand-dark/45 border-l-2 border-emerald-400 rounded-r-xl">
                       <span className="text-[10px] text-emerald-400 font-mono block">07:30 - 14:30</span>
                       <strong className="text-white">Active School Safe-Zone Boundary</strong>
-                      <p className="text-slate-400 text-[11px] mt-0.5">Child must reside within School perimeter. Silent tracking active.</p>
+                      <p className="text-slate-400 text-[11px] mt-0.5">Child must reside within School perimeter.</p>
                     </div>
 
                     <div className="p-3 bg-brand-dark/45 border-l-2 border-brand-gold rounded-r-xl">
@@ -1021,115 +1509,6 @@ export function GuardianDashboard({
           </div>
         )}
 
-        {/* ==================================== TAB 10: SOS & EMERGENCY ==================================== */}
-        {activeTab === 'sos' && (
-          <div className="space-y-6" id="guardian-sos-tab">
-            <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-3 flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-red-500 animate-pulse" /> Emergency SOS Operations Center
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Center dispatch controls */}
-              <div className="md:col-span-2 glass-panel p-6 rounded-2xl border-2 border-red-500/20 glow-red space-y-6">
-                <div className="text-center space-y-2">
-                  <h4 className="text-lg font-bold text-white">Manual Silent Monitoring Interface</h4>
-                  <p className="text-xs text-brand-silver">
-                    Interfacing with child wearable secure audio microphone array. Streaming live to Joint Command.
-                  </p>
-                </div>
-
-                {/* Animated Waveform Simulator */}
-                <div className="h-28 bg-brand-dark/80 rounded-xl border border-red-500/30 flex items-center justify-center gap-1.5 px-6 relative overflow-hidden">
-                  <div className="absolute top-2 left-3 text-[9px] font-mono text-red-400 flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" /> LIVE SECURE AUDIT AUDIO STREAM · 44.1 KHZ POPIA PROTECTED
-                  </div>
-
-                  {/* Waveform bars */}
-                  {[40, 60, 20, 80, 50, 90, 30, 70, 40, 85, 30, 60, 75, 20, 95, 40, 65, 80, 20, 45, 90, 10, 50].map((h, idx) => (
-                    <div 
-                      key={idx} 
-                      className="bg-red-500 w-1.5 rounded-full animate-bounce" 
-                      style={{ height: `${h}%`, animationDuration: `${0.8 + (idx % 4) * 0.25}s` }} 
-                    />
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                  <button
-                    onClick={() => {
-                      onTriggerSOS(currentLearner);
-                      alert("TACTICAL INTERCEPT ALERT DISPATCHED: SAPS and local emergency operators have been dispatched with live telemetry coordinates!");
-                    }}
-                    className="py-3 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg glow-red cursor-pointer"
-                  >
-                    <ShieldAlert className="w-4 h-4 animate-spin" /> DISPATCH ARMED RESPONSE
-                  </button>
-
-                  <a
-                    href="tel:+2786010111"
-                    className="py-3 bg-brand-navy border border-brand-gold/30 hover:border-brand-gold text-brand-gold font-bold uppercase rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer text-center"
-                  >
-                    <Phone className="w-4 h-4" /> VOICE CALL COMMAND CENTRE
-                  </a>
-                </div>
-
-                <div className="p-4 bg-brand-dark rounded-xl border border-slate-800 text-xs text-slate-300 space-y-1 font-mono">
-                  <span className="text-brand-gold block text-[10px] uppercase">Active Silent Monitoring Policy:</span>
-                  <p className="leading-relaxed">
-                    Audio recording is protected under Section 12 of South Africa POPI Act. Files are stored on private government clouds and can only be used as evidence in active police proceedings.
-                  </p>
-                </div>
-              </div>
-
-              {/* Emergency Contacts Sidebar */}
-              <div className="space-y-6">
-                <div className="glass-panel p-5 rounded-2xl border-t-2 border-brand-gold space-y-4 text-xs">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-widest font-mono">
-                    SAPS / Emergency Hotlines
-                  </h4>
-
-                  <div className="space-y-3 font-mono">
-                    <div className="p-3 bg-brand-dark/40 rounded-xl border border-slate-850">
-                      <span className="block text-slate-400 font-sans">SAPS Flying Squad</span>
-                      <strong className="text-white text-md">10111</strong>
-                    </div>
-
-                    <div className="p-3 bg-brand-dark/40 rounded-xl border border-slate-850">
-                      <span className="block text-slate-400 font-sans">Ambulance / EMS Metro</span>
-                      <strong className="text-white text-md">10177</strong>
-                    </div>
-
-                    <div className="p-3 bg-brand-dark/40 rounded-xl border border-slate-850">
-                      <span className="block text-slate-400 font-sans">ITIS Command Hotline</span>
-                      <strong className="text-brand-gold text-md">+27 11 983 4000</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="glass-panel p-5 rounded-2xl space-y-3 text-xs">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-widest font-mono">
-                    Recent Incident Logs
-                  </h4>
-                  <div className="space-y-2 font-mono text-[10px] text-slate-400">
-                    <div className="flex justify-between border-b border-slate-850 pb-1.5">
-                      <span>07:34 AM</span>
-                      <span className="text-emerald-400">Arrived: School safe zone</span>
-                    </div>
-                    <div className="flex justify-between border-b border-slate-850 pb-1.5">
-                      <span>07:11 AM</span>
-                      <span className="text-brand-gold">Left: Home safe zone</span>
-                    </div>
-                    <div className="flex justify-between border-b border-slate-850 pb-1.5">
-                      <span>Yesterday</span>
-                      <span className="text-slate-300">Heart Rate Check OK</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* ==================================== TAB 11: MESSAGES ==================================== */}
         {activeTab === 'messages' && (
           <div className="space-y-6" id="guardian-messages-tab">
@@ -1146,7 +1525,7 @@ export function GuardianDashboard({
                     onClick={() => {
                       setParentMessages(prev => prev.map(m => m.id === msg.id ? { ...m, read: true } : m));
                     }}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs font-sans ${!msg.read ? 'bg-brand-navy border-brand-gold glow-gold' : 'bg-brand-dark/40 border-slate-850'}`}
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs font-sans cursor-pointer ${!msg.read ? 'bg-brand-navy border-brand-gold glow-gold' : 'bg-brand-dark/40 border-slate-850'}`}
                   >
                     <div className="flex justify-between items-center mb-1 font-mono">
                       <span className="font-bold text-brand-gold truncate max-w-[120px]">{msg.from}</span>
@@ -1209,7 +1588,7 @@ export function GuardianDashboard({
                   </div>
                   <button 
                     onClick={() => alert("Downloading ITIS Setup Guide...")}
-                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20"
+                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -1227,7 +1606,7 @@ export function GuardianDashboard({
                   </div>
                   <button 
                     onClick={() => alert("Downloading SAPS Guidelines...")}
-                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20"
+                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -1245,7 +1624,7 @@ export function GuardianDashboard({
                   </div>
                   <button 
                     onClick={() => alert("Downloading POPIA Agreement...")}
-                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20"
+                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -1263,7 +1642,7 @@ export function GuardianDashboard({
                   </div>
                   <button 
                     onClick={() => alert("Downloading School Indemnity Template...")}
-                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20"
+                    className="p-2 bg-brand-dark hover:bg-brand-navy-light text-brand-gold rounded border border-brand-gold/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -1298,7 +1677,7 @@ export function GuardianDashboard({
                     </p>
                     <button 
                       onClick={() => { setSupportTicketSuccess(false); setSupportDesc(''); }}
-                      className="px-3 py-1 bg-emerald-900 text-emerald-200 font-mono rounded"
+                      className="px-3 py-1 bg-emerald-900 text-emerald-200 font-mono rounded cursor-pointer"
                     >
                       File another query
                     </button>
@@ -1489,7 +1868,7 @@ export function GuardianDashboard({
         {activeTab === 'settings' && (
           <div className="space-y-6" id="guardian-settings-tab">
             <h3 className="text-md font-bold text-white uppercase tracking-wider font-mono border-b border-slate-800 pb-3 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-brand-gold" /> System Settings & Developer Controls
+              <Settings className="w-5 h-5 text-brand-gold" /> System Settings & Preferences
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-sans">
@@ -1514,8 +1893,8 @@ export function GuardianDashboard({
 
                   <div className="flex justify-between items-center pb-2 border-b border-slate-850">
                     <div>
-                      <strong className="text-white block">Critical SOS Silent Trigger Push</strong>
-                      <span className="text-[10px] text-slate-400">Always notify via SMS and Push notification on armed response dispatch</span>
+                      <strong className="text-white block">Critical SOS Alert Push</strong>
+                      <span className="text-[10px] text-slate-400">Always notify via SMS and Push notification on emergency alerts</span>
                     </div>
                     <input
                       type="checkbox"
@@ -1566,27 +1945,18 @@ export function GuardianDashboard({
                       onChange={(e) => setSimRefreshRate(e.target.value)}
                       className="w-full bg-brand-dark border border-brand-gold/20 rounded px-2.5 py-2 text-white"
                     >
-                      <option value="15s">15 Seconds (High Accuracy, battery expensive)</option>
+                      <option value="15s">15 Seconds (High Accuracy)</option>
                       <option value="30s">30 Seconds (Standard Balance)</option>
-                      <option value="60s">60 Seconds (Power-saving, long-life mode)</option>
+                      <option value="60s">60 Seconds (Power-saving mode)</option>
                     </select>
                   </div>
 
                   <div className="pt-2">
                     <button
-                      onClick={() => alert("Rotating POPI compliance encryption tokens. Key set rotated successfully.")}
-                      className="w-full py-2 bg-brand-navy-light hover:bg-brand-navy border border-brand-gold/25 text-brand-gold rounded font-bold uppercase"
+                      onClick={() => alert("Diagnostic ping initiated to wearable chip. Sync OK.")}
+                      className="w-full py-2 bg-emerald-950/40 hover:bg-emerald-950 text-emerald-300 border border-emerald-500/20 rounded font-bold uppercase cursor-pointer"
                     >
-                      🔄 ROTATE DEPLOYED SECURITY KEYS
-                    </button>
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      onClick={() => alert("Diagnostic ping initiated to wearable chip. Latency: 42ms. Sensors: OK.")}
-                      className="w-full py-2 bg-emerald-950/40 hover:bg-emerald-950 text-emerald-300 border border-emerald-500/20 rounded font-bold uppercase"
-                    >
-                      📡 PING WEARABLE HARDWARE SECURE CHIP
+                      📡 PING WEARABLE HARDWARE CHIP
                     </button>
                   </div>
                 </div>
@@ -1596,31 +1966,6 @@ export function GuardianDashboard({
         )}
 
       </main>
-
-      {/* Designated Learner Safety Intervention & Escalation Modal */}
-      {interventionLearner && (
-        <LearnerInterventionModal
-          learner={interventionLearner}
-          isOpen={!!interventionLearner}
-          onClose={() => setInterventionLearner(null)}
-          onResolveAlert={(learnerId, notes) => {
-            onAddAlert({
-              id: `al-${Date.now()}`,
-              type: 'Intervention Resolved',
-              message: notes,
-              time: new Date().toISOString(),
-              severity: 'low',
-              learnerId,
-              resolved: true
-            });
-            setInterventionLearner(null);
-          }}
-          onEscalateDispatch={(incident) => {
-            onAddIncident(incident);
-            setInterventionLearner(null);
-          }}
-        />
-      )}
     </div>
   );
 }

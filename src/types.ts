@@ -74,8 +74,30 @@ export interface IncidentTicket {
   assignedOfficer: string;
   status: 'Reported' | 'Dispatched' | 'On Scene' | 'Resolved';
   evidenceNotes: string[];
-  timeline: { time: string; description: string }[];
+  timeline: { time: string; description: string; roleScope?: string }[];
   category: string;
+
+  // Synchronized Role-Specific Workspace Fields
+  priority?: string;
+  latestVerifiedUpdate?: string;
+  guardianNotes?: string[];
+  responderEtaMinutes?: number;
+  deviceBatteryLevel?: number;
+  teacherAssigned?: string;
+  principalNotified?: boolean;
+  parentContactedStatus?: string;
+  schoolNurseStatus?: string;
+  safeRoomAssignment?: string;
+  schoolLockdownStatus?: 'Normal Operations' | 'Precautionary Lockdown' | 'Active Lockdown' | string;
+  schoolObservations?: string[];
+  cctvEvidenceCount?: number;
+  responderType?: string;
+  responderLocation?: { lat: number; lng: number };
+  responderArrivalConfirmed?: boolean;
+  gpsAccuracyMeters?: number;
+  sceneChecklist?: any;
+  resolutionChecklist?: any;
+  capturedEvidence?: { id: string; type: string; note: string; timestamp: string }[];
 }
 
 export interface SubscriptionPlan {

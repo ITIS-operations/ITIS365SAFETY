@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 import { 
   Landmark, ShieldCheck, FileCheck, BarChart3, Users, Building2, 
-  CheckCircle2, Download, Filter, Search, Award, AlertTriangle, Shield 
+  CheckCircle2, Download, Filter, Search, Award, AlertTriangle, Shield, Radio, Navigation
 } from 'lucide-react';
+import { IncidentTicket, Learner } from '../types';
+import { ResponderView } from './ResponderView';
 
-export function GovernmentPortal() {
+interface GovernmentPortalProps {
+  incidents?: IncidentTicket[];
+  learners?: Learner[];
+  onUpdateIncident?: (updatedIncident: IncidentTicket) => void;
+}
+
+export function GovernmentPortal({ 
+  incidents = [], 
+  learners = [], 
+  onUpdateIncident 
+}: GovernmentPortalProps) {
   const [selectedProvince, setSelectedProvince] = useState('Gauteng');
+  const [activeTab, setActiveTab] = useState<'oversight' | 'responder'>('oversight');
+  const [selectedIncidentId, setSelectedIncidentId] = useState<string>(incidents[0]?.id || '');
+
+  const selectedIncident = incidents.find(i => i.id === selectedIncidentId) || incidents[0];
+  const matchedLearner = learners.find(l => l.name === selectedIncident?.learnerName) || learners[0];
 
   const provinces = [
     { name: 'Gauteng', schools: 420, learners: 185000, safetyScore: 94.8, incidentsToday: 12, compliance: '100% POPIA Compliant' },
@@ -61,16 +78,61 @@ export function GovernmentPortal() {
           </div>
         </div>
 
-        <button 
-          onClick={() => alert("📄 Exporting Government Compliance & POPIA Audit Package (PDF/A format)...")}
-          className="px-4 py-2.5 bg-gradient-to-r from-brand-gold-dark to-brand-gold text-brand-dark font-mono font-bold text-xs uppercase rounded-xl shadow-lg flex items-center gap-2 cursor-pointer"
-        >
-          <Download className="w-4 h-4 text-brand-dark" />
-          Export Audit Package
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Workspace Sub-tab Switcher */}
+          <div className="flex items-center bg-brand-navy p-1 rounded-xl border border-brand-gold/30 font-mono text-xs">
+            <button
+              onClick={() => setActiveTab('oversight')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${activeTab === 'oversight' ? 'bg-brand-gold text-brand-dark' : 'text-slate-300 hover:text-white'}`}
+            >
+              National Oversight
+            </button>
+            <button
+              onClick={() => setActiveTab('responder')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'responder' ? 'bg-red-600 text-white' : 'text-slate-300 hover:text-white'}`}
+            >
+              <Navigation className="w-3.5 h-3.5" /> Responder View
+            </button>
+          </div>
+
+          <button 
+            onClick={() => alert("📄 Exporting Government Compliance & POPIA Audit Package (PDF/A format)...")}
+            className="px-4 py-2.5 bg-gradient-to-r from-brand-gold-dark to-brand-gold text-brand-dark font-mono font-bold text-xs uppercase rounded-xl shadow-lg flex items-center gap-2 cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-brand-dark" />
+            Export Audit Package
+          </button>
+        </div>
       </div>
 
-      {/* KPI Cards Grid */}
+      {activeTab === 'responder' ? (
+        <div className="space-y-4">
+          <div className="p-3 bg-brand-navy rounded-xl border border-brand-gold/30 flex items-center justify-between font-mono text-xs">
+            <span className="text-slate-300">Select Active Emergency Case to Respond:</span>
+            <select
+              value={selectedIncidentId}
+              onChange={e => setSelectedIncidentId(e.target.value)}
+              className="bg-brand-dark text-white border border-brand-gold/40 rounded px-3 py-1 font-bold focus:outline-none"
+            >
+              {incidents.map(inc => (
+                <option key={inc.id} value={inc.id}>
+                  {inc.id} - {inc.learnerName} ({inc.status})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedIncident && onUpdateIncident && (
+            <ResponderView
+              incident={selectedIncident}
+              learner={matchedLearner}
+              onUpdateIncident={onUpdateIncident}
+            />
+          )}
+        </div>
+      ) : (
+        <>
+          {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
         <div className="p-4 bg-brand-navy rounded-xl border border-slate-800 space-y-1">
           <span className="text-slate-400 text-[10px] uppercase">Connected Schools Nationwide</span>
@@ -163,6 +225,8 @@ export function GovernmentPortal() {
           ))}
         </div>
       </div>
+        </>
+      )}
 
     </div>
   );

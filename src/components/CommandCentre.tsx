@@ -17,6 +17,7 @@ interface CommandCentreProps {
   incidents: IncidentTicket[];
   onResolveIncident: (id: string, resolutionNote: string) => void;
   onUpdateIncidentStatus: (id: string, newStatus: 'Reported' | 'Dispatched' | 'On Scene' | 'Resolved') => void;
+  onUpdateIncident?: (updatedIncident: IncidentTicket) => void;
 }
 
 export function CommandCentre({ 
@@ -26,7 +27,8 @@ export function CommandCentre({
   onTriggerSOS,
   incidents, 
   onResolveIncident, 
-  onUpdateIncidentStatus 
+  onUpdateIncidentStatus,
+  onUpdateIncident 
 }: CommandCentreProps) {
   const [selectedIncidentId, setSelectedIncidentId] = useState<string>(incidents[0]?.id || '');
   const [resolutionInput, setResolutionInput] = useState('');

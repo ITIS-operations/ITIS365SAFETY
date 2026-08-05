@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { 
   TrendingUp, DollarSign, Users, Award, ShieldAlert, FileText, 
-  PieChart, BarChart2, Globe, Sparkles, Download, CheckCircle2 
+  PieChart, BarChart2, Globe, Sparkles, Download, CheckCircle2, Clock, Shield 
 } from 'lucide-react';
+import { IncidentTicket } from '../types';
 
-export function ExecutivePortal() {
+interface ExecutivePortalProps {
+  incidents?: IncidentTicket[];
+}
+
+export function ExecutivePortal({ incidents = [] }: ExecutivePortalProps) {
   const [currency] = useState<'ZAR' | 'USD'>('ZAR');
+
+  const resolvedCount = incidents.filter(i => i.status === 'Resolved').length;
+  const activeCount = incidents.filter(i => i.status !== 'Resolved').length;
+  const totalCount = incidents.length;
+  const resolutionRate = totalCount > 0 ? Math.round((resolvedCount / totalCount) * 100) : 100;
 
   const financialMetrics = {
     mrrZar: 'R 24,850,000',

@@ -7,8 +7,9 @@ import {
 } from 'lucide-react';
 import { 
   Learner, EnrolledUser, DeviceAssignment, SchoolIDCard,
-  initialEnrolledUsers, initialDevices, initialIDCards
+  initialDevices, initialIDCards
 } from '../types';
+import { authService, ProductionUserRecord } from '../services/authService';
 
 interface AdminPortalProps {
   learners: Learner[];
@@ -19,10 +20,11 @@ interface AdminPortalProps {
 export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: AdminPortalProps) {
   const [activeTab, setActiveTab] = useState<'users' | 'learners' | 'devices' | 'idcards' | 'audit'>('users');
 
-  // Enrolled Users State
-  const [users, setUsers] = useState<EnrolledUser[]>(initialEnrolledUsers);
+  // Enrolled Users State from authService
+  const [users, setUsers] = useState<ProductionUserRecord[]>(() => authService.getUsers());
   const [userSearch, setUserSearch] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState<string>('ALL');
+  const [lastEnrolledToken, setLastEnrolledToken] = useState<{ name: string; email: string; token: string } | null>(null);
 
   // Device Assignments State
   const [devices, setDevices] = useState<DeviceAssignment[]>(initialDevices);
@@ -77,33 +79,45 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
   // New Card Form State
   const [newCardLearnerId, setNewCardLearnerId] = useState<string>(learners[0]?.id || 'l1');
 
-  // Handle Add User
+  // Handle Add User / Enrollment
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUser.fullName || !newUser.email) return;
 
-    const created: EnrolledUser = {
-      id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
-      fullName: newUser.fullName,
-      email: newUser.email,
-      role: newUser.role,
-      phone: newUser.phone || '+27 82 000 0000',
-      rsaIdNumber: newUser.rsaIdNumber || '9001015800088',
-      organization: newUser.organization || 'Gauteng Safety Network',
-      status: 'Active',
-      enrolledDate: new Date().toISOString().split('T')[0]
-    };
+    const names = newUser.fullName.trim().split(' ');
+    const firstName = names[0] || newUser.fullName;
+    const lastName = names.slice(1).join(' ') || 'User';
 
-    setUsers(prev => [created, ...prev]);
-    setShowAddUserModal(false);
-    setNewUser({
-      fullName: '',
-      email: '',
-      role: 'Parent',
-      phone: '',
-      rsaIdNumber: '',
-      organization: ''
+    const res = authService.enrollUser({
+      firstName,
+      lastName,
+      rsaIdNumber: newUser.rsaIdNumber || '9001015800088',
+      email: newUser.email,
+      phone: newUser.phone || '+27 82 000 0000',
+      role: newUser.role as any,
+      organization: newUser.organization || 'Gauteng Public Safety Network',
+      enrolledBy: 'SYS_ADMIN'
     });
+
+    if (res.success && res.activationToken) {
+      setUsers(authService.getUsers());
+      setLastEnrolledToken({
+        name: newUser.fullName,
+        email: newUser.email,
+        token: res.activationToken
+      });
+      setShowAddUserModal(false);
+      setNewUser({
+        fullName: '',
+        email: '',
+        role: 'Parent',
+        phone: '',
+        rsaIdNumber: '',
+        organization: ''
+      });
+    } else {
+      alert(res.error || 'Failed to enroll user.');
+    }
   };
 
   // Handle Add Learner
@@ -428,6 +442,36 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
       {/* TAB 1: USERS & PARENT ENROLLMENT */}
       {activeTab === 'users' && (
         <div className="space-y-4">
+          {/* Enrollment Token Success Banner */}
+          {lastEnrolledToken && (
+            <div className="p-4 bg-emerald-950/90 border-2 border-emerald-500/60 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in font-mono">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                    ACCOUNT ENROLLED – ACTIVATION TOKEN GENERATED
+                  </span>
+                </div>
+                <p className="text-xs text-white">
+                  User <span className="font-bold text-brand-gold">{lastEnrolledToken.name}</span> ({lastEnrolledToken.email}) enrolled successfully.
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-[10px] text-slate-300">One-Time Activation Token:</span>
+                  <span className="px-3 py-1 bg-brand-dark text-emerald-400 font-extrabold text-sm rounded border border-emerald-500/40 tracking-widest">
+                    {lastEnrolledToken.token}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setLastEnrolledToken(null)}
+                className="px-3 py-1.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-200 text-xs font-bold rounded-lg border border-emerald-500/40 cursor-pointer self-end sm:self-center"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-brand-navy/60 p-4 rounded-xl border border-brand-gold/20">
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -469,7 +513,7 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                     <th className="p-3.5">RSA ID Number</th>
                     <th className="p-3.5">Contact Details</th>
                     <th className="p-3.5">Organization / Family</th>
-                    <th className="p-3.5">Status</th>
+                    <th className="p-3.5">Activation Status</th>
                     <th className="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -496,15 +540,43 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                       <td className="p-3.5 text-slate-300 text-[11px]">{user.phone}</td>
                       <td className="p-3.5 text-slate-300 text-[11px]">{user.organization}</td>
                       <td className="p-3.5">
-                        <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/30 rounded text-[9px] font-bold uppercase flex items-center gap-1 w-fit">
-                          <CheckCircle2 className="w-3 h-3" />
-                          {user.status}
-                        </span>
+                        {user.status === 'ACTIVE' ? (
+                          <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/30 rounded text-[9px] font-bold uppercase flex items-center gap-1 w-fit">
+                            <CheckCircle2 className="w-3 h-3" />
+                            ACTIVE
+                          </span>
+                        ) : user.status === 'INVITED' ? (
+                          <div className="space-y-1">
+                            <span className="px-2 py-0.5 bg-amber-950 text-amber-400 border border-amber-500/30 rounded text-[9px] font-bold uppercase flex items-center gap-1 w-fit">
+                              <AlertTriangle className="w-3 h-3" />
+                              INVITED (ACTIVATION PENDING)
+                            </span>
+                            {user.activationToken && (
+                              <div className="text-[10px] text-brand-gold font-bold">
+                                Token: <code className="bg-brand-dark px-1 rounded text-white">{user.activationToken}</code>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="px-2 py-0.5 bg-rose-950 text-rose-400 border border-rose-500/30 rounded text-[9px] font-bold uppercase flex items-center gap-1 w-fit">
+                            {user.status}
+                          </span>
+                        )}
                       </td>
                       <td className="p-3.5 text-right space-x-2">
-                        <button className="text-slate-400 hover:text-brand-gold text-[10px] uppercase font-bold transition-colors">
-                          Verify POPIA
-                        </button>
+                        {user.activationToken ? (
+                          <button 
+                            onClick={() => {
+                              navigator.clipboard.writeText(user.activationToken!);
+                              alert(`Activation token ${user.activationToken} copied to clipboard!`);
+                            }}
+                            className="text-brand-gold hover:underline text-[10px] uppercase font-bold cursor-pointer"
+                          >
+                            Copy Token
+                          </button>
+                        ) : (
+                          <span className="text-slate-500 text-[10px] font-bold">Verified POPIA</span>
+                        )}
                       </td>
                     </tr>
                   ))}

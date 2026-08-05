@@ -197,6 +197,10 @@ export default function App() {
     setIncidents(prev => [newIncident, ...prev]);
   };
 
+  const handleUpdateIncident = (updatedIncident: IncidentTicket) => {
+    setIncidents(prev => prev.map(inc => inc.id === updatedIncident.id ? updatedIncident : inc));
+  };
+
   const handleAddLearner = (newLearner: Learner) => {
     setLearners(prev => [newLearner, ...prev]);
   };
@@ -339,12 +343,14 @@ export default function App() {
                 learners={learners}
                 safeZones={safeZones}
                 alerts={alerts}
+                incidents={incidents}
                 onTriggerSOS={triggerSOS}
                 onAddSafeZone={handleAddSafeZone}
                 onDeleteSafeZone={handleDeleteSafeZone}
                 onUpdateLearnerStatus={handleUpdateLearnerStatus}
                 onAddAlert={handleAddAlert}
                 onAddIncident={handleNewIncidentLogged}
+                onUpdateIncident={handleUpdateIncident}
               />
             )}
 
@@ -352,9 +358,11 @@ export default function App() {
               <SchoolPortal 
                 learners={learners}
                 alerts={alerts}
+                incidents={incidents}
                 onTriggerSOS={triggerSOS}
                 onUpdateLearnerStatus={handleUpdateLearnerStatus}
                 onAddAlert={handleAddAlert}
+                onUpdateIncident={handleUpdateIncident}
               />
             )}
 
@@ -367,6 +375,7 @@ export default function App() {
                 incidents={incidents}
                 onResolveIncident={handleResolveIncident}
                 onUpdateIncidentStatus={handleUpdateIncidentStatus}
+                onUpdateIncident={handleUpdateIncident}
               />
             )}
 
@@ -375,11 +384,17 @@ export default function App() {
             )}
 
             {userRole === 'Government' && (
-              <GovernmentPortal />
+              <GovernmentPortal 
+                incidents={incidents}
+                learners={learners}
+                onUpdateIncident={handleUpdateIncident}
+              />
             )}
 
             {userRole === 'Executive' && (
-              <ExecutivePortal />
+              <ExecutivePortal 
+                incidents={incidents}
+              />
             )}
 
             {userRole === 'Admin' && (

@@ -2,18 +2,29 @@ import React, { useState } from 'react';
 import { 
   Building2, Users, AlertTriangle, Radio, Send, CheckSquare, Calendar, Bus, Watch, Search, PlusCircle, Volume2, ShieldAlert 
 } from 'lucide-react';
-import { Learner, SafetyAlert } from '../types';
+import { Learner, SafetyAlert, IncidentTicket } from '../types';
 import { LearnerInterventionModal } from './LearnerInterventionModal';
+import { SchoolIncidentView } from './SchoolIncidentView';
 
 interface SchoolPortalProps {
   learners: Learner[];
   alerts: SafetyAlert[];
+  incidents?: IncidentTicket[];
   onTriggerSOS: (learner: Learner) => void;
   onUpdateLearnerStatus: (id: string, newStatus: 'In School' | 'En Route' | 'At Home' | 'Emergency') => void;
   onAddAlert: (newAlert: SafetyAlert) => void;
+  onUpdateIncident?: (updatedIncident: IncidentTicket) => void;
 }
 
-export function SchoolPortal({ learners, alerts, onTriggerSOS, onUpdateLearnerStatus, onAddAlert }: SchoolPortalProps) {
+export function SchoolPortal({ 
+  learners, 
+  alerts, 
+  incidents = [],
+  onTriggerSOS, 
+  onUpdateLearnerStatus, 
+  onAddAlert,
+  onUpdateIncident
+}: SchoolPortalProps) {
   const [selectedLearnerForIntervention, setSelectedLearnerForIntervention] = useState<Learner | null>(null);
   const [attendanceRecords, setAttendanceRecords] = useState<Record<string, 'present' | 'absent' | 'late'>>({
     'l1': 'present',
@@ -100,6 +111,23 @@ export function SchoolPortal({ learners, alerts, onTriggerSOS, onUpdateLearnerSt
           </button>
         </div>
       </div>
+
+      {/* Synchronized School Learner Welfare Incident Workspace */}
+      {(() => {
+        const activeSchoolInc = incidents.find(inc => inc.status !== 'Resolved') || incidents[0];
+        if (activeSchoolInc && onUpdateIncident) {
+          const matchedL = learners.find(l => l.name === activeSchoolInc.learnerName) || learners[0];
+          return (
+            <SchoolIncidentView
+              incident={activeSchoolInc}
+              learner={matchedL}
+              onUpdateIncident={onUpdateIncident}
+              onUpdateLearnerStatus={onUpdateLearnerStatus}
+            />
+          );
+        }
+        return null;
+      })()}
 
       {/* School KPIs Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4" id="school-stats-kpi">
