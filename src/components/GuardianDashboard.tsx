@@ -5,6 +5,7 @@ import {
   Download, Calendar, Sliders, Volume2, HelpCircle, Phone, Heart, Info, Eye, Languages, Sparkles,
   Users, MessageSquare, FileText, CheckSquare, RefreshCw, Send, FileCheck, Clock, School
 } from 'lucide-react';
+import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import { Learner, SafeZone, SafetyAlert, SubscriptionPlan, BusTransport, IncidentTicket, mockBuses, mockSubscriptionPlans } from '../types';
 import { InteractiveRouteMap } from './InteractiveRouteMap';
 import { PremiumFeatures } from './PremiumFeatures';
@@ -158,6 +159,19 @@ export function GuardianDashboard({
       {/* Sidebar Navigation */}
       <aside className="w-full md:w-64 bg-brand-navy border-r border-brand-gold/15 flex flex-col justify-between" id="guardian-sidebar">
         <div>
+          {/* Prominent ITIS Portal Logo Header */}
+          <div className="p-4 border-b border-brand-gold/20 flex items-center gap-3 bg-brand-navy-heavy/80">
+            <img 
+              src={itisLogo} 
+              alt="ITIS Shield Logo" 
+              className="w-12 h-12 object-cover border-2 border-brand-gold rounded-full shadow-xl glow-gold shrink-0" 
+            />
+            <div>
+              <h3 className="text-xs font-bold text-white tracking-wider font-mono">ITIS GUARDIAN</h3>
+              <span className="text-[10px] text-brand-gold block font-mono">Parent Protection Portal</span>
+            </div>
+          </div>
+
           {/* Dashboard Profile Swapper */}
           <div className="p-4 border-b border-brand-gold/10">
             <label className="block text-[10px] uppercase tracking-wider text-brand-gold font-mono mb-2">Registered Children</label>

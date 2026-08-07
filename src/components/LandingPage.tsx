@@ -67,15 +67,15 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
       
       {/* Header Bar */}
       <header className="sticky top-0 z-50 bg-brand-navy-heavy/95 backdrop-blur-md border-b border-brand-gold/20 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3.5">
           <img 
             src={itisLogo} 
             alt="ITIS Official Shield" 
-            className="w-10 h-10 object-cover border-2 border-brand-gold rounded-full shadow-lg glow-gold"
+            className="w-14 h-14 sm:w-16 sm:h-16 object-cover border-2 border-brand-gold rounded-full shadow-2xl glow-gold shrink-0"
           />
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-base sm:text-lg font-bold tracking-wide text-white">ITIS Child Safety Platform</span>
+              <span className="text-base sm:text-xl font-extrabold tracking-wide text-white">ITIS Child Safety Platform</span>
               <span className="hidden md:inline-block text-[10px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded-full border border-brand-gold/30 font-medium">
                 National Protection Service
               </span>
@@ -86,29 +86,18 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           </div>
         </div>
 
-        {/* Quick Actions in Header */}
-        <div className="flex items-center gap-2.5">
-          <button 
-            onClick={() => {
-              setCareersTab('explore');
-              setIsCareersOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold text-brand-gold hover:text-white rounded-lg text-xs font-semibold font-mono transition-all cursor-pointer shadow-sm"
-          >
-            <Briefcase className="w-3.5 h-3.5 text-brand-gold" />
-            <span>Careers</span>
-          </button>
-
+        {/* Quick Actions in Header Navigation (Rebalanced without Careers) */}
+        <div className="flex items-center gap-3">
           <button 
             onClick={() => scrollToDiscover('request-demo')}
-            className="hidden sm:inline-flex items-center px-3.5 py-2 border border-brand-gold/40 hover:border-brand-gold text-brand-gold hover:text-white rounded-lg text-xs font-medium transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center px-4 py-2 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold text-brand-gold hover:text-white rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm"
           >
             Request Demonstration
           </button>
 
           <button
             onClick={() => onOpenLogin('Parent')}
-            className="px-4.5 py-2 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-bold text-xs rounded-lg shadow-md transform active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-extrabold text-xs rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
           >
             <Shield className="w-4 h-4" />
             <span>Portal Login</span>
@@ -1479,8 +1468,8 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
         {/* TOP TRUST & COMPLIANCE BADGE STRIP */}
         <div className="border-b border-brand-gold/20 bg-brand-navy/90 py-4 px-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <img src={itisLogo} alt="ITIS Logo" className="w-8 h-8 rounded-full border border-brand-gold/60 shadow-md shrink-0" />
+            <div className="flex items-center gap-3.5">
+              <img src={itisLogo} alt="ITIS Official Shield" className="w-12 h-12 rounded-full border-2 border-brand-gold shadow-xl glow-gold shrink-0 object-cover" />
               <div>
                 <span className="font-bold text-white text-sm block">Integrated Technology Intelligence & Safety (ITIS)</span>
                 <span className="text-[11px] text-slate-400 font-sans block">Protecting Every Learner. Every Journey. Every Second.</span>

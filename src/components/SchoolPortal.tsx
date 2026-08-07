@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { 
   Building2, Users, AlertTriangle, Radio, Send, CheckSquare, Calendar, Bus, Watch, Search, PlusCircle, Volume2, ShieldAlert 
 } from 'lucide-react';
+import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import { Learner, SafetyAlert, IncidentTicket } from '../types';
 import { LearnerInterventionModal } from './LearnerInterventionModal';
 import { SchoolIncidentView } from './SchoolIncidentView';
@@ -92,13 +93,20 @@ export function SchoolPortal({
       
       {/* Upper header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-navy-light pb-4">
-        <div>
-          <h2 className="text-xl font-bold font-sans tracking-wide text-white flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-brand-gold animate-pulse" /> School Management Terminal
-          </h2>
-          <p className="text-xs text-brand-silver">
-            Gauteng High & Associated Primary campuses · Safety Command Link
-          </p>
+        <div className="flex items-center gap-3.5">
+          <img 
+            src={itisLogo} 
+            alt="ITIS Official Shield" 
+            className="w-14 h-14 object-cover border-2 border-brand-gold rounded-full shadow-xl glow-gold shrink-0" 
+          />
+          <div>
+            <h2 className="text-xl font-bold font-sans tracking-wide text-white flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-brand-gold animate-pulse" /> School Management Terminal
+            </h2>
+            <p className="text-xs text-brand-silver">
+              Gauteng High & Associated Primary campuses · Safety Command Link
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2.5">

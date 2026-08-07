@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Shield, Fingerprint, Lock, Mail, AlertTriangle, Cpu, X, Key, CheckCircle2, Sliders,
-  UserCheck, ArrowRight, ShieldCheck, Check, FileText, HelpCircle, RefreshCw, Send, Settings
+  UserCheck, ArrowRight, ShieldCheck, Check, FileText, HelpCircle, RefreshCw, Send, Settings,
+  Briefcase, GraduationCap, Users, Building2
 } from 'lucide-react';
 import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import { LandingPage } from './LandingPage';
@@ -9,6 +10,7 @@ import { UserRole, DEFAULT_PERSONAS, authService, validatePasswordPolicy } from 
 import { AccountSecurityModal } from './AccountSecurityModal';
 import { AuthFlowScreens } from './AuthFlowScreens';
 import { registerFailedLoginAttempt, evaluatePasswordStrength } from '../services/identityEngine';
+import { CareersCentre } from './CareersCentre';
 
 interface LoginScreenProps {
   onLoginSuccess: (role: UserRole | 'EmergencyBypass') => void;
@@ -18,6 +20,10 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'activate' | 'reset'>('login');
   const [selectedRole, setSelectedRole] = useState<UserRole>('Parent');
+  
+  // Careers & Recruitment Modal State in Login Gateway
+  const [isCareersOpen, setIsCareersOpen] = useState(false);
+  const [careersTab, setCareersTab] = useState<'explore' | 'why-itis' | 'programmes' | 'ats'>('explore');
   
   // Login form states
   const [email, setEmail] = useState(DEFAULT_PERSONAS.Parent.email);
@@ -221,7 +227,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               <img 
                 src={itisLogo} 
                 alt="ITIS Badge Logo" 
-                className="w-14 h-14 object-cover border-2 border-brand-gold rounded-full shadow-2xl mb-2 glow-gold"
+                className="w-16 h-16 sm:w-20 sm:h-20 object-cover border-2 border-brand-gold rounded-full shadow-2xl mb-2 glow-gold"
               />
               <h2 className="text-lg font-bold tracking-wider text-white font-mono">
                 ITIS CHILD SAFETY PLATFORM
@@ -610,9 +616,65 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               </button>
             </div>
 
+            {/* Dedicated Human Resources & Careers Section in Portal Gateway */}
+            <div className="mt-4 pt-3.5 border-t border-brand-gold/20 bg-brand-dark/70 p-3.5 rounded-2xl border border-brand-gold/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5 font-mono">
+                  <Briefcase className="w-4 h-4 text-brand-gold" /> Careers & Recruitment Portal
+                </span>
+                <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 text-[10px] font-mono rounded border border-emerald-500/30">
+                  14 Active Positions
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-snug">
+                Join South Africa's next-generation child safety platform. Public access — applicants do not require a Parent or Government account to view opportunities or apply.
+              </p>
+              <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] font-mono">
+                <button
+                  type="button"
+                  onClick={() => { setCareersTab('explore'); setIsCareersOpen(true); }}
+                  className="px-2.5 py-1.5 bg-brand-navy hover:bg-brand-gold hover:text-brand-dark text-brand-gold rounded-lg border border-brand-gold/30 transition-all cursor-pointer font-bold flex items-center justify-between"
+                >
+                  <span>Open Vacancies</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setCareersTab('programmes'); setIsCareersOpen(true); }}
+                  className="px-2.5 py-1.5 bg-brand-navy hover:bg-emerald-500 hover:text-white text-emerald-400 rounded-lg border border-emerald-500/30 transition-all cursor-pointer font-bold flex items-center justify-between"
+                >
+                  <span>Graduate & Intern</span>
+                  <GraduationCap className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setCareersTab('why-itis'); setIsCareersOpen(true); }}
+                  className="hover:text-brand-gold transition-colors underline cursor-pointer"
+                >
+                  Life at ITIS & Operations
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setCareersTab('explore'); setIsCareersOpen(true); }}
+                  className="text-brand-gold font-bold hover:underline cursor-pointer flex items-center gap-1"
+                >
+                  <span>Join Talent Network</span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
+
+      {/* Public Unauthenticated Careers & Recruitment Centre */}
+      <CareersCentre
+        isOpen={isCareersOpen}
+        onClose={() => setIsCareersOpen(false)}
+        initialTab={careersTab}
+      />
 
       {/* Guardian & Enterprise User Self-Service Security Hub */}
       <AccountSecurityModal
