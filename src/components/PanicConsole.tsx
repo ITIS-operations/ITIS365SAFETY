@@ -168,7 +168,38 @@ export function PanicConsole({ learner, onCancel, onLoggedIncident }: PanicConso
           </div>
         ) : (
           /* ACTIVE SOS MONITORING ROOM */
-          <div className="w-full space-y-6" id="panic-triggered-view">
+          <div className="w-full space-y-5" id="panic-triggered-view">
+            
+            {/* 5-SECOND EMERGENCY SITUATIONAL AWARENESS BANNER */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-red-950/90 border-2 border-red-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-emergency-alert">
+              <div className="bg-slate-950/80 border border-red-500/40 p-3.5 rounded-xl">
+                <span className="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
+                  1. WHAT HAPPENED?
+                </span>
+                <p className="text-xs text-white font-bold leading-tight">SOS Beacon Triggered for {learner.name}</p>
+                <p className="text-[11px] text-slate-300 mt-1">Panic button pressed on wearable device ({learner.trackerSerial}).</p>
+              </div>
+
+              <div className="bg-slate-950/80 border border-amber-500/40 p-3.5 rounded-xl">
+                <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                  2. WHAT SHOULD I DO?
+                </span>
+                <p className="text-xs text-white font-bold leading-tight">Remain Calm & Monitor Live Feed</p>
+                <p className="text-[11px] text-slate-300 mt-1">Continuous mic stream & GPS location broadcast are active.</p>
+              </div>
+
+              <div className="bg-slate-950/80 border border-emerald-500/40 p-3.5 rounded-xl">
+                <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
+                  <Navigation className="w-3.5 h-3.5 text-emerald-400" />
+                  3. WHAT HAPPENS NEXT?
+                </span>
+                <p className="text-xs text-white font-bold leading-tight">SAPS Armed Unit & EMS Dispatched</p>
+                <p className="text-[11px] text-slate-300 mt-1">Milpark Patrol Unit J212 en route (ETA ~4.5m). Guardians alerted.</p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Left Column: Target Learner Details & Wearable Telemetry */}

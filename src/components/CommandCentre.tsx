@@ -327,22 +327,25 @@ export function CommandCentre({
       <main className="flex-1 p-6 overflow-y-auto space-y-6" id="command-centre-main">
         
         {/* Workspace Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-navy-light pb-4">
+        <div className="glass-panel p-6 rounded-2xl border-2 border-brand-gold/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] bg-brand-gold/15 text-brand-gold px-2 py-0.5 rounded border border-brand-gold/30 font-mono uppercase font-bold">
+              <span className="text-[10px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded-full border border-brand-gold/30 font-mono uppercase font-bold">
                 E09B Operational Incident Management System
               </span>
-              <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-mono uppercase font-bold">
+              <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-mono uppercase font-bold">
                 HUMAN AUTHORIZED DISPATCH
               </span>
             </div>
-            <h2 className="text-2xl font-extrabold font-sans tracking-wide text-white flex items-center gap-2 mt-1">
-              <Landmark className="w-6 h-6 text-brand-gold" /> Emergency Operations Command Centre
+            <h2 className="text-xl sm:text-2xl font-extrabold font-mono tracking-wide text-white flex items-center gap-2 mt-1.5">
+              <Landmark className="w-6 h-6 text-brand-gold" /> EMERGENCY OPERATIONS COMMAND CENTRE
             </h2>
+            <p className="text-xs text-slate-300 font-mono mt-0.5">
+              National Dispatch & Telemetry Operations · SAPS 10111 & Private Security Interoperability
+            </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="bg-brand-navy border border-brand-gold/20 px-4 py-2 rounded-xl text-xs font-mono text-brand-silver flex items-center gap-2">
               <Clock className="w-4 h-4 text-brand-gold" />
               <span>Shift SLA: <strong className="text-emerald-400 font-bold">99.8% On Target</strong></span>

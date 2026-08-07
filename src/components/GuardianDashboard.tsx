@@ -312,13 +312,18 @@ export function GuardianDashboard({
       <main className="flex-1 p-6 overflow-y-auto space-y-6" id="guardian-main-content">
         
         {/* Banner/Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-navy-light pb-4">
+        <div className="glass-panel p-6 rounded-2xl border-2 border-brand-gold/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
           <div>
-            <h2 className="text-xl font-bold font-sans tracking-wide text-white">
-              Good Morning, Guardian
-            </h2>
-            <p className="text-xs text-brand-silver">
-              Guardian Portal Active · Verified Security for <strong className="text-brand-gold">{currentLearner.name}</strong>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-extrabold font-mono tracking-wide text-white">
+                GOOD MORNING, GUARDIAN
+              </h2>
+              <span className="text-[10px] bg-brand-gold/15 text-brand-gold border border-brand-gold/30 px-2.5 py-0.5 rounded-full font-mono uppercase font-bold">
+                Parent Protection Command
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 font-mono mt-0.5">
+              Guardian Portal Active · Verified Security & Telemetry for <strong className="text-brand-gold">{currentLearner.name}</strong>
             </p>
           </div>
           
