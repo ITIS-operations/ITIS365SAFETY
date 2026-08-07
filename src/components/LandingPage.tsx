@@ -140,11 +140,11 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </button>
 
             <button
-              onClick={() => onOpenLogin('Parent')}
+              onClick={() => scrollToDiscover('portal-access')}
               className="px-6 py-3.5 bg-brand-navy border border-brand-gold/40 text-brand-gold hover:bg-brand-gold hover:text-brand-dark text-sm font-bold rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer"
             >
               <Shield className="w-4 h-4" />
-              <span>Portal Login</span>
+              <span>Portal Access</span>
             </button>
           </div>
 
@@ -290,15 +290,15 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
         </div>
 
         {/* Accordion Container */}
-        <div className="space-y-3.5">
+        <div className="space-y-2.5">
 
-          {/* SECTION 1: WHO ITIS IS */}
+          {/* SECTION 01: WHO ITIS IS */}
           <div 
             id="accordion-card-who-we-are"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'who-we-are'
-                ? 'bg-brand-navy border border-brand-gold/60 shadow-2xl ring-1 ring-brand-gold/30'
-                : 'bg-brand-navy/70 border border-brand-gold/25 hover:border-brand-gold/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -306,20 +306,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'who-we-are'}
               aria-controls="accordion-content-who-we-are"
               onClick={() => toggleSection('who-we-are')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                   01
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>Who ITIS Is</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
                       National Safety Network
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     South Africa's Premier Child Protection Network
                   </p>
                 </div>
@@ -327,10 +327,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               
               <motion.div 
                 animate={{ rotate: expandedSection === 'who-we-are' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -344,72 +344,66 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
-                    <div className="space-y-3">
-                      <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-brand-gold" />
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <div className="space-y-2">
+                      <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                        <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-brand-gold" />
                         <span>South Africa's Intelligent Child Protection Network</span>
                       </h4>
-                      <p>
-                        <strong>ITIS (Integrated Technology Intelligence & Safety)</strong> is South Africa's premier national child protection and rapid emergency response network. Built specifically to safeguard learners during daily transit, campus attendance, and community activities, ITIS unifies parents, school leaders, emergency services, and law enforcement into a compassionate, early-intervention safety net.
+                      <p className="text-slate-300 text-xs sm:text-sm">
+                        <strong className="text-white">ITIS (Integrated Technology Intelligence & Safety)</strong> is South Africa's premier national child protection and rapid emergency response network. Built specifically to safeguard learners during daily transit, campus attendance, and community activities, ITIS unifies parents, school leaders, emergency services, and law enforcement into a compassionate, early-intervention safety net.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Eye className="w-4 h-4 text-brand-gold" /> Human-Verified 24/7 Operations
+                          <Eye className="w-3.5 h-3.5 text-brand-gold" /> Human-Verified 24/7 Operations
                         </span>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-[11px] text-slate-300">
                           Every panic signal or route anomaly is evaluated in real time by trained South African safety officers at our 24/7 Command Centre before emergency dispatch.
                         </p>
                       </div>
 
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
+                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Landmark className="w-4 h-4 text-brand-gold" /> National Safety Ecosystem
+                          <Landmark className="w-3.5 h-3.5 text-brand-gold" /> National Safety Ecosystem
                         </span>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-[11px] text-slate-300">
                           Coordinated with the Department of Basic Education (DBE), SAPS, Emergency Medical Services (EMS), and accredited private security partners.
                         </p>
                       </div>
 
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
+                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Lock className="w-4 h-4 text-brand-gold" /> Privacy-First Protection
+                          <Lock className="w-3.5 h-3.5 text-brand-gold" /> Privacy-First Protection
                         </span>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-[11px] text-slate-300">
                           100% POPIA compliant (Act 4 of 2013) with role-based encryption, child data safeguards, and immutable audit logs.
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 p-3.5 bg-brand-navy-heavy rounded-xl border border-brand-gold/30 text-xs text-slate-200">
+                    <div className="flex items-center gap-2.5 p-3 bg-brand-navy-heavy rounded-xl border border-brand-gold/30 text-xs text-slate-200">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span>Empowering every parent, school principal, transport operator, and first responder with trusted situational awareness when seconds matter.</span>
                     </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* SECTION 2: THE CHILD SAFETY CHALLENGE */}
+          {/* SECTION 02: THE CHILD SAFETY CHALLENGE */}
           <div 
             id="accordion-card-the-challenge"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'the-challenge'
-                ? 'bg-brand-navy border border-red-500/60 shadow-2xl ring-1 ring-red-500/30'
-                : 'bg-brand-navy/70 border border-red-500/25 hover:border-red-500/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -417,20 +411,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'the-challenge'}
               aria-controls="accordion-content-the-challenge"
               onClick={() => toggleSection('the-challenge')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                   02
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-red-300 transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>The Child Safety Challenge</span>
-                    <span className="text-[10px] font-mono text-red-400 bg-red-950/40 px-2 py-0.5 rounded border border-red-500/30 hidden sm:inline-block">
+                    <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
                       Daily Commute Blindspots
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     Closing the critical gaps in daily learner transit & attendance
                   </p>
                 </div>
@@ -438,10 +432,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
               <motion.div 
                 animate={{ rotate: expandedSection === 'the-challenge' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-red-400 p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-red-500/30 shrink-0 group-hover:border-red-500/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -455,86 +449,80 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-red-500/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
-                    <div className="space-y-3">
-                      <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-red-400" />
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <div className="space-y-2">
+                      <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-brand-gold" />
                         <span>High-Risk Threats & Critical Vulnerabilities</span>
                       </h4>
-                      <p>
+                      <p className="text-slate-300 text-xs sm:text-sm">
                         Every day, millions of South African school children face acute risks during daily transit and school attendance. Without coordinated situational awareness, critical minutes are lost during life-threatening emergencies.
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> Kidnappings & Disappearances
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <ShieldAlert className="w-3.5 h-3.5 text-brand-gold" /> Kidnappings & Disappearances
                         </span>
-                        <p className="text-slate-400">Unmonitored transit routes create dangerous blindspots where children can go missing without immediate detection.</p>
+                        <p className="text-slate-400 text-[11px]">Unmonitored transit routes create dangerous blindspots where children can go missing without immediate detection.</p>
                       </div>
 
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-red-400" /> Unreported Absenteeism
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-brand-gold" /> Unreported Absenteeism
                         </span>
-                        <p className="text-slate-400">Manual paper roll calls mean parents and principals only discover a child hasn't arrived safely hours after school starts.</p>
+                        <p className="text-slate-400 text-[11px]">Manual paper roll calls mean parents and principals only discover a child hasn't arrived safely hours after school starts.</p>
                       </div>
 
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <Stethoscope className="w-3.5 h-3.5 text-red-400" /> Medical & Violence Emergencies
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <Stethoscope className="w-3.5 h-3.5 text-brand-gold" /> Medical & Violence Emergencies
                         </span>
-                        <p className="text-slate-400">Accidents, asthma attacks, or violence near schools suffer delayed dispatch when responders lack precise live coordinates.</p>
+                        <p className="text-slate-400 text-[11px]">Accidents, medical episodes, or violence near schools suffer delayed dispatch when responders lack precise live coordinates.</p>
                       </div>
 
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <AlertCircle className="w-3.5 h-3.5 text-red-400" /> Communication Breakdown
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <AlertCircle className="w-3.5 h-3.5 text-brand-gold" /> Communication Breakdown
                         </span>
-                        <p className="text-slate-400">Panic situations cause fragmented phone calls between panic-stricken parents, confused drivers, and busy schools.</p>
+                        <p className="text-slate-400 text-[11px]">Panic situations cause fragmented phone calls between panic-stricken parents, confused drivers, and busy schools.</p>
                       </div>
 
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <Users className="w-3.5 h-3.5 text-red-400" /> Child Exploitation & Bullying
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <Users className="w-3.5 h-3.5 text-brand-gold" /> Child Exploitation & Bullying
                         </span>
-                        <p className="text-slate-400">Off-campus transport stops without verified adult supervision increase exposure to exploitation or violence.</p>
+                        <p className="text-slate-400 text-[11px]">Off-campus transport stops without verified adult supervision increase exposure to exploitation or violence.</p>
                       </div>
 
-                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 flex items-center gap-1.5">
-                          <Compass className="w-3.5 h-3.5 text-red-400" /> Lack of Coordinated Response
+                      <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <Compass className="w-3.5 h-3.5 text-brand-gold" /> Lack of Coordinated Response
                         </span>
-                        <p className="text-slate-400">Fragmented security providers lack a central, human-verified dispatch standard dedicated strictly to child protection.</p>
+                        <p className="text-slate-400 text-[11px]">Fragmented security providers lack a central, human-verified dispatch standard dedicated strictly to child protection.</p>
                       </div>
                     </div>
 
-                    <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/30 text-xs text-slate-200">
-                      <strong>The Solution ITIS Delivers:</strong> An intelligent national network connecting parents, principals, SAPS, and EMS to eliminate transit blindspots and mobilize instant emergency response when every second matters.
+                    <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/30 text-xs text-slate-200">
+                      <strong className="text-brand-gold">The Solution ITIS Delivers:</strong> An intelligent national network connecting parents, principals, SAPS, and EMS to eliminate transit blindspots and mobilize instant emergency response when every second matters.
                     </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* SECTION 3: HOW ITIS PROTECTS EVERY JOURNEY */}
+          {/* SECTION 03: HOW ITIS PROTECTS EVERY JOURNEY */}
           <div 
             id="accordion-card-how-itis-protects"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'how-itis-protects'
-                ? 'bg-brand-navy border border-emerald-500/60 shadow-2xl ring-1 ring-emerald-500/30'
-                : 'bg-brand-navy/70 border border-emerald-500/25 hover:border-emerald-500/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -542,20 +530,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'how-itis-protects'}
               aria-controls="accordion-content-how-itis-protects"
               onClick={() => toggleSection('how-itis-protects')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                   03
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-400 transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>How ITIS Protects Every Journey</span>
-                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30 hidden sm:inline-block">
+                    <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
                       7-Step Safety Shield
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     The 7-Step Protected Journey & Smart Companion Wearables
                   </p>
                 </div>
@@ -563,10 +551,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
               <motion.div 
                 animate={{ rotate: expandedSection === 'how-itis-protects' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-emerald-400 p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-emerald-500/30 shrink-0 group-hover:border-emerald-500/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -580,79 +568,73 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-emerald-500/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
-                    <div className="space-y-3">
-                      <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <div className="space-y-2">
+                      <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-brand-gold" />
                         <span>The 7-Step Protected Journey</span>
                       </h4>
-                      <p>
+                      <p className="text-slate-300 text-xs sm:text-sm">
                         ITIS wraps each child's routine in a 7-stage complete protection ring. From morning departure to afternoon return, every key milestone is verified:
                       </p>
                     </div>
 
                     {/* 7 Step Lifecycle Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2">
                       {[
-                        { step: '1', title: 'Child Departs', desc: 'Companion wearable active', icon: '🏠' },
+                        { step: '1', title: 'Child Departs', desc: 'Wearable active', icon: '🏠' },
                         { step: '2', title: 'Transport Verified', desc: 'Boarding confirmed', icon: '🚌' },
                         { step: '3', title: 'Parent Notified', desc: 'Instant app sync', icon: '📱' },
-                        { step: '4', title: 'Campus Arrival', desc: 'Campus location verified', icon: '🏫' },
+                        { step: '4', title: 'Campus Arrival', desc: 'Location verified', icon: '🏫' },
                         { step: '5', title: 'Attendance Logged', desc: 'Roll call confirmed', icon: '✅' },
                         { step: '6', title: 'Afternoon Return', desc: 'Bus route tracked', icon: '🚸' },
-                        { step: '7', title: 'Safe at Home', desc: 'Parent arrival alert', icon: '🏡' },
+                        { step: '7', title: 'Safe at Home', desc: 'Parent alert', icon: '🏡' },
                       ].map((s) => (
-                        <div key={s.step} className="p-3 bg-brand-navy/70 rounded-xl border border-slate-800 flex flex-col justify-between space-y-1">
+                        <div key={s.step} className="p-2.5 bg-brand-navy/60 rounded-lg border border-slate-800 flex flex-col justify-between space-y-1">
                           <div className="flex items-center justify-between">
                             <span className="text-[9px] font-bold text-brand-gold bg-brand-dark px-1.5 py-0.5 rounded border border-brand-gold/20">Step {s.step}</span>
-                            <span className="text-base">{s.icon}</span>
+                            <span className="text-sm">{s.icon}</span>
                           </div>
-                          <span className="text-xs font-bold text-white block mt-1">{s.title}</span>
+                          <span className="text-[11px] font-bold text-white block mt-0.5">{s.title}</span>
                           <span className="text-[10px] text-slate-400">{s.desc}</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
-                        <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                          <Radio className="w-4 h-4" /> Wearable Panic & QR Profile
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
+                        <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
+                          <Radio className="w-3.5 h-3.5 text-brand-gold" /> Wearable Panic & QR Profile
                         </span>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-[11px] text-slate-300">
                           Water-resistant companion wearables feature a single-touch emergency button and a secure QR code for first responder medical access.
                         </p>
                       </div>
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
-                        <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                          <MapPin className="w-4 h-4" /> Campus & Home Safe Zones
+                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
+                        <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-brand-gold" /> Campus & Home Safe Zones
                         </span>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-[11px] text-slate-300">
                           Automatic location boundaries around home, school grounds, and sports fields trigger calm status updates to guardians.
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* SECTION 4: WHY SCHOOLS, PARENTS AND GOVERNMENT TRUST ITIS */}
+          {/* SECTION 04: WHY SCHOOLS, PARENTS AND GOVERNMENT TRUST ITIS */}
           <div 
             id="accordion-card-why-trust-itis"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'why-trust-itis'
-                ? 'bg-brand-navy border border-brand-gold/60 shadow-2xl ring-1 ring-brand-gold/30'
-                : 'bg-brand-navy/70 border border-brand-gold/25 hover:border-brand-gold/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -660,20 +642,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'why-trust-itis'}
               aria-controls="accordion-content-why-trust-itis"
               onClick={() => toggleSection('why-trust-itis')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                   04
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>Why Schools, Parents and Government Trust ITIS</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
-                      Multi-Stakeholder
+                      Multi-Stakeholder Trust
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     POPIA Compliance, Zero Cost to Public Schools & Government Readiness
                   </p>
                 </div>
@@ -681,10 +663,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
               <motion.div 
                 animate={{ rotate: expandedSection === 'why-trust-itis' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -698,72 +680,64 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
                     
                     {/* Top Pillars */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="p-5 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-2">
-                        <span className="text-2xl font-black text-brand-gold font-mono">100%</span>
-                        <h5 className="font-bold text-white">POPIA & Child Privacy</h5>
-                        <p className="text-xs text-slate-300">Full compliance with minor data protection regulations, role-based encryption, and sovereign local storage.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
+                        <span className="text-xl font-black text-brand-gold font-mono">100%</span>
+                        <h5 className="font-bold text-white text-xs sm:text-sm">POPIA & Child Privacy</h5>
+                        <p className="text-[11px] text-slate-300">Full compliance with minor data protection regulations, role-based encryption, and sovereign local storage.</p>
                       </div>
-                      <div className="p-5 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-2">
-                        <span className="text-2xl font-black text-brand-gold font-mono">0 RAND</span>
-                        <h5 className="font-bold text-white">School Budget Impact</h5>
-                        <p className="text-xs text-slate-300">Free platform access for public schools, subsidized via public-private safety partnerships.</p>
+                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
+                        <span className="text-xl font-black text-brand-gold font-mono">0 RAND</span>
+                        <h5 className="font-bold text-white text-xs sm:text-sm">School Budget Impact</h5>
+                        <p className="text-[11px] text-slate-300">Free platform access for public schools, subsidized via public-private safety partnerships.</p>
                       </div>
-                      <div className="p-5 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-2">
-                        <span className="text-2xl font-black text-brand-gold font-mono">24 / 7</span>
-                        <h5 className="font-bold text-white">Continuous Oversight</h5>
-                        <p className="text-xs text-slate-300">Human command centre oversight during daily commutes, school excursions, and sports events.</p>
+                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
+                        <span className="text-xl font-black text-brand-gold font-mono">24 / 7</span>
+                        <h5 className="font-bold text-white text-xs sm:text-sm">Continuous Oversight</h5>
+                        <p className="text-[11px] text-slate-300">Human command centre oversight during daily commutes, school excursions, and sports events.</p>
                       </div>
                     </div>
 
                     {/* Guiding Principles & Safety Commitment */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
                         <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-                          <Heart className="w-4 h-4 text-brand-gold" /> Our Guiding Principles
+                          <Heart className="w-3.5 h-3.5 text-brand-gold" /> Our Guiding Principles
                         </h5>
-                        <ul className="text-xs space-y-1.5 text-slate-300">
-                          <li><strong className="text-white">• Every Child Matters:</strong> Protection is a fundamental right for every learner in South Africa.</li>
+                        <ul className="text-[11px] space-y-1 text-slate-300">
+                          <li><strong className="text-white">• Every Child Matters:</strong> Protection is a fundamental right for every learner.</li>
                           <li><strong className="text-white">• Human Decisions First:</strong> Technology alerts, but trained human officers verify every emergency.</li>
-                          <li><strong className="text-white">• Technology with Purpose:</strong> Advanced GIS and AI exist strictly to serve child safety.</li>
                           <li><strong className="text-white">• Privacy by Design:</strong> Minor data is protected by sovereign encryption and POPIA standards.</li>
                           <li><strong className="text-white">• Compassion & Accountability:</strong> Immediate, empathetic family reassurance during crises.</li>
                         </ul>
                       </div>
 
-                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-emerald-500/25 space-y-2">
-                        <h5 className="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                          <ShieldCheck className="w-4 h-4 text-emerald-400" /> Our Safety Commitment
+                      <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
+                        <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+                          <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" /> Our Safety Commitment
                         </h5>
-                        <ul className="text-xs space-y-1.5 text-slate-300">
+                        <ul className="text-[11px] space-y-1 text-slate-300">
                           <li><strong className="text-white">1. Early Awareness:</strong> Detecting route delays and campus absences before they escalate.</li>
                           <li><strong className="text-white">2. Verified Information:</strong> Eliminating false alarms through operator verification.</li>
                           <li><strong className="text-white">3. Coordinated Response:</strong> Instant dispatch link to SAPS, EMS, and private security.</li>
                           <li><strong className="text-white">4. Family Reassurance:</strong> Keeping parents informed at every stage of an incident.</li>
-                          <li><strong className="text-white">5. Continuous Review:</strong> Post-incident audits to strengthen community prevention.</li>
                         </ul>
                       </div>
                     </div>
 
                     {/* Dedicated Stakeholder Value Breakdown */}
-                    <div className="space-y-3 pt-2">
-                      <h4 className="text-sm font-bold text-brand-gold uppercase tracking-wider font-mono">
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono">
                         Tailored Value for Every Partner
                       </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
                             <Heart className="w-3.5 h-3.5 text-brand-gold" /> Parents & Guardians
                           </span>
@@ -772,7 +746,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           </p>
                         </div>
 
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
                             <GraduationCap className="w-3.5 h-3.5 text-brand-gold" /> School Principals & Teachers
                           </span>
@@ -781,7 +755,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           </p>
                         </div>
 
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
                             <Landmark className="w-3.5 h-3.5 text-brand-gold" /> Provincial Education Depts
                           </span>
@@ -790,7 +764,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           </p>
                         </div>
 
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
                             <Building2 className="w-3.5 h-3.5 text-brand-gold" /> Municipalities & Transit
                           </span>
@@ -799,16 +773,16 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           </p>
                         </div>
 
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <Stethoscope className="w-3.5 h-3.5 text-red-400" /> SAPS & First Responders
+                            <Stethoscope className="w-3.5 h-3.5 text-brand-gold" /> SAPS & First Responders
                           </span>
                           <p className="text-[11px] text-slate-400">
                             Precise GPS coordinates, wearable QR medical profiles, and verified incident escalation.
                           </p>
                         </div>
 
-                        <div className="p-3.5 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-1">
+                        <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
                             <Briefcase className="w-3.5 h-3.5 text-brand-gold" /> Corporate Partners & Investors
                           </span>
@@ -819,19 +793,19 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                       </div>
                     </div>
 
-                  </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* SECTION 5: HOW A DEMONSTRATION WORKS */}
+          {/* SECTION 05: HOW A DEMONSTRATION WORKS */}
           <div 
             id="accordion-card-request-demo"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'request-demo'
-                ? 'bg-brand-navy border border-purple-500/60 shadow-2xl ring-1 ring-purple-500/30'
-                : 'bg-brand-navy/70 border border-purple-500/25 hover:border-purple-500/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -839,20 +813,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'request-demo'}
               aria-controls="accordion-content-request-demo"
               onClick={() => toggleSection('request-demo')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-400 font-mono font-bold text-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                   05
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>How a Demonstration Works</span>
-                    <span className="text-[10px] font-mono text-purple-300 bg-purple-950/40 px-2 py-0.5 rounded border border-purple-500/30 hidden sm:inline-block">
+                    <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
                       Executive Briefings
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     Schedule an executive briefing for your school, municipality, or department
                   </p>
                 </div>
@@ -860,10 +834,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
               <motion.div 
                 animate={{ rotate: expandedSection === 'request-demo' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-purple-400 p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-purple-500/30 shrink-0 group-hover:border-purple-500/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -877,108 +851,102 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-purple-500/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
                     
                     {/* Demonstration Explanation Steps */}
-                    <div className="space-y-3">
-                      <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-purple-400" />
+                    <div className="space-y-2">
+                      <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-brand-gold" />
                         <span>What Happens During an Executive Demonstration</span>
                       </h4>
                       <p className="text-xs text-slate-300">
                         Our Child Safety Specialists conduct tailored virtual or in-person briefings for School Governing Bodies (SGB), Municipalities, or Provincial Education Departments:
                       </p>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">1. Security Needs Review</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-0.5">
+                          <span className="text-xs font-bold text-brand-gold block">1. Security Needs Review</span>
                           <p className="text-[11px] text-slate-400">Analyzing learner transport routes, school gate entry points, and attendance protocols.</p>
                         </div>
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">2. Live Simulation</span>
+                        <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-0.5">
+                          <span className="text-xs font-bold text-brand-gold block">2. Live Simulation</span>
                           <p className="text-[11px] text-slate-400">Simulating wearable panic alerts, driver route tracking, and instant parent app notifications.</p>
                         </div>
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">3. Rollout & Funding Plan</span>
+                        <div className="p-3 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-0.5">
+                          <span className="text-xs font-bold text-brand-gold block">3. Rollout & Funding Plan</span>
                           <p className="text-[11px] text-slate-400">Reviewing POPIA compliance, zero-cost public school subsidies, and onboarding timelines.</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Form Section */}
-                    <div className="pt-2">
+                    <div className="pt-1">
                       {demoSubmitted ? (
-                        <div className="p-6 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl text-center space-y-3 max-w-lg mx-auto">
-                          <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-                          <h3 className="text-lg font-bold text-white">Demonstration Request Received</h3>
+                        <div className="p-5 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-center space-y-2 max-w-lg mx-auto">
+                          <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+                          <h3 className="text-base font-bold text-white">Demonstration Request Received</h3>
                           <p className="text-xs text-slate-300">
                             An ITIS Child Safety Specialist will contact your office within 24 hours to coordinate a formal presentation.
                           </p>
                           <button 
                             onClick={() => setDemoSubmitted(false)}
-                            className="px-4 py-2 bg-brand-dark border border-brand-gold/30 text-brand-gold text-xs rounded-lg hover:border-brand-gold cursor-pointer"
+                            className="px-3.5 py-1.5 bg-brand-dark border border-brand-gold/30 text-brand-gold text-xs rounded-lg hover:border-brand-gold cursor-pointer"
                           >
                             Submit Another Request
                           </button>
                         </div>
                       ) : (
-                        <form onSubmit={handleDemoSubmit} className="space-y-4 max-w-xl mx-auto bg-brand-navy/40 p-5 rounded-2xl border border-purple-500/20">
-                          <h5 className="text-xs font-bold text-white uppercase tracking-wider text-center font-mono">
+                        <form onSubmit={handleDemoSubmit} className="space-y-3 max-w-xl mx-auto bg-brand-navy/50 p-4 sm:p-5 rounded-xl border border-brand-gold/25">
+                          <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider text-center font-mono">
                             Request Executive Presentation
                           </h5>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+                              <label className="block text-[11px] font-medium text-slate-300 mb-1">Full Name</label>
                               <input 
                                 type="text" 
                                 required
                                 value={demoName}
                                 onChange={(e) => setDemoName(e.target.value)}
                                 placeholder="Dr. Sipho Mthembu"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
+                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-sans"
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Official Email</label>
+                              <label className="block text-[11px] font-medium text-slate-300 mb-1">Official Email</label>
                               <input 
                                 type="email" 
                                 required
                                 value={demoEmail}
                                 onChange={(e) => setDemoEmail(e.target.value)}
                                 placeholder="mthokozisi@live.co.za"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
+                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-sans"
                               />
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Institution / Department</label>
+                              <label className="block text-[11px] font-medium text-slate-300 mb-1">Institution / Department</label>
                               <input 
                                 type="text" 
                                 required
                                 value={demoOrganization}
                                 onChange={(e) => setDemoOrganization(e.target.value)}
                                 placeholder="Gauteng Department of Education"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
+                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-sans"
                               />
                             </div>
                             <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Role / Designation</label>
+                              <label className="block text-[11px] font-medium text-slate-300 mb-1">Role / Designation</label>
                               <select
                                 value={demoRole}
                                 onChange={(e) => setDemoRole(e.target.value)}
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
+                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-sans"
                               >
                                 <option>School Principal / SGB Member</option>
                                 <option>Government Official / Administrator</option>
@@ -990,145 +958,40 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           </div>
 
                           <div>
-                            <label className="block text-xs font-medium text-slate-300 mb-1">Additional Notes (Optional)</label>
+                            <label className="block text-[11px] font-medium text-slate-300 mb-1">Additional Notes (Optional)</label>
                             <textarea
                               rows={2}
                               value={demoNotes}
                               onChange={(e) => setDemoNotes(e.target.value)}
                               placeholder="e.g., Requesting briefing for 1,200 learners across 3 campuses..."
-                              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-400 font-sans resize-none"
+                              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-brand-gold font-sans resize-none"
                             />
                           </div>
 
                           <button
                             type="submit"
-                            className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer transform active:scale-95 transition-all flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-md cursor-pointer transform active:scale-98 transition-all flex items-center justify-center gap-2"
                           >
-                            <Send className="w-4 h-4" />
+                            <Send className="w-3.5 h-3.5" />
                             <span>Submit Executive Briefing Request</span>
                           </button>
                         </form>
                       )}
                     </div>
 
-                  </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* SECTION 6: CAREERS & TALENT CENTRE */}
-          <div 
-            id="accordion-card-careers-centre"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
-              expandedSection === 'careers-centre'
-                ? 'bg-brand-navy border border-brand-gold/60 shadow-2xl ring-1 ring-brand-gold/30'
-                : 'bg-brand-navy/70 border border-brand-gold/25 hover:border-brand-gold/45 hover:bg-brand-navy/90'
-            }`}
-          >
-            <button
-              id="accordion-header-careers-centre"
-              aria-expanded={expandedSection === 'careers-centre'}
-              aria-controls="accordion-content-careers-centre"
-              onClick={() => toggleSection('careers-centre')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
-            >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
-                  06
-                </span>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>Careers & Talent Opportunities</span>
-                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30 hidden sm:inline-block">
-                      Recruitment Portal
-                    </span>
-                  </h3>
-                  <p className="text-xs text-slate-400 font-sans">
-                    Join South Africa's premier public safety technology and emergency engineering team
-                  </p>
-                </div>
-              </div>
-
-              <motion.div 
-                animate={{ rotate: expandedSection === 'careers-centre' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/60 transition-colors"
-              >
-                <ChevronDown className="w-5 h-5" />
-              </motion.div>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {expandedSection === 'careers-centre' && (
-                <motion.div
-                  key="content-careers-centre"
-                  id="accordion-content-careers-centre"
-                  role="region"
-                  aria-labelledby="accordion-header-careers-centre"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
-                    
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 bg-brand-navy border border-brand-gold/30 rounded-2xl">
-                      <div className="space-y-2">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/15 text-brand-gold text-xs font-mono font-bold rounded-full">
-                          <Briefcase className="w-3.5 h-3.5" /> ITIS Careers Centre
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Protecting Every Learner Requires World-Class Talent</h4>
-                        <p className="text-xs text-slate-300 max-w-xl">
-                          We are hiring across Executive Leadership, Command Centre Dispatch, GIS Telemetry, Full-Stack Software Engineering, Fleet Operations, Cybersecurity, Emergency Coordination, Marketing, and Youth Graduate Programmes.
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
-                        <button
-                          onClick={() => {
-                            setCareersTab('explore');
-                            setIsCareersOpen(true);
-                          }}
-                          className="px-5 py-3 bg-brand-gold text-brand-dark font-extrabold text-xs rounded-xl shadow-lg hover:bg-brand-gold-dark transition-all cursor-pointer flex items-center gap-2"
-                        >
-                          <Briefcase className="w-4 h-4" />
-                          <span>View All Open Positions</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setCareersTab('programmes');
-                            setIsCareersOpen(true);
-                          }}
-                          className="px-5 py-3 bg-brand-navy border border-brand-gold/40 text-brand-gold font-bold text-xs rounded-xl hover:bg-brand-navy-heavy transition-all cursor-pointer flex items-center gap-2"
-                        >
-                          <GraduationCap className="w-4 h-4 text-emerald-400" />
-                          <span>Graduate & Youth Programmes</span>
-                        </button>
-                      </div>
-                    </div>
-
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 7: PORTAL ACCESS */}
+          {/* SECTION 06: PORTAL ACCESS */}
           <div 
             id="accordion-card-portal-access"
-            className={`rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
               expandedSection === 'portal-access'
-                ? 'bg-brand-navy border border-brand-gold/60 shadow-2xl ring-1 ring-brand-gold/30'
-                : 'bg-brand-navy/70 border border-brand-gold/25 hover:border-brand-gold/45 hover:bg-brand-navy/90'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
             }`}
           >
             <button
@@ -1136,20 +999,20 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               aria-expanded={expandedSection === 'portal-access'}
               aria-controls="accordion-content-portal-access"
               onClick={() => toggleSection('portal-access')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
             >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
-                  07
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
+                  06
                 </span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
                     <span>Portal Access</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
                       Authorized Login
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans">
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
                     Access parent, school principal, command center, or responder portals
                   </p>
                 </div>
@@ -1157,10 +1020,10 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
               <motion.div 
                 animate={{ rotate: expandedSection === 'portal-access' ? 180 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 group-hover:bg-brand-dark rounded-xl border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/60 transition-colors"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
               >
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             </button>
 
@@ -1174,342 +1037,41 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, delay: 0.03, ease: "easeOut" }}
-                    className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed"
-                  >
-                    
-                    {/* Demonstration Explanation Steps */}
-                    <div className="space-y-3">
-                      <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-purple-400" />
-                        <span>What Happens During an Executive Demonstration</span>
-                      </h4>
-                      <p className="text-xs text-slate-300">
-                        Our Child Safety Specialists conduct tailored virtual or in-person briefings for School Governing Bodies (SGB), Municipalities, or Provincial Education Departments:
-                      </p>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">1. Security Needs Review</span>
-                          <p className="text-[11px] text-slate-400">Analyzing learner transport routes, school gate entry points, and attendance protocols.</p>
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <div className="max-w-xl mx-auto text-center space-y-4 py-1">
+                      <div className="space-y-1.5">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-brand-gold/10 border border-brand-gold/30 rounded-full text-[11px] font-mono text-brand-gold">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>AUTHORIZED STAKEHOLDER PORTAL</span>
                         </div>
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">2. Live Simulation</span>
-                          <p className="text-[11px] text-slate-400">Simulating wearable panic alerts, driver route tracking, and instant parent app notifications.</p>
-                        </div>
-                        <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1">
-                          <span className="text-xs font-bold text-purple-300 block">3. Rollout & Funding Plan</span>
-                          <p className="text-[11px] text-slate-400">Reviewing POPIA compliance, zero-cost public school subsidies, and onboarding timelines.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Form Section */}
-                    <div className="pt-2">
-                      {demoSubmitted ? (
-                        <div className="p-6 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl text-center space-y-3 max-w-lg mx-auto">
-                          <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-                          <h3 className="text-lg font-bold text-white">Demonstration Request Received</h3>
-                          <p className="text-xs text-slate-300">
-                            An ITIS Child Safety Specialist will contact your office within 24 hours to coordinate a formal presentation.
-                          </p>
-                          <button 
-                            onClick={() => setDemoSubmitted(false)}
-                            className="px-4 py-2 bg-brand-dark border border-brand-gold/30 text-brand-gold text-xs rounded-lg hover:border-brand-gold cursor-pointer"
-                          >
-                            Submit Another Request
-                          </button>
-                        </div>
-                      ) : (
-                        <form onSubmit={handleDemoSubmit} className="space-y-4 max-w-xl mx-auto bg-brand-navy/40 p-5 rounded-2xl border border-purple-500/20">
-                          <h5 className="text-xs font-bold text-white uppercase tracking-wider text-center font-mono">
-                            Request Executive Presentation
-                          </h5>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
-                              <input 
-                                type="text" 
-                                required
-                                value={demoName}
-                                onChange={(e) => setDemoName(e.target.value)}
-                                placeholder="Dr. Sipho Mthembu"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Official Email</label>
-                              <input 
-                                type="email" 
-                                required
-                                value={demoEmail}
-                                onChange={(e) => setDemoEmail(e.target.value)}
-                                placeholder="mthokozisi@live.co.za"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Institution / Department</label>
-                              <input 
-                                type="text" 
-                                required
-                                value={demoOrganization}
-                                onChange={(e) => setDemoOrganization(e.target.value)}
-                                placeholder="Gauteng Department of Education"
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-slate-300 mb-1">Role / Designation</label>
-                              <select
-                                value={demoRole}
-                                onChange={(e) => setDemoRole(e.target.value)}
-                                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400 font-sans"
-                              >
-                                <option>School Principal / SGB Member</option>
-                                <option>Government Official / Administrator</option>
-                                <option>Public Safety Coordinator</option>
-                                <option>Emergency Services Coordinator</option>
-                                <option>Corporate Partner / Investor</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-medium text-slate-300 mb-1">Additional Notes (Optional)</label>
-                            <textarea
-                              rows={2}
-                              value={demoNotes}
-                              onChange={(e) => setDemoNotes(e.target.value)}
-                              placeholder="e.g., Requesting briefing for 1,200 learners across 3 campuses..."
-                              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-400 font-sans resize-none"
-                            />
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer transform active:scale-95 transition-all flex items-center justify-center gap-2"
-                          >
-                            <Send className="w-4 h-4" />
-                            <span>Submit Executive Briefing Request</span>
-                          </button>
-                        </form>
-                      )}
-                    </div>
-
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 6: CAREERS & TALENT CENTRE */}
-          <div className="bg-brand-navy/80 border border-brand-gold/30 rounded-2xl overflow-hidden shadow-xl transition-all">
-            <button
-              onClick={() => toggleSection('careers-centre')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group"
-            >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
-                  06
-                </span>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>Careers & Talent Opportunities</span>
-                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30 hidden sm:inline-block">
-                      Recruitment Portal
-                    </span>
-                  </h3>
-                  <p className="text-xs text-slate-400 font-sans">
-                    Join South Africa's premier public safety technology and emergency engineering team
-                  </p>
-                </div>
-              </div>
-
-              <motion.div 
-                animate={{ rotate: expandedSection === 'careers-centre' ? 180 : 0 }}
-                transition={{ duration: 0.22, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 rounded-xl border border-brand-gold/30 shrink-0"
-              >
-                <ChevronDown className="w-5 h-5" />
-              </motion.div>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {expandedSection === 'careers-centre' && (
-                <motion.div
-                  key="content-careers-centre"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <div className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed">
-                    
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 bg-brand-navy border border-brand-gold/30 rounded-2xl">
-                      <div className="space-y-2">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/15 text-brand-gold text-xs font-mono font-bold rounded-full">
-                          <Briefcase className="w-3.5 h-3.5" /> ITIS Careers Centre
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Protecting Every Learner Requires World-Class Talent</h4>
-                        <p className="text-xs text-slate-300 max-w-xl">
-                          We are hiring across Executive Leadership, Command Centre Dispatch, GIS Telemetry, Full-Stack Software Engineering, Fleet Operations, Cybersecurity, Emergency Coordination, Marketing, and Youth Graduate Programmes.
+                        <h4 className="text-lg font-bold text-white font-mono uppercase tracking-wide">
+                          Unified Safety Gateway
+                        </h4>
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                          Secure portal access for authorized parents, school principals, command centre coordinators, and emergency responders.
                         </p>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+                      <div className="pt-1 pb-1">
                         <button
-                          onClick={() => {
-                            setCareersTab('explore');
-                            setIsCareersOpen(true);
-                          }}
-                          className="px-5 py-3 bg-brand-gold text-brand-dark font-extrabold text-xs rounded-xl shadow-lg hover:bg-brand-gold-dark transition-all cursor-pointer flex items-center gap-2"
+                          onClick={() => onOpenLogin()}
+                          className="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:shadow-brand-gold/20 transform active:scale-98 transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer"
                         >
-                          <Briefcase className="w-4 h-4" />
-                          <span>View All Open Positions</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setCareersTab('programmes');
-                            setIsCareersOpen(true);
-                          }}
-                          className="px-5 py-3 bg-brand-navy border border-brand-gold/40 text-brand-gold font-bold text-xs rounded-xl hover:bg-brand-navy-heavy transition-all cursor-pointer flex items-center gap-2"
-                        >
-                          <GraduationCap className="w-4 h-4 text-emerald-400" />
-                          <span>Graduate & Youth Programmes</span>
+                          <Shield className="w-4 h-4 text-brand-dark" />
+                          <span>Portal Login</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                    </div>
 
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 7: PORTAL ACCESS */}
-          <div className="bg-brand-navy/80 border border-brand-gold/30 rounded-2xl overflow-hidden shadow-xl transition-all">
-            <button
-              onClick={() => toggleSection('portal-access')}
-              className="w-full min-h-[56px] py-4 px-5 sm:px-6 text-left flex items-center justify-between gap-4 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group"
-            >
-              <div className="flex items-center gap-3.5">
-                <span className="w-8 h-8 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-mono font-bold text-sm flex items-center justify-center shrink-0">
-                  07
-                </span>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>Portal Access</span>
-                    <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
-                      Authorized Login
-                    </span>
-                  </h3>
-                  <p className="text-xs text-slate-400 font-sans">
-                    Access parent, school principal, command center, or responder portals
-                  </p>
-                </div>
-              </div>
-
-              <motion.div 
-                animate={{ rotate: expandedSection === 'portal-access' ? 180 : 0 }}
-                transition={{ duration: 0.22, ease: "easeInOut" }}
-                className="text-brand-gold p-2 bg-brand-dark/70 rounded-xl border border-brand-gold/30 shrink-0"
-              >
-                <ChevronDown className="w-5 h-5" />
-              </motion.div>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {expandedSection === 'portal-access' && (
-                <motion.div
-                  key="content-portal-access"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <div className="p-6 sm:p-8 bg-brand-dark/95 border-t border-brand-gold/20 space-y-6 font-sans text-sm text-slate-300 leading-relaxed">
-                    <div className="text-center space-y-1.5 max-w-xl mx-auto">
-                      <h4 className="text-base font-bold text-white">Select Your Dedicated Stakeholder Workspace</h4>
-                      <p className="text-xs text-slate-400">
-                        Each stakeholder accesses a secure portal tailored to their specific safety responsibilities:
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                      <button
-                        onClick={() => onOpenLogin('Parent')}
-                        className="p-5 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold rounded-2xl text-left space-y-3 hover:bg-brand-navy-heavy transition-all cursor-pointer group shadow-lg"
-                      >
-                        <Users className="w-8 h-8 text-brand-gold group-hover:scale-110 transition-transform" />
-                        <div>
-                          <span className="font-bold text-white block text-sm">Parent / Guardian</span>
-                          <span className="text-[11px] text-slate-400 block mt-0.5">Child protection & safety notification portal</span>
-                        </div>
-                        <div className="text-[10px] text-brand-gold font-mono flex items-center gap-1 font-bold pt-1">
-                          <span>Enter Portal</span>
-                          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => onOpenLogin('School')}
-                        className="p-5 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold rounded-2xl text-left space-y-3 hover:bg-brand-navy-heavy transition-all cursor-pointer group shadow-lg"
-                      >
-                        <Building2 className="w-8 h-8 text-brand-gold group-hover:scale-110 transition-transform" />
-                        <div>
-                          <span className="font-bold text-white block text-sm">School Principal</span>
-                          <span className="text-[11px] text-slate-400 block mt-0.5">Campus attendance & roll call workspace</span>
-                        </div>
-                        <div className="text-[10px] text-brand-gold font-mono flex items-center gap-1 font-bold pt-1">
-                          <span>Enter Portal</span>
-                          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => onOpenLogin('Command')}
-                        className="p-5 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold rounded-2xl text-left space-y-3 hover:bg-brand-navy-heavy transition-all cursor-pointer group shadow-lg"
-                      >
-                        <Shield className="w-8 h-8 text-brand-gold group-hover:scale-110 transition-transform" />
-                        <div>
-                          <span className="font-bold text-white block text-sm">Safety Coordinator</span>
-                          <span className="text-[11px] text-slate-400 block mt-0.5">24/7 Command Centre live operations map</span>
-                        </div>
-                        <div className="text-[10px] text-brand-gold font-mono flex items-center gap-1 font-bold pt-1">
-                          <span>Enter Portal</span>
-                          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => onOpenLogin('Technician')}
-                        className="p-5 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold rounded-2xl text-left space-y-3 hover:bg-brand-navy-heavy transition-all cursor-pointer group shadow-lg"
-                      >
-                        <Phone className="w-8 h-8 text-red-400 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <span className="font-bold text-white block text-sm">First Responder</span>
-                          <span className="text-[11px] text-slate-400 block mt-0.5">Emergency dispatch & QR medical profile</span>
-                        </div>
-                        <div className="text-[10px] text-red-400 font-mono flex items-center gap-1 font-bold pt-1">
-                          <span>Enter Portal</span>
-                          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </button>
+                      <div className="p-3 bg-brand-navy-heavy/80 rounded-lg border border-brand-gold/20 text-[11px] text-slate-400 font-sans space-y-0.5">
+                        <span className="font-semibold text-slate-300 block">Role-Based Access Control (RBAC)</span>
+                        <p>
+                          Protected by zero-trust identity & multi-factor authentication (MFA). Authorized credentials automatically route users to their designated workspace upon login.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -1561,7 +1123,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               <Shield className="w-4 h-4 text-brand-gold" /> About ITIS
             </h4>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              ITIS is South Africa's Intelligent Child Protection Network, delivering real-time transit safeguarding, campus attendance protection, and emergency dispatch for over 2.4 million learners.
+              South Africa's Intelligent Child Protection Network, delivering real-time transit safeguarding, campus attendance protection, and emergency dispatch.
             </p>
             <ul className="space-y-2 pt-1 font-sans text-slate-300">
               <li>
@@ -1570,9 +1132,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     const el = document.getElementById('accordion-card-who-we-are');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Our Mission & Vision
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Mission & Vision
                 </button>
               </li>
               <li>
@@ -1581,7 +1143,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     const el = document.getElementById('accordion-card-why-trust-itis');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> Public Safety Consortium
                 </button>
@@ -1589,23 +1151,12 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               <li>
                 <button 
                   onClick={() => {
-                    setCareersTab('why-itis');
+                    setCareersTab('explore');
                     setIsCareersOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Executive Governance
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setSelectedLegalDoc('popia');
-                    setIsLegalOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer text-brand-gold font-medium"
-                >
-                  <ShieldCheck className="w-3 h-3" /> Child Protection Mandate
+                  <Briefcase className="w-3.5 h-3.5 text-brand-gold" /> Careers & Talent Network
                 </button>
               </li>
             </ul>
@@ -1614,92 +1165,62 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           {/* COLUMN 2: PLATFORM & PORTALS */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Building2 className="w-4 h-4 text-brand-gold" /> Platform & Portals
+              <Building2 className="w-4 h-4 text-brand-gold" /> Platform & Access
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
               <li>
                 <button 
-                  onClick={() => onOpenLogin('Guardian')}
+                  onClick={() => scrollToDiscover('portal-access')}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium group"
                 >
-                  <Heart className="w-3.5 h-3.5 text-brand-gold group-hover:scale-110 transition-transform" /> Parent & Guardian Portal
+                  <Shield className="w-3.5 h-3.5 text-brand-gold group-hover:scale-110 transition-transform" />
+                  <span>Authorized Portal Access</span>
                 </button>
               </li>
               <li>
                 <button 
-                  onClick={() => onOpenLogin('School')}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium group"
+                  onClick={() => scrollToDiscover('who-we-are')}
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <Building2 className="w-3.5 h-3.5 text-brand-gold group-hover:scale-110 transition-transform" /> School Principal Workspace
+                  <ChevronRight className="w-3 h-3 text-brand-gold" />
+                  <span>National Safety Network</span>
                 </button>
               </li>
               <li>
                 <button 
-                  onClick={() => onOpenLogin('Command')}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium group"
+                  onClick={() => scrollToDiscover('how-itis-protects')}
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <Shield className="w-3.5 h-3.5 text-brand-gold group-hover:scale-110 transition-transform" /> National Command Centre
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => onOpenLogin('Technician')}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium group"
-                >
-                  <Phone className="w-3.5 h-3.5 text-red-400 group-hover:scale-110 transition-transform" /> Emergency Responder Portal
+                  <ChevronRight className="w-3 h-3 text-brand-gold" />
+                  <span>7-Step Protected Journey</span>
                 </button>
               </li>
               <li className="pt-1">
                 <button 
-                  onClick={() => {
-                    const el = document.getElementById('accordion-card-request-demo');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToDiscover('request-demo')}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-950/80 border border-purple-500/40 text-purple-300 rounded-lg hover:bg-purple-900/80 transition-colors cursor-pointer font-mono text-[11px]"
                 >
-                  <Sparkles className="w-3 h-3 text-purple-400" /> Request Executive Briefing
+                  <Sparkles className="w-3 h-3 text-purple-400" /> Request Demonstration
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* COLUMN 3: NEWS & MEDIA HUB */}
+          {/* COLUMN 3: RESOURCES */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Newspaper className="w-4 h-4 text-brand-gold" /> News & Media Hub
+              <Newspaper className="w-4 h-4 text-brand-gold" /> Resources
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
               <li>
                 <button 
                   onClick={() => {
-                    setNewsCategory('press');
+                    setNewsCategory('all');
                     setIsNewsOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Official Press Releases
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setNewsCategory('partnerships');
-                    setIsNewsOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> School & Dept Partnerships
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setNewsCategory('product');
-                    setIsNewsOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> GIS Telemetry & V2.4 Updates
+                  <Newspaper className="w-3.5 h-3.5 text-brand-gold" /> Newsroom & Media Kit
                 </button>
               </li>
               <li>
@@ -1708,95 +1229,27 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setNewsCategory('community');
                     setIsNewsOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> Emergency Safety Guides
                 </button>
               </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setNewsCategory('all');
-                    setIsNewsOpen(true);
-                  }}
-                  className="inline-flex items-center gap-1 text-brand-gold font-bold hover:underline pt-1 cursor-pointer"
-                >
-                  <span>Explore Newsroom & Media Kit</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
+              <li className="pt-1">
+                <div className="p-2.5 bg-brand-navy-heavy rounded-xl border border-brand-gold/20 space-y-1">
+                  <span className="text-[10px] text-slate-400 block font-mono uppercase">System Availability</span>
+                  <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-mono font-bold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>24/7/365 Operational</span>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
 
-          {/* COLUMN 4: CAREERS & TALENT */}
+          {/* COLUMN 4: LEGAL & COMPLIANCE */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Briefcase className="w-4 h-4 text-brand-gold" /> Careers & Talent
-            </h4>
-            <ul className="space-y-2 font-sans text-slate-300">
-              <li>
-                <button 
-                  onClick={() => {
-                    setCareersTab('explore');
-                    setIsCareersOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium"
-                >
-                  <span>View All Open Vacancies</span>
-                  <span className="px-1.5 py-0.2 bg-emerald-950 text-emerald-400 text-[10px] font-mono rounded border border-emerald-500/30">14 Active</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setCareersTab('why-itis');
-                    setIsCareersOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Life at ITIS Safety Labs
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setCareersTab('programmes');
-                    setIsCareersOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <GraduationCap className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Youth & Graduate Academy
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setCareersTab('ats');
-                    setIsCareersOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer text-emerald-400 font-medium"
-                >
-                  <FileCheck className="w-3.5 h-3.5" /> HR Recruitment Portal
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    setCareersTab('explore');
-                    setIsCareersOpen(true);
-                  }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer text-slate-400 text-[11px]"
-                >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Join Talent Network
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* COLUMN 5: LEGAL, POPIA & COMPLIANCE */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Scale className="w-4 h-4 text-brand-gold" /> Legal & Governance
+              <Scale className="w-4 h-4 text-brand-gold" /> Legal & Compliance
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
               <li>
@@ -1805,7 +1258,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('popia');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer text-emerald-400 font-medium"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-emerald-400 font-medium"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" /> POPIA Act Compliance
                 </button>
@@ -1816,9 +1269,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('privacy');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Privacy & Child Protection
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Privacy & Child Safety
                 </button>
               </li>
               <li>
@@ -1827,7 +1280,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('terms');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> Terms of Service & SLA
                 </button>
@@ -1838,9 +1291,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('security');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Lock className="w-3 h-3 text-brand-gold" /> Security & Cryptography
+                  <Lock className="w-3.5 h-3.5 text-brand-gold" /> Security & Encryption
                 </button>
               </li>
               <li>
@@ -1849,9 +1302,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('ai-ethics');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Sparkles className="w-3 h-3 text-purple-400" /> Responsible AI Ethics
+                  <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Responsible AI Ethics
                 </button>
               </li>
               <li>
@@ -1860,7 +1313,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('accessibility');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer text-slate-400"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-400"
                 >
                   <Globe className="w-3.5 h-3.5" /> Accessibility Statement
                 </button>
@@ -1868,69 +1321,37 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </ul>
           </div>
 
-        </div>
-
-        {/* NATIONAL OPERATIONS HEADQUARTERS & DIRECT CONTACT BANNER */}
-        <div className="border-t border-brand-gold/15 bg-brand-navy/60 py-6 px-6 text-xs text-slate-300">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-brand-gold shrink-0 mt-0.5" />
-              <div className="space-y-0.5">
-                <span className="font-bold text-white block text-xs">National Command Headquarters</span>
-                <p className="text-[11px] text-slate-400">
-                  ITIS Public Safety Building, Pretoria West & Sandton Campus, Gauteng, Republic of South Africa
-                </p>
+          {/* COLUMN 5: CONTACT & DISPATCH */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <Phone className="w-4 h-4 text-brand-gold" /> Contact & Dispatch
+            </h4>
+            <div className="space-y-2.5 font-sans text-xs text-slate-300">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
+                <span className="text-[11px] text-slate-300 leading-tight">
+                  National HQ: Pretoria West & Sandton Campus, Gauteng, RSA
+                </span>
               </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 shrink-0">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-red-400 shrink-0" />
-                <div>
-                  <span className="text-[10px] text-slate-400 block font-mono uppercase">24/7 Dispatch Hotline</span>
-                  <span className="font-mono font-bold text-white text-xs">0800 365 911 / +27 11 365 0000</span>
-                </div>
+                <a href="tel:0624304906" className="font-mono text-white font-bold text-[11px] hover:text-brand-gold transition-colors">0624304906</a>
               </div>
-
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-gold shrink-0" />
-                <div>
-                  <span className="text-[10px] text-slate-400 block font-mono uppercase">Official Enquiries</span>
-                  <span className="font-mono text-brand-gold text-xs">support@itis.gov.za</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div>
-                  <span className="text-[10px] text-slate-400 block font-mono uppercase">Operations Status</span>
-                  <span className="font-mono text-emerald-400 text-xs">24/7/365 Continuous Live</span>
-                </div>
+                <a href="mailto:mthokozisi@live.co.za" className="font-mono text-brand-gold text-[11px] hover:underline">mthokozisi@live.co.za</a>
               </div>
             </div>
-
           </div>
+
         </div>
 
         {/* BOTTOM COPYRIGHT BAR */}
-        <div className="border-t border-slate-800 bg-brand-dark py-5 px-6 text-[11px] text-slate-400 font-sans">
+        <div className="border-t border-slate-800/80 bg-brand-dark py-5 px-6 text-[11px] text-slate-400 font-sans">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>© 2026 Integrated Technology Intelligence & Safety (ITIS). Republic of South Africa Public Safety Consortium. All Rights Reserved.</span>
-            </div>
-
-            <div className="flex items-center gap-3 font-mono text-[10px] text-slate-400">
-              <button onClick={() => { setSelectedLegalDoc('popia'); setIsLegalOpen(true); }} className="hover:text-brand-gold cursor-pointer">POPIA</button>
-              <span>•</span>
-              <button onClick={() => { setSelectedLegalDoc('privacy'); setIsLegalOpen(true); }} className="hover:text-brand-gold cursor-pointer">Privacy</button>
-              <span>•</span>
-              <button onClick={() => { setSelectedLegalDoc('terms'); setIsLegalOpen(true); }} className="hover:text-brand-gold cursor-pointer">Terms</button>
-              <span>•</span>
-              <button onClick={() => { setSelectedLegalDoc('security'); setIsLegalOpen(true); }} className="hover:text-brand-gold cursor-pointer">Security</button>
-              <span>•</span>
-              <button onClick={() => { setSelectedLegalDoc('accessibility'); setIsLegalOpen(true); }} className="hover:text-brand-gold cursor-pointer">Accessibility</button>
             </div>
           </div>
         </div>
@@ -2168,7 +1589,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                           <Bell className="w-4 h-4 text-brand-gold" /> Media & Official Enquiries
                         </span>
                         <p className="text-xs text-slate-300">
-                          For press interviews, broadcast assets, or provincial safety data briefs, contact media@itis.org.za
+                          For press interviews, broadcast assets, or provincial safety data briefs, contact <a href="mailto:mthokozisi@live.co.za" className="text-brand-gold font-mono hover:underline">mthokozisi@live.co.za</a> or call <a href="tel:0624304906" className="text-brand-gold font-mono hover:underline">0624304906</a>.
                         </p>
                       </div>
                       <button

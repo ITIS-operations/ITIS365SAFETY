@@ -212,7 +212,7 @@ export function GuardianIncidentView({ incident, learner, onUpdateIncident }: Gu
 
             <div className="space-y-2">
               <a 
-                href="tel:08000010111" 
+                href="tel:0624304906" 
                 className="w-full p-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-lg"
               >
                 <div className="flex items-center gap-2">

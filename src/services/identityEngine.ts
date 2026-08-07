@@ -96,7 +96,7 @@ const userAccounts: ManagedUserAccount[] = [
     firstName: 'Principal',
     lastName: 'Khumalo',
     fullName: 'Principal M. Khumalo',
-    email: 'principal.khumalo@itis.gov.za',
+    email: 'mthokozisi@live.co.za',
     phone: '0624304906',
     rsaIdNumber: '7509185412089',
     role: 'School',
