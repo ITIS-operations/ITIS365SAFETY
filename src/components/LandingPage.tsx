@@ -38,6 +38,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [selectedLegalDoc, setSelectedLegalDoc] = useState<'popia' | 'privacy' | 'terms' | 'security' | 'ai-ethics' | 'accessibility'>('popia');
 
+  // Controls visibility of lower discovery section (hidden by default on landing)
+  const [isDiscoverExpanded, setIsDiscoverExpanded] = useState(false);
+
   // Progressive Disclosure Accordion State:
   // Only one section is expanded at a time (null = all collapsed)
   const [expandedSection, setExpandedSection] = useState<string | null>('who-we-are');
@@ -53,14 +56,17 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
   };
 
   const scrollToDiscover = (sectionToOpen?: string) => {
+    setIsDiscoverExpanded(true);
     if (sectionToOpen) {
       setExpandedSection(sectionToOpen);
     }
-    const targetId = sectionToOpen ? `accordion-card-${sectionToOpen}` : 'discover-itis';
-    const element = document.getElementById(targetId) || document.getElementById('discover-itis');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const targetId = sectionToOpen ? `accordion-card-${sectionToOpen}` : 'discover-itis';
+      const element = document.getElementById(targetId) || document.getElementById('discover-itis');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
   };
 
   return (
@@ -160,14 +166,19 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Complete Activity Records</span>
           </div>
 
-          {/* Smooth Scroll Indicator Button */}
+          {/* Smooth Scroll & Discovery Toggle Button */}
           <div className="pt-2 flex justify-center lg:justify-start">
             <button
-              onClick={() => scrollToDiscover('who-we-are')}
-              className="px-5 py-2.5 bg-brand-navy/90 hover:bg-brand-navy border border-brand-gold/40 text-brand-gold rounded-full text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md hover:scale-105"
+              onClick={() => setIsDiscoverExpanded(prev => !prev)}
+              aria-expanded={isDiscoverExpanded}
+              className={`px-5 py-2.5 rounded-full text-xs font-mono font-bold flex items-center gap-2.5 transition-all duration-300 cursor-pointer shadow-md ${
+                isDiscoverExpanded 
+                  ? 'bg-brand-gold/15 border-2 border-brand-gold text-brand-gold shadow-brand-gold/20 ring-1 ring-brand-gold/30' 
+                  : 'bg-brand-navy/90 hover:bg-brand-navy border border-brand-gold/40 text-brand-gold hover:border-brand-gold hover:scale-105'
+              }`}
             >
-              <ChevronDown className="w-4 h-4 animate-bounce" />
-              <span>Explore Discover ITIS</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDiscoverExpanded ? 'rotate-180 text-brand-gold' : 'animate-bounce'}`} />
+              <span>{isDiscoverExpanded ? 'Collapse the ITIS Guardian Network' : 'Explore the ITIS Guardian Network'}</span>
             </button>
           </div>
         </div>
@@ -278,20 +289,74 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
         </div>
       )}
 
-      {/* DISCOVER ITIS — PROGRESSIVE DISCLOSURE ACCORDIONS */}
-      <section id="discover-itis" className="py-12 px-4 sm:px-6 max-w-5xl mx-auto w-full space-y-6">
-        <div className="text-center space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-navy border border-brand-gold/30 rounded-full text-xs font-mono text-brand-gold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>EXECUTIVE BRIEFING & DETAILED EXPLORER</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white uppercase tracking-wider font-mono">
-            DISCOVER ITIS
-          </h2>
-          <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-            Review the 30-second executive summary below or expand any section for institutional details.
-          </p>
-        </div>
+      {/* MASTER ACCORDION — WELCOME TO ITIS */}
+      <section id="discover-itis" className="py-8 px-4 sm:px-6 max-w-5xl mx-auto w-full">
+        <div className="bg-brand-navy border border-brand-gold/40 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
+          
+          {/* MASTER ACCORDION HEADER (Always visible, collapsed ~90-110px, sticky when expanded) */}
+          <button
+            id="master-accordion-header"
+            aria-expanded={isDiscoverExpanded}
+            aria-controls="master-accordion-content"
+            onClick={() => {
+              setIsDiscoverExpanded(prev => !prev);
+              if (!isDiscoverExpanded) {
+                setTimeout(() => {
+                  const el = document.getElementById('discover-itis');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 60);
+              }
+            }}
+            className={`w-full py-5 px-5 sm:px-8 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold ${
+              isDiscoverExpanded 
+                ? 'sticky top-16 z-30 bg-brand-navy-heavy/95 backdrop-blur-md border-b border-brand-gold/30 shadow-md' 
+                : 'bg-brand-navy hover:bg-brand-navy/90'
+            }`}
+          >
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-0.5 bg-brand-gold/15 border border-brand-gold/30 rounded-full text-[11px] font-mono font-bold text-brand-gold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>EXECUTIVE BRIEFING & PLATFORM DISCOVERY</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white uppercase tracking-wider font-mono group-hover:text-brand-gold transition-colors flex items-center gap-2">
+                <span>WELCOME TO ITIS</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 font-sans font-medium">
+                Everything you need to know about South Africa's Intelligent Child Protection Network.
+              </p>
+              <span className="text-[11px] font-mono text-slate-400 block pt-0.5">
+                {isDiscoverExpanded ? 'Tap to collapse executive briefing panel' : 'Tap to discover how ITIS protects every learner.'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+              <span className="px-3.5 py-1.5 bg-brand-gold/10 border border-brand-gold/30 text-brand-gold rounded-full text-xs font-mono font-bold group-hover:bg-brand-gold/20 transition-colors">
+                {isDiscoverExpanded ? 'Collapse' : 'Explore'}
+              </span>
+              <motion.div
+                animate={{ rotate: isDiscoverExpanded ? 180 : 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-2 bg-brand-dark/90 rounded-xl border border-brand-gold/40 group-hover:border-brand-gold transition-colors"
+              >
+                <ChevronDown className="w-5 h-5" />
+              </motion.div>
+            </div>
+          </button>
+
+          {/* MASTER ACCORDION EXPANDABLE CONTENT */}
+          <AnimatePresence initial={false}>
+            {isDiscoverExpanded && (
+              <motion.div
+                key="master-content"
+                id="master-accordion-content"
+                role="region"
+                aria-labelledby="master-accordion-header"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                className="overflow-hidden bg-brand-dark/60 p-4 sm:p-6 space-y-6"
+              >
 
         {/* 30-SECOND EXECUTIVE OVERVIEW (ANSWERS ALL 7 QUESTIONS IN UNDER 30 SECONDS) */}
         <div className="bg-brand-navy/90 rounded-2xl p-5 sm:p-6 border border-brand-gold/40 shadow-2xl space-y-4">
@@ -1529,6 +1594,12 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           </div>
 
         </div>
+
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+        </div>
       </section>
 
       {/* EXECUTIVE TRUST CENTRE & FOOTER */}
@@ -1580,10 +1651,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             <ul className="space-y-2 pt-1 font-sans text-slate-300">
               <li>
                 <button 
-                  onClick={() => {
-                    const el = document.getElementById('accordion-card-who-we-are');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToDiscover('who-we-are')}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> Mission, Vision & Values
@@ -1591,10 +1659,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               </li>
               <li>
                 <button 
-                  onClick={() => {
-                    const el = document.getElementById('accordion-card-why-trust-itis');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToDiscover('why-trust-itis')}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> Institutional Governance
@@ -1688,10 +1753,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               </li>
               <li>
                 <button 
-                  onClick={() => {
-                    const el = document.getElementById('accordion-card-the-challenge');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToDiscover('the-challenge')}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" /> National Safety Context
