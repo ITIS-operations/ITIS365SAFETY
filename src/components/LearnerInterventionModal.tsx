@@ -597,7 +597,7 @@ export function LearnerInterventionModal({
 
         {/* Footer */}
         <div className="bg-brand-dark border-t border-brand-gold/20 p-3 text-center text-[10px] text-slate-500 font-mono shrink-0">
-          Integrated Technology Intelligence & Safety (ITIS) · POPIA Child Protection Protocol E11 Enforced
+          ITIS Guardian Network · Integrated Technology Intelligence & Safety (ITIS) · POPIA Child Protection Protocol E11 Enforced
         </div>
 
       </div>

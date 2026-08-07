@@ -6,7 +6,7 @@ import {
   Maximize2, ShieldCheck, ChevronDown, ChevronRight,
   AlertTriangle, Send, Sparkles, Award, Eye, Clock, HelpCircle,
   Briefcase, GraduationCap, Scale, Stethoscope, Compass, ExternalLink, Check,
-  Newspaper, FileCheck, X, Search, Globe, ShieldAlert, BookOpen, Tag, Bell, Building, AlertCircle, Download
+  Newspaper, FileCheck, X, Search, Globe, ShieldAlert, BookOpen, Tag, Bell, Building, AlertCircle, Download, Target
 } from 'lucide-react';
 import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import itisCommandCentre from '../assets/images/itis_command_centre_1785899117210.jpg';
@@ -56,7 +56,8 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
     if (sectionToOpen) {
       setExpandedSection(sectionToOpen);
     }
-    const element = document.getElementById('discover-itis');
+    const targetId = sectionToOpen ? `accordion-card-${sectionToOpen}` : 'discover-itis';
+    const element = document.getElementById(targetId) || document.getElementById('discover-itis');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -75,13 +76,13 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           />
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-base sm:text-xl font-extrabold tracking-wide text-white">ITIS Child Safety Platform</span>
+              <span className="text-base sm:text-xl font-extrabold tracking-wide text-white">ITIS Guardian Network</span>
               <span className="hidden md:inline-block text-[10px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded-full border border-brand-gold/30 font-medium">
-                National Protection Service
+                National Protection Ecosystem
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-sans hidden sm:block">
-              Integrated Technology Intelligence & Safety · Republic of South Africa
+              Integrated Technology Intelligence & Safety (ITIS) · Republic of South Africa
             </p>
           </div>
         </div>
@@ -115,19 +116,22 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
           {/* Core Tagline */}
           <div className="space-y-1">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight uppercase font-mono">
-              Protecting Every Learner.
-            </h1>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-brand-gold leading-tight tracking-tight uppercase font-mono">
+              ITIS Guardian Network
+            </h1>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight uppercase font-mono">
+              Protecting Every Learner.
+            </h2>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-gold leading-tight tracking-tight uppercase font-mono">
               Every Journey.
-            </h1>
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-emerald-400 leading-tight tracking-tight uppercase font-mono">
+            </h2>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-emerald-400 leading-tight tracking-tight uppercase font-mono">
               Every Second.
-            </h1>
+            </h2>
           </div>
 
           <p className="text-base sm:text-lg text-slate-200 max-w-2xl font-normal leading-relaxed mx-auto lg:mx-0">
-            <strong>We protect children when every second matters.</strong> ITIS unites families, schools, scholar transport operators, emergency services, and law enforcement into one coordinated protection ecosystem — ensuring every child arrives safely, learns safely, and returns home safely.
+            ITIS Guardian Network brings together families, schools, emergency responders, and government into one intelligent child protection network that helps prevent kidnappings, disappearances, violence, and other high-risk incidents while enabling rapid, coordinated emergency response.
           </p>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
@@ -279,14 +283,169 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
         <div className="text-center space-y-2.5">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-navy border border-brand-gold/30 rounded-full text-xs font-mono text-brand-gold">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>EXPLORE ITIS CHILD PROTECTION</span>
+            <span>EXECUTIVE BRIEFING & DETAILED EXPLORER</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white uppercase tracking-wider font-mono">
             DISCOVER ITIS
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-            Tap any section below to learn how ITIS protects learners on every route and campus.
+            Review the 30-second executive summary below or expand any section for institutional details.
           </p>
+        </div>
+
+        {/* 30-SECOND EXECUTIVE OVERVIEW (ANSWERS ALL 7 QUESTIONS IN UNDER 30 SECONDS) */}
+        <div className="bg-brand-navy/90 rounded-2xl p-5 sm:p-6 border border-brand-gold/40 shadow-2xl space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-brand-gold/20 pb-3">
+            <div>
+              <span className="text-[10px] font-mono font-bold text-brand-gold bg-brand-gold/15 px-2.5 py-0.5 rounded-full border border-brand-gold/30 uppercase">
+                30-Second Executive Briefing
+              </span>
+              <h3 className="text-base sm:text-lg font-extrabold text-white font-mono mt-1">
+                7 Core Questions Answered
+              </h3>
+            </div>
+            <span className="text-[11px] text-slate-400 font-sans">
+              Instant Answers for Guardians, Principals & Government
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {/* Q1: Who is ITIS? */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-1.5 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Question 01</span>
+                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <Shield className="w-4 h-4 text-brand-gold shrink-0" />
+                  <span>Who is ITIS?</span>
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Integrated Technology Intelligence & Safety (ITIS) Guardian Network is South Africa's national child protection ecosystem.
+                </p>
+              </div>
+              <button
+                onClick={() => scrollToDiscover('who-we-are')}
+                className="text-[10px] font-mono text-brand-gold hover:underline flex items-center gap-1 pt-1 font-semibold cursor-pointer"
+              >
+                <span>Read Full Mission & Vision</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Q2: Why does it exist? */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-1.5 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Question 02</span>
+                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <Target className="w-4 h-4 text-brand-gold shrink-0" />
+                  <span>Why does it exist?</span>
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  To eliminate transit safety blindspots, prevent disappearances and kidnappings, and safeguard every learner from departure to home return.
+                </p>
+              </div>
+              <button
+                onClick={() => scrollToDiscover('who-we-are')}
+                className="text-[10px] font-mono text-brand-gold hover:underline flex items-center gap-1 pt-1 font-semibold cursor-pointer"
+              >
+                <span>Read Purpose & Core Mandate</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Q3: What problem does it solve? */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-1.5 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Question 03</span>
+                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 text-brand-gold shrink-0" />
+                  <span>What problem does it solve?</span>
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Delayed emergency response, unmonitored transit corridors, unreported absenteeism, and fragmented emergency communication.
+                </p>
+              </div>
+              <button
+                onClick={() => scrollToDiscover('the-challenge')}
+                className="text-[10px] font-mono text-brand-gold hover:underline flex items-center gap-1 pt-1 font-semibold cursor-pointer"
+              >
+                <span>Read Threat & Vulnerability Analysis</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Q4: How does it protect children? */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-1.5 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Question 04</span>
+                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>How does it protect children?</span>
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Through a 7-step verified journey, smart companion wearables with SOS panic buttons, geofenced campus safe zones, and 24/7 command center dispatch.
+                </p>
+              </div>
+              <button
+                onClick={() => scrollToDiscover('how-itis-protects')}
+                className="text-[10px] font-mono text-brand-gold hover:underline flex items-center gap-1 pt-1 font-semibold cursor-pointer"
+              >
+                <span>View 7-Step Journey & Products</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Q5: Why should I trust it? */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-1.5 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Question 05</span>
+                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <Scale className="w-4 h-4 text-brand-gold shrink-0" />
+                  <span>Why should I trust it?</span>
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  POPIA Act compliance (Act 4 of 2013), bank-grade AES-256 encryption, 30-day automatic data purge, and certified human-in-the-loop decision making.
+                </p>
+              </div>
+              <button
+                onClick={() => scrollToDiscover('why-trust-itis')}
+                className="text-[10px] font-mono text-brand-gold hover:underline flex items-center gap-1 pt-1 font-semibold cursor-pointer"
+              >
+                <span>Read 9 Institutional Trust Pillars</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Q6 & Q7: How to Request Demo & Access Portal */}
+            <div className="p-3.5 bg-brand-dark/90 rounded-xl border border-brand-gold/25 space-y-2 flex flex-col justify-between hover:border-brand-gold/50 transition-colors col-span-1 md:col-span-2 lg:col-span-1">
+              <div className="space-y-2">
+                <div>
+                  <span className="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-wider block">Questions 06 & 07</span>
+                  <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-brand-gold shrink-0" />
+                    <span>Demo & Portal Access</span>
+                  </h4>
+                  <p className="text-[11px] text-slate-300 leading-relaxed mt-0.5">
+                    Schedule an executive presentation for your school or municipality, or access your authorized portal.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5 pt-1">
+                <button
+                  onClick={() => scrollToDiscover('request-demo')}
+                  className="w-full py-1.5 bg-brand-navy border border-brand-gold/40 hover:border-brand-gold text-brand-gold hover:text-white rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer text-center"
+                >
+                  Request Demonstration Form
+                </button>
+                <button
+                  onClick={() => onOpenLogin()}
+                  className="w-full py-1.5 bg-gradient-to-r from-brand-gold-dark to-brand-gold text-brand-dark rounded-lg text-[10px] font-mono font-extrabold transition-all cursor-pointer text-center shadow-md"
+                >
+                  Portal Login Gateway
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         {/* Accordion Container */}
@@ -314,13 +473,13 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                 </span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>Who ITIS Is</span>
+                    <span>Who We Are</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
-                      National Safety Network
+                      National Ecosystem
                     </span>
                   </h3>
                   <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
-                    South Africa's Premier Child Protection Network
+                    South Africa's Intelligent Child Protection Network
                   </p>
                 </div>
               </div>
@@ -348,48 +507,78 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   className="overflow-hidden"
                 >
                   <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                         <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-brand-gold" />
                         <span>South Africa's Intelligent Child Protection Network</span>
                       </h4>
-                      <p className="text-slate-300 text-xs sm:text-sm">
-                        <strong className="text-white">ITIS (Integrated Technology Intelligence & Safety)</strong> is South Africa's premier national child protection and rapid emergency response network. Built specifically to safeguard learners during daily transit, campus attendance, and community activities, ITIS unifies parents, school leaders, emergency services, and law enforcement into a compassionate, early-intervention safety net.
+                      <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                        <strong className="text-white font-semibold">ITIS Guardian Network</strong> is an integrated national child protection ecosystem developed to help safeguard learners from kidnapping, disappearances, violence, medical emergencies, and other high-risk incidents.
+                      </p>
+                      <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        By securely connecting parents, schools, emergency responders, and government agencies, ITIS provides real-time situational awareness, verified emergency coordination, and human-centred protection throughout every learner's day.
+                      </p>
+                      <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        Every alert is supported by intelligent technology, but every critical decision remains under trained human supervision.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
-                        <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Eye className="w-3.5 h-3.5 text-brand-gold" /> Human-Verified 24/7 Operations
-                        </span>
-                        <p className="text-[11px] text-slate-300">
-                          Every panic signal or route anomaly is evaluated in real time by trained South African safety officers at our 24/7 Command Centre before emergency dispatch.
+                    {/* Mission & Vision Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/30 space-y-2">
+                        <div className="flex items-center gap-2 text-brand-gold font-mono font-bold text-xs uppercase tracking-wider">
+                          <Target className="w-4 h-4 text-brand-gold shrink-0" />
+                          <span>Our Mission</span>
+                        </div>
+                        <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                          Protecting every learner through intelligent technology, trusted partnerships, and coordinated emergency response that helps prevent kidnapping, disappearances, violence, injuries, and other high-risk incidents.
                         </p>
                       </div>
 
-                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
-                        <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Landmark className="w-3.5 h-3.5 text-brand-gold" /> National Safety Ecosystem
-                        </span>
-                        <p className="text-[11px] text-slate-300">
-                          Coordinated with the Department of Basic Education (DBE), SAPS, Emergency Medical Services (EMS), and accredited private security partners.
-                        </p>
-                      </div>
-
-                      <div className="p-3.5 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-1.5">
-                        <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-brand-gold" /> Privacy-First Protection
-                        </span>
-                        <p className="text-[11px] text-slate-300">
-                          100% POPIA compliant (Act 4 of 2013) with role-based encryption, child data safeguards, and immutable audit logs.
+                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/30 space-y-2">
+                        <div className="flex items-center gap-2 text-brand-gold font-mono font-bold text-xs uppercase tracking-wider">
+                          <Eye className="w-4 h-4 text-brand-gold shrink-0" />
+                          <span>Our Vision</span>
+                        </div>
+                        <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                          To become Africa's most trusted child protection network, ensuring every learner can travel, learn, and return home safely through intelligent technology, coordinated emergency response, and human-centred protection.
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 p-3 bg-brand-navy-heavy rounded-xl border border-brand-gold/30 text-xs text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Empowering every parent, school principal, transport operator, and first responder with trusted situational awareness when seconds matter.</span>
+                    {/* Core Values */}
+                    <div className="space-y-2.5 pt-1">
+                      <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+                        <Heart className="w-3.5 h-3.5 text-brand-gold" />
+                        <span>Our Core Values</span>
+                      </h5>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          'Every Learner',
+                          'Human First',
+                          'Integrity',
+                          'Accountability',
+                          'Rapid Response',
+                          'Innovation',
+                          'Partnership',
+                          'Privacy',
+                          'Trust',
+                          'Continuous Protection'
+                        ].map((val) => (
+                          <span 
+                            key={val} 
+                            className="px-3 py-1 bg-brand-navy/90 text-slate-200 rounded-lg border border-brand-gold/30 text-xs font-medium hover:border-brand-gold/60 transition-colors"
+                          >
+                            {val}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-brand-navy-heavy rounded-xl border border-brand-gold/40 text-center space-y-1 shadow-inner">
+                      <p className="text-brand-gold font-mono font-bold text-xs sm:text-sm tracking-wider uppercase">
+                        Protecting Every Learner. Every Journey. Every Second.
+                      </p>
                     </div>
                   </div>
                 </motion.div>
@@ -419,13 +608,13 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                 </span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>The Child Safety Challenge</span>
+                    <span>The Child Protection Imperative</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
-                      Daily Commute Blindspots
+                      National Ecosystem
                     </span>
                   </h3>
                   <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
-                    Closing the critical gaps in daily learner transit & attendance
+                    Closing critical safety blindspots through early detection & human verification
                   </p>
                 </div>
               </div>
@@ -628,7 +817,204 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </AnimatePresence>
           </div>
 
-          {/* SECTION 04: WHY SCHOOLS, PARENTS AND GOVERNMENT TRUST ITIS */}
+          {/* SECTION 04: UNIFIED ITIS PRODUCT ARCHITECTURE */}
+          <div 
+            id="accordion-card-product-architecture"
+            className={`rounded-xl overflow-hidden transition-all duration-300 ${
+              expandedSection === 'product-architecture'
+                ? 'bg-brand-navy border border-brand-gold/60 shadow-lg ring-1 ring-brand-gold/20'
+                : 'bg-brand-navy/60 border border-brand-gold/20 hover:border-brand-gold/40 hover:bg-brand-navy/80'
+            }`}
+          >
+            <button
+              id="accordion-header-product-architecture"
+              aria-expanded={expandedSection === 'product-architecture'}
+              aria-controls="accordion-content-product-architecture"
+              onClick={() => toggleSection('product-architecture')}
+              className="w-full py-3.5 px-4 sm:px-5 text-left flex items-center justify-between gap-3 bg-brand-navy-heavy hover:bg-brand-navy transition-colors cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
+                  04
+                </span>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
+                    <span>ITIS Product Architecture</span>
+                    <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
+                      Unified Product Suite
+                    </span>
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
+                    Master Brand, Platform & Unified Product Suite
+                  </p>
+                </div>
+              </div>
+
+              <motion.div 
+                animate={{ rotate: expandedSection === 'product-architecture' ? 180 : 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="text-brand-gold p-1.5 bg-brand-dark/80 group-hover:bg-brand-dark rounded-lg border border-brand-gold/30 shrink-0 group-hover:border-brand-gold/50 transition-colors"
+              >
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+              </motion.div>
+            </button>
+
+            <AnimatePresence initial={false}>
+              {expandedSection === 'product-architecture' && (
+                <motion.div
+                  key="content-product-architecture"
+                  id="accordion-content-product-architecture"
+                  role="region"
+                  aria-labelledby="accordion-header-product-architecture"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    
+                    {/* Master Brand & Platform Box */}
+                    <div className="p-4 bg-brand-navy/90 rounded-xl border border-brand-gold/40 space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-brand-gold block font-bold">
+                            Master Brand
+                          </span>
+                          <h4 className="text-xl font-black text-white font-mono flex items-center gap-2">
+                            <span>ITIS</span>
+                            <span className="text-xs font-sans text-slate-300 font-normal">
+                              (Integrated Technology Intelligence & Safety)
+                            </span>
+                          </h4>
+                          <p className="text-xs text-slate-300">
+                            The official national umbrella standard for South Africa's public safety technology.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1 border-t md:border-t-0 md:border-l border-brand-gold/20 pt-3 md:pt-0 md:pl-4">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-brand-gold block font-bold">
+                            Ecosystem Platform
+                          </span>
+                          <h4 className="text-xl font-black text-brand-gold font-mono flex items-center gap-2">
+                            <span>ITIS Guardian Network</span>
+                          </h4>
+                          <p className="text-xs text-slate-300">
+                            The central protective cloud intelligence layer unifying families, schools, first responders, and government.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Products Grid Header */}
+                    <div className="space-y-1">
+                      <h4 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-brand-gold" />
+                        <span>Unified Products Suite</span>
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        All products share one enterprise design system, consistent typography, and unified role-based navigation.
+                      </p>
+                    </div>
+
+                    {/* 9 Products Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {[
+                        {
+                          name: 'ITIS Parent',
+                          role: 'Family Protection Portal',
+                          desc: 'Real-time learner tracking, geofence boundary alerts, arrival notifications, and instant emergency panic triggering for guardians.',
+                          icon: Heart
+                        },
+                        {
+                          name: 'ITIS School',
+                          role: 'Campus Safety & Roll-Call',
+                          desc: 'Automated digital attendance, campus visitor QR scanning, excursion safety logs, and principal-to-parent broadcasts.',
+                          icon: GraduationCap
+                        },
+                        {
+                          name: 'ITIS Command',
+                          role: '24/7 Central Dispatch Console',
+                          desc: 'Sub-second spatial GIS telemetry, 15-second alarm triage, operator verification, and multi-agency escalation.',
+                          icon: Radio
+                        },
+                        {
+                          name: 'ITIS Responder',
+                          role: 'Tactical Field Unit Dispatch',
+                          desc: 'Field emergency navigation, live coordinates relay, wearable medical QR scanning, and tactical scene management.',
+                          icon: Stethoscope
+                        },
+                        {
+                          name: 'ITIS Intelligence',
+                          role: 'Predictive Threat Analysis',
+                          desc: 'Route risk analysis, threat pattern modeling, early-intervention risk algorithms, and automated anomaly detection.',
+                          icon: Globe
+                        },
+                        {
+                          name: 'ITIS Verify',
+                          role: 'Zero-Trust Identity & Vetting',
+                          desc: 'POPIA-compliant child profile verification, driver vetting, role-based access tokens, and cryptographic security.',
+                          icon: Lock
+                        },
+                        {
+                          name: 'ITIS Academy',
+                          role: 'Safety Officer Accreditation',
+                          desc: 'Accredited child protection training modules, emergency response simulations, and campus safety officer certifications.',
+                          icon: BookOpen
+                        },
+                        {
+                          name: 'ITIS Analytics',
+                          role: 'Executive Public Safety Reporting',
+                          desc: 'Provincial executive scorecards, district safety compliance metrics, SLA response time tracking, and government audit reporting.',
+                          icon: ShieldCheck
+                        },
+                        {
+                          name: 'ITIS Operations',
+                          role: 'Fleet & Wearables Lifecycle',
+                          desc: 'Scholar transport fleet telemetry, wearable device pairing, SIM card lifecycle tracking, and hardware maintenance.',
+                          icon: Building2
+                        }
+                      ].map((product) => {
+                        const IconComp = product.icon;
+                        return (
+                          <div 
+                            key={product.name}
+                            className="p-3.5 bg-brand-navy/70 rounded-xl border border-brand-gold/25 hover:border-brand-gold/60 transition-all space-y-1.5 group"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-white text-xs sm:text-sm font-mono group-hover:text-brand-gold transition-colors flex items-center gap-1.5">
+                                <IconComp className="w-4 h-4 text-brand-gold shrink-0" />
+                                {product.name}
+                              </span>
+                              <span className="text-[9px] font-mono text-brand-gold bg-brand-dark/90 px-2 py-0.5 rounded border border-brand-gold/30 uppercase">
+                                Product
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-brand-gold/90 font-medium block">
+                              {product.role}
+                            </span>
+                            <p className="text-[11px] text-slate-300 leading-snug">
+                              {product.desc}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Shared Design System Footer Commitment */}
+                    <div className="p-3.5 bg-brand-navy-heavy rounded-xl border border-brand-gold/30 text-center space-y-1">
+                      <p className="text-xs text-slate-200">
+                        <strong className="text-white font-semibold">One Enterprise Design System:</strong> Every product in the ITIS architecture shares identical typography standards, visual hierarchies, color palettes, and security rules — ensuring seamless operational continuity across every stakeholder portal.
+                      </p>
+                    </div>
+
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* SECTION 05: WHY SCHOOLS, FAMILIES AND GOVERNMENT TRUST ITIS */}
           <div 
             id="accordion-card-why-trust-itis"
             className={`rounded-xl overflow-hidden transition-all duration-300 ${
@@ -646,17 +1032,17 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             >
               <div className="flex items-center gap-3">
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
-                  04
+                  05
                 </span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
-                    <span>Why Schools, Parents and Government Trust ITIS</span>
+                    <span>Why Schools, Families and Government Trust ITIS</span>
                     <span className="text-[10px] font-mono text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded border border-brand-gold/20 hidden sm:inline-block">
-                      Multi-Stakeholder Trust
+                      Institutional Trust & Compliance
                     </span>
                   </h3>
                   <p className="text-[11px] sm:text-xs text-slate-400 font-sans">
-                    POPIA Compliance, Zero Cost to Public Schools & Government Readiness
+                    Human Verification, POPIA Compliance, End-to-End Security & Emergency Coordination
                   </p>
                 </div>
               </div>
@@ -685,61 +1071,124 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                 >
                   <div className="p-5 sm:p-6 bg-brand-dark/95 border-t border-brand-gold/20 space-y-5 font-sans text-xs sm:text-sm text-slate-300 leading-relaxed">
                     
-                    {/* Top Pillars */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
-                        <span className="text-xl font-black text-brand-gold font-mono">100%</span>
-                        <h5 className="font-bold text-white text-xs sm:text-sm">POPIA & Child Privacy</h5>
-                        <p className="text-[11px] text-slate-300">Full compliance with minor data protection regulations, role-based encryption, and sovereign local storage.</p>
-                      </div>
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
-                        <span className="text-xl font-black text-brand-gold font-mono">0 RAND</span>
-                        <h5 className="font-bold text-white text-xs sm:text-sm">School Budget Impact</h5>
-                        <p className="text-[11px] text-slate-300">Free platform access for public schools, subsidized via public-private safety partnerships.</p>
-                      </div>
-                      <div className="p-4 bg-brand-navy/60 rounded-xl border border-brand-gold/30 space-y-1">
-                        <span className="text-xl font-black text-brand-gold font-mono">24 / 7</span>
-                        <h5 className="font-bold text-white text-xs sm:text-sm">Continuous Oversight</h5>
-                        <p className="text-[11px] text-slate-300">Human command centre oversight during daily commutes, school excursions, and sports events.</p>
-                      </div>
+                    {/* Header Intro */}
+                    <div className="space-y-1 border-b border-slate-800 pb-3">
+                      <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2 font-mono">
+                        <ShieldCheck className="w-4 h-4 text-brand-gold shrink-0" />
+                        <span>Why Schools, Families and Government Trust ITIS</span>
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        ITIS Guardian Network operates under rigorous institutional governance, legal data protection standards, and human-supervised operational protocols designed for maximum safety, transparency, and accountability.
+                      </p>
                     </div>
 
-                    {/* Guiding Principles & Safety Commitment */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
-                        <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-                          <Heart className="w-3.5 h-3.5 text-brand-gold" /> Our Guiding Principles
-                        </h5>
-                        <ul className="text-[11px] space-y-1 text-slate-300">
-                          <li><strong className="text-white">• Every Child Matters:</strong> Protection is a fundamental right for every learner.</li>
-                          <li><strong className="text-white">• Human Decisions First:</strong> Technology alerts, but trained human officers verify every emergency.</li>
-                          <li><strong className="text-white">• Privacy by Design:</strong> Minor data is protected by sovereign encryption and POPIA standards.</li>
-                          <li><strong className="text-white">• Compassion & Accountability:</strong> Immediate, empathetic family reassurance during crises.</li>
-                        </ul>
-                      </div>
+                    {/* 9 Trust Pillars Grid */}
+                    <div className="space-y-2">
+                      <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono">
+                        Core Pillars of Institutional Trust
+                      </h5>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <span>Human Verified Emergency Decisions</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Every panic alert or route anomaly is evaluated in real time by trained safety officers before dispatching emergency services, preventing false alarms and ensuring accurate incident response.
+                          </p>
+                        </div>
 
-                      <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
-                        <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-                          <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" /> Our Safety Commitment
-                        </h5>
-                        <ul className="text-[11px] space-y-1 text-slate-300">
-                          <li><strong className="text-white">1. Early Awareness:</strong> Detecting route delays and campus absences before they escalate.</li>
-                          <li><strong className="text-white">2. Verified Information:</strong> Eliminating false alarms through operator verification.</li>
-                          <li><strong className="text-white">3. Coordinated Response:</strong> Instant dispatch link to SAPS, EMS, and private security.</li>
-                          <li><strong className="text-white">4. Family Reassurance:</strong> Keeping parents informed at every stage of an incident.</li>
-                        </ul>
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Scale className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>POPIA Compliant</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Fully compliant with South Africa’s Protection of Personal Information Act (Act 4 of 2013), safeguarding all minor data with local sovereign hosting and strict data privacy protocols.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Lock className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>End-to-End Encryption</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            All location telemetry, communication feeds, and student profile records are encrypted both in transit and at rest using bank-grade cryptographic standards.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Users className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>Role-Based Access</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Cryptographically enforced permissions ensure parents view only their children, school administrators view only enrolled campus learners, and emergency responders access data strictly during active dispatches.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <FileCheck className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>Immutable Audit Trail</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Every system interaction, location check, and emergency dispatch is permanently recorded in a tamper-proof audit log for regulatory compliance, administrative transparency, and legal review.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Radio className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>24/7 Operations Centre</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Our centralized command center operates continuously year-round, monitoring transit routes, school excursions, and high-risk incidents across the country.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Landmark className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>National Emergency Coordination</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Integrated operational workflows connect school leadership, the South African Police Service (SAPS), Emergency Medical Services (EMS), and accredited private security units.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Sparkles className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>AI-Assisted Human Decision Making</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Intelligent telemetry algorithms process spatial data and detect potential anomalies, while certified human operators retain final review and decision-making authority for every critical action.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-1 hover:border-brand-gold/50 transition-colors">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono">
+                            <Shield className="w-4 h-4 text-brand-gold shrink-0" />
+                            <span>Trusted Partnerships</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Established operational frameworks built in alignment with educational authorities, municipal transport departments, law enforcement agencies, and accredited public safety bodies.
+                          </p>
+                        </div>
                       </div>
                     </div>
 
                     {/* Dedicated Stakeholder Value Breakdown */}
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono">
-                        Tailored Value for Every Partner
-                      </h4>
+                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                      <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono">
+                        Tailored Value for Every Stakeholder
+                      </h5>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                         <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <Heart className="w-3.5 h-3.5 text-brand-gold" /> Parents & Guardians
+                            <Heart className="w-3.5 h-3.5 text-brand-gold" /> Families & Guardians
                           </span>
                           <p className="text-[11px] text-slate-400">
                             Real-time peace of mind, arrival notifications, and immediate emergency SOS dispatch.
@@ -757,7 +1206,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
                         <div className="p-3 bg-brand-navy/40 rounded-xl border border-slate-800 space-y-0.5">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <Landmark className="w-3.5 h-3.5 text-brand-gold" /> Provincial Education Depts
+                            <Landmark className="w-3.5 h-3.5 text-brand-gold" /> Government & Education Departments
                           </span>
                           <p className="text-[11px] text-slate-400">
                             District-wide safety reports, compliance logs, and protected student records.
@@ -799,7 +1248,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </AnimatePresence>
           </div>
 
-          {/* SECTION 05: HOW A DEMONSTRATION WORKS */}
+          {/* SECTION 06: HOW A DEMONSTRATION WORKS */}
           <div 
             id="accordion-card-request-demo"
             className={`rounded-xl overflow-hidden transition-all duration-300 ${
@@ -817,7 +1266,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             >
               <div className="flex items-center gap-3">
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
-                  05
+                  06
                 </span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
@@ -985,7 +1434,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </AnimatePresence>
           </div>
 
-          {/* SECTION 06: PORTAL ACCESS */}
+          {/* SECTION 07: PORTAL ACCESS */}
           <div 
             id="accordion-card-portal-access"
             className={`rounded-xl overflow-hidden transition-all duration-300 ${
@@ -1003,7 +1452,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             >
               <div className="flex items-center gap-3">
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/10 border border-brand-gold/30 text-brand-gold font-mono font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
-                  06
+                  07
                 </span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-brand-gold transition-colors flex items-center gap-2">
@@ -1086,29 +1535,32 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
       <footer className="bg-brand-navy-heavy border-t border-brand-gold/30 font-sans">
         
         {/* TOP TRUST & COMPLIANCE BADGE STRIP */}
-        <div className="border-b border-brand-gold/20 bg-brand-navy/90 py-4 px-6">
+        <div className="border-b border-brand-gold/20 bg-brand-navy/90 py-5 px-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-3.5 text-center md:text-left">
               <img src={itisLogo} alt="ITIS Official Shield" className="w-12 h-12 rounded-full border-2 border-brand-gold shadow-xl glow-gold shrink-0 object-cover" />
               <div>
-                <span className="font-bold text-white text-sm block">Integrated Technology Intelligence & Safety (ITIS)</span>
-                <span className="text-[11px] text-slate-400 font-sans block">Protecting Every Learner. Every Journey. Every Second.</span>
+                <span className="font-bold text-white text-base block font-mono">ITIS Guardian Network</span>
+                <span className="text-xs text-brand-gold font-sans font-medium block">Integrated Technology Intelligence & Safety</span>
+                <p className="text-[11px] text-slate-300 font-sans mt-0.5 font-medium">
+                  Protecting Every Learner. Every Journey. Every Second.
+                </p>
               </div>
             </div>
 
-            {/* Trust Badges */}
+            {/* Organizational Compliance Badges */}
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] font-mono">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-gold/10 border border-brand-gold/30 text-brand-gold rounded-full">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/10 border border-brand-gold/30 text-brand-gold rounded-full font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" /> POPIA Compliant (Act 4 of 2013)
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 rounded-full">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" /> AES-256 Encrypted
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 rounded-full font-medium">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" /> End-to-End Encrypted
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/60 border border-purple-500/30 text-purple-300 rounded-full">
-                <Radio className="w-3.5 h-3.5 text-purple-300" /> 24/7 Command Dispatch
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-950/60 border border-purple-500/30 text-purple-300 rounded-full font-medium">
+                <Radio className="w-3.5 h-3.5 text-purple-300" /> 24/7 Operations Centre
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-950/60 border border-blue-500/30 text-blue-300 rounded-full">
-                <Users className="w-3.5 h-3.5 text-blue-300" /> Human-Verified AI
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-950/60 border border-blue-500/30 text-blue-300 rounded-full font-medium">
+                <Users className="w-3.5 h-3.5 text-blue-300" /> Human-Verified Operations
               </span>
             </div>
           </div>
@@ -1119,11 +1571,11 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           
           {/* COLUMN 1: ABOUT ITIS */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5 border-b border-brand-gold/20 pb-2">
               <Shield className="w-4 h-4 text-brand-gold" /> About ITIS
             </h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
-              South Africa's Intelligent Child Protection Network, delivering real-time transit safeguarding, campus attendance protection, and emergency dispatch.
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              South Africa's national child protection ecosystem, uniting families, schools, emergency services, and law enforcement in continuous learner safety.
             </p>
             <ul className="space-y-2 pt-1 font-sans text-slate-300">
               <li>
@@ -1132,9 +1584,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     const el = document.getElementById('accordion-card-who-we-are');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Mission & Vision
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Mission, Vision & Values
                 </button>
               </li>
               <li>
@@ -1143,9 +1595,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     const el = document.getElementById('accordion-card-why-trust-itis');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Public Safety Consortium
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Institutional Governance
                 </button>
               </li>
               <li>
@@ -1154,18 +1606,18 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setCareersTab('explore');
                     setIsCareersOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-brand-gold" /> Careers & Talent Network
+                  <Briefcase className="w-3.5 h-3.5 text-brand-gold" /> Careers & Talent
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* COLUMN 2: PLATFORM & PORTALS */}
+          {/* COLUMN 2: GUARDIAN NETWORK */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Building2 className="w-4 h-4 text-brand-gold" /> Platform & Access
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5 border-b border-brand-gold/20 pb-2">
+              <Building2 className="w-4 h-4 text-brand-gold" /> Guardian Network
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
               <li>
@@ -1179,11 +1631,11 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToDiscover('who-we-are')}
+                  onClick={() => scrollToDiscover('product-architecture')}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
                   <ChevronRight className="w-3 h-3 text-brand-gold" />
-                  <span>National Safety Network</span>
+                  <span>Product Suite Architecture</span>
                 </button>
               </li>
               <li>
@@ -1200,7 +1652,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   onClick={() => scrollToDiscover('request-demo')}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-950/80 border border-purple-500/40 text-purple-300 rounded-lg hover:bg-purple-900/80 transition-colors cursor-pointer font-mono text-[11px]"
                 >
-                  <Sparkles className="w-3 h-3 text-purple-400" /> Request Demonstration
+                  <Sparkles className="w-3 h-3 text-purple-400" /> Request Institutional Briefing
                 </button>
               </li>
             </ul>
@@ -1208,7 +1660,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
 
           {/* COLUMN 3: RESOURCES */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5 border-b border-brand-gold/20 pb-2">
               <Newspaper className="w-4 h-4 text-brand-gold" /> Resources
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
@@ -1220,7 +1672,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   }}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-white font-medium"
                 >
-                  <Newspaper className="w-3.5 h-3.5 text-brand-gold" /> Newsroom & Media Kit
+                  <Newspaper className="w-3.5 h-3.5 text-brand-gold" /> News & Media Kit
                 </button>
               </li>
               <li>
@@ -1229,27 +1681,38 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setNewsCategory('community');
                     setIsNewsOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Emergency Safety Guides
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Emergency Response Protocols
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    const el = document.getElementById('accordion-card-the-challenge');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
+                >
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> National Safety Context
                 </button>
               </li>
               <li className="pt-1">
                 <div className="p-2.5 bg-brand-navy-heavy rounded-xl border border-brand-gold/20 space-y-1">
-                  <span className="text-[10px] text-slate-400 block font-mono uppercase">System Availability</span>
+                  <span className="text-[10px] text-slate-400 block font-mono uppercase">Operational Readiness</span>
                   <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-mono font-bold">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>24/7/365 Operational</span>
+                    <span>24/7/365 Command Centre</span>
                   </div>
                 </div>
               </li>
             </ul>
           </div>
 
-          {/* COLUMN 4: LEGAL & COMPLIANCE */}
+          {/* COLUMN 4: LEGAL */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Scale className="w-4 h-4 text-brand-gold" /> Legal & Compliance
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5 border-b border-brand-gold/20 pb-2">
+              <Scale className="w-4 h-4 text-brand-gold" /> Legal
             </h4>
             <ul className="space-y-2 font-sans text-slate-300">
               <li>
@@ -1269,9 +1732,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('privacy');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Privacy & Child Safety
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Child Data Protection
                 </button>
               </li>
               <li>
@@ -1280,9 +1743,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('terms');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Terms of Service & SLA
+                  <ChevronRight className="w-3 h-3 text-brand-gold" /> Terms of Governance
                 </button>
               </li>
               <li>
@@ -1291,9 +1754,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('security');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <Lock className="w-3.5 h-3.5 text-brand-gold" /> Security & Encryption
+                  <Lock className="w-3.5 h-3.5 text-brand-gold" /> Security & Data Safeguards
                 </button>
               </li>
               <li>
@@ -1302,9 +1765,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     setSelectedLegalDoc('ai-ethics');
                     setIsLegalOpen(true);
                   }}
-                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-300"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Responsible AI Ethics
+                  <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Responsible Technology Ethics
                 </button>
               </li>
               <li>
@@ -1315,22 +1778,22 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                   }}
                   className="hover:text-brand-gold transition-colors flex items-center gap-1.5 cursor-pointer text-slate-400"
                 >
-                  <Globe className="w-3.5 h-3.5" /> Accessibility Statement
+                  <Globe className="w-3.5 h-3.5" /> Accessibility Commitment
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* COLUMN 5: CONTACT & DISPATCH */}
+          {/* COLUMN 5: CONTACT */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <Phone className="w-4 h-4 text-brand-gold" /> Contact & Dispatch
+            <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5 border-b border-brand-gold/20 pb-2">
+              <Phone className="w-4 h-4 text-brand-gold" /> Contact
             </h4>
             <div className="space-y-2.5 font-sans text-xs text-slate-300">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
-                <span className="text-[11px] text-slate-300 leading-tight">
-                  National HQ: Pretoria West & Sandton Campus, Gauteng, RSA
+                <span className="text-[11px] text-slate-300 leading-relaxed">
+                  National HQ: Pretoria West & Sandton Campus, Gauteng, Republic of South Africa
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -1340,6 +1803,9 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-gold shrink-0" />
                 <a href="mailto:mthokozisi@live.co.za" className="font-mono text-brand-gold text-[11px] hover:underline">mthokozisi@live.co.za</a>
+              </div>
+              <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400">
+                <span>Emergency Command Centre: Operating 24/7/365</span>
               </div>
             </div>
           </div>
@@ -1351,7 +1817,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>© 2026 Integrated Technology Intelligence & Safety (ITIS). Republic of South Africa Public Safety Consortium. All Rights Reserved.</span>
+              <span>© 2026 ITIS Guardian Network · Integrated Technology Intelligence & Safety (ITIS). Republic of South Africa Public Safety Consortium. All Rights Reserved.</span>
             </div>
           </div>
         </div>

@@ -256,7 +256,7 @@ export default function App() {
           />
           <div>
             <h1 className="text-md font-bold tracking-wider text-white flex items-center gap-2 flex-wrap font-mono">
-              ITIS CHILD SAFETY PLATFORM
+              ITIS GUARDIAN NETWORK
               <span className="text-[9px] bg-brand-gold/15 text-brand-gold px-1.5 py-0.5 rounded border border-brand-gold/30 uppercase">
                 Enterprise RBAC Session
               </span>
@@ -270,7 +270,7 @@ export default function App() {
               </span>
             </h1>
             <p className="text-[10px] text-brand-gold font-mono tracking-widest uppercase">
-              Integrated Technology Intelligence & Safety
+              Integrated Technology Intelligence & Safety · Protecting Every Learner. Every Journey. Every Second.
             </p>
           </div>
         </div>
@@ -445,7 +445,7 @@ export default function App() {
 
       {/* Footer system ribbon */}
       <footer className="bg-brand-navy-heavy border-t border-brand-gold/15 py-1.5 px-6 text-center text-[9px] text-slate-500 font-mono flex flex-col sm:flex-row justify-between shrink-0">
-        <span>© 2026 Integrated Technology Intelligence & Safety (ITIS) · South Africa</span>
+        <span>© 2026 ITIS Guardian Network · Integrated Technology Intelligence & Safety (ITIS) · South Africa</span>
         <span className="text-brand-gold">POPIA ENCRYPTION PROTOCOL ACTIVE · ZERO TRUST SESSION ISOLATION</span>
       </footer>
 

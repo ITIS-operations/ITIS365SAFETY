@@ -33,7 +33,7 @@ export function AccessDeniedView({
             Access Denied: Session Isolation Policy Enforced
           </h2>
           <p className="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed">
-            Every authenticated session in the ITIS National Child Safety Platform belongs to a single, locked identity. Identity switching within an active session is strictly prohibited.
+            Every authenticated session in the ITIS Guardian Network belongs to a single, locked identity. Identity switching within an active session is strictly prohibited.
           </p>
         </div>
 

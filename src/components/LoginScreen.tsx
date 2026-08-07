@@ -230,10 +230,10 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                 className="w-16 h-16 sm:w-20 sm:h-20 object-cover border-2 border-brand-gold rounded-full shadow-2xl mb-2 glow-gold"
               />
               <h2 className="text-lg font-bold tracking-wider text-white font-mono">
-                ITIS INTELLIGENT CHILD PROTECTION NETWORK
+                ITIS GUARDIAN NETWORK
               </h2>
               <p className="text-[10px] text-brand-gold tracking-widest uppercase font-mono">
-                Enterprise Zero Trust Identity & Access Manager
+                Integrated Technology Intelligence & Safety · Protecting Every Learner. Every Journey. Every Second.
               </p>
             </div>
 

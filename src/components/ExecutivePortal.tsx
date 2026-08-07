@@ -63,7 +63,7 @@ export function ExecutivePortal({ incidents = [] }: ExecutivePortalProps) {
               </span>
             </div>
             <p className="text-xs text-slate-300 font-mono mt-0.5">
-              ITIS Enterprise Platform v1.0.0-GA · Financial Performance & Unit Economics
+              ITIS Guardian Network v1.0.0-GA · Financial Performance & Unit Economics
             </p>
           </div>
         </div>

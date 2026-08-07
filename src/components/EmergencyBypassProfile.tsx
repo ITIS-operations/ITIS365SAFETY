@@ -245,7 +245,7 @@ export function EmergencyBypassProfile({ learner, onClose, onUpdateStatus }: Eme
       </div>
 
       <div className="mt-8 text-center text-[10px] font-mono text-slate-500 space-y-1">
-        <div>© 2026 Integrated Technology Intelligence & Safety (ITIS) · Republic of South Africa</div>
+        <div>© 2026 ITIS Guardian Network · Integrated Technology Intelligence & Safety (ITIS) · Republic of South Africa</div>
         <div>AUTHORIZED AUDIT TRAIL LOGGING ENFORCED</div>
       </div>
     </div>

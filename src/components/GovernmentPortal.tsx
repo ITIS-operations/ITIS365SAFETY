@@ -73,7 +73,7 @@ export function GovernmentPortal({
               </span>
             </div>
             <p className="text-xs text-slate-300 font-mono mt-0.5">
-              Department of Basic Education & Civilian Secretariat for Police Service Joint Command
+              ITIS Guardian Network · Department of Basic Education & Civilian Secretariat for Police Service Joint Command
             </p>
           </div>
         </div>

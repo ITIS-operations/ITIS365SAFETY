@@ -1,6 +1,6 @@
 {
-  "name": "Integrated Technology Intelligence Safety (ITIS)",
-  "description": "Integrated Technology Intelligence \u0026 Safety platform for South African public safety, connecting parents, schools, and emergency dispatch.",
+  "name": "ITIS Guardian Network",
+  "description": "Integrated Technology Intelligence & Safety (ITIS) national child protection ecosystem for South Africa. Protecting Every Learner. Every Journey. Every Second.",
   "requestFramePermissions": [
     "geolocation"
   ],

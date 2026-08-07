@@ -212,13 +212,13 @@ export function CareersCentre({ isOpen, onClose, initialTab = 'explore' }: Caree
           <img src={itisLogo} alt="ITIS Logo" className="w-10 h-10 object-cover border-2 border-brand-gold rounded-full glow-gold" />
           <div>
             <h1 className="text-base sm:text-lg font-extrabold text-white tracking-wide font-mono flex items-center gap-2">
-              <span>ITIS ENTERPRISE CAREERS CENTRE</span>
+              <span>ITIS GUARDIAN NETWORK CAREERS CENTRE</span>
               <span className="text-[10px] bg-brand-gold/15 text-brand-gold px-2 py-0.5 rounded border border-brand-gold/30 uppercase hidden sm:inline-block">
                 National Public Safety Recruitment
               </span>
             </h1>
             <p className="text-[11px] text-slate-400 font-sans">
-              Dedicated to Protecting Every Learner across South Africa
+              Integrated Technology Intelligence & Safety · Protecting Every Learner. Every Journey. Every Second.
             </p>
           </div>
         </div>
@@ -493,67 +493,47 @@ export function CareersCentre({ isOpen, onClose, initialTab = 'explore' }: Caree
                 At ITIS, every software commit, every dispatch call, every GIS polygon, and every school liaison directly safeguards young lives. We believe that technology without human coordination is incomplete — which is why our 24/7 Command Centre, field liaisons, and engineers work as one unified team to ensure no child is left unaccounted for.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div className="p-5 bg-brand-dark/80 rounded-2xl border border-slate-800 space-y-2">
                   <Shield className="w-6 h-6 text-brand-gold" />
-                  <h4 className="text-sm font-bold text-white">Mission-Driven Purpose</h4>
+                  <h4 className="text-sm font-bold text-white">Our Mission</h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Work on technology that matters. Your code and operations protect over 50,000 learners on daily transit routes across South Africa.
+                    Protecting every learner through intelligent technology, trusted partnerships, and coordinated emergency response that helps prevent kidnapping, disappearances, violence, injuries, and other high-risk incidents.
                   </p>
                 </div>
 
                 <div className="p-5 bg-brand-dark/80 rounded-2xl border border-slate-800 space-y-2">
                   <Award className="w-6 h-6 text-emerald-400" />
-                  <h4 className="text-sm font-bold text-white">Enterprise Engineering Standards</h4>
+                  <h4 className="text-sm font-bold text-white">Our Vision</h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Build with sub-second spatial telemetry, offline-first architectures, zero-trust RBAC session security, and POPIA data protection.
-                  </p>
-                </div>
-
-                <div className="p-5 bg-brand-dark/80 rounded-2xl border border-slate-800 space-y-2">
-                  <Users className="w-6 h-6 text-brand-gold" />
-                  <h4 className="text-sm font-bold text-white">24/7 Wellness & Support</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Dedicated trauma support, mental wellness debriefs for emergency operators, comprehensive medical aid, and continuous SETA training.
+                    To become Africa's most trusted child protection network, ensuring every learner can travel, learn, and return home safely through intelligent technology, coordinated emergency response, and human-centred protection.
                   </p>
                 </div>
               </div>
 
               {/* Core Values Grid */}
               <div className="pt-4 border-t border-slate-800 space-y-3">
-                <h4 className="text-sm font-bold text-brand-gold font-mono uppercase tracking-wider">Our Core Operating Values</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
-                  <div className="flex items-start gap-2 p-3 bg-brand-dark/50 rounded-xl border border-slate-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block">Child Safety First:</strong>
-                      Every decision prioritize child safety, privacy, and verified emergency escalation.
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-3 bg-brand-dark/50 rounded-xl border border-slate-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block">Sovereign Integrity & POPIA:</strong>
-                      100% compliance with South African data laws, local data hosting, and zero-leak guarantee.
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-3 bg-brand-dark/50 rounded-xl border border-slate-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block">15-Second Human Verification:</strong>
-                      Combining smart hardware telemetry with human empathy before triggering emergency services.
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-3 bg-brand-dark/50 rounded-xl border border-slate-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block">Inclusivity Across RSA:</strong>
-                      Protecting learners equally across rural farm schools, township transport, and urban campuses.
-                    </div>
-                  </div>
+                <h4 className="text-sm font-bold text-brand-gold font-mono uppercase tracking-wider">Our Core Values</h4>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Every Learner',
+                    'Human First',
+                    'Integrity',
+                    'Accountability',
+                    'Rapid Response',
+                    'Innovation',
+                    'Partnership',
+                    'Privacy',
+                    'Trust',
+                    'Continuous Protection'
+                  ].map((val) => (
+                    <span 
+                      key={val} 
+                      className="px-3.5 py-1.5 bg-brand-dark/90 text-slate-200 rounded-xl border border-brand-gold/30 text-xs font-medium hover:border-brand-gold/60 transition-colors"
+                    >
+                      {val}
+                    </span>
+                  ))}
                 </div>
               </div>
 
