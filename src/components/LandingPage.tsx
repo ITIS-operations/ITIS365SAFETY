@@ -110,7 +110,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
         <div className="flex-1 space-y-6 z-10 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-brand-navy border border-brand-gold/30 rounded-full text-xs font-medium text-brand-gold shadow-sm">
             <Heart className="w-4 h-4 text-brand-gold fill-brand-gold/20" />
-            <span>Trusted National Child Safety Network</span>
+            <span>South Africa's Intelligent Child Protection Network</span>
           </div>
 
           {/* Core Tagline */}
@@ -126,8 +126,8 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
             </h1>
           </div>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl font-normal leading-relaxed mx-auto lg:mx-0">
-            ITIS connects parents, schools, transport operators, and emergency responders through one unified child safety platform — ensuring every child's journey is monitored with care, verified arrival, and dedicated safety team support.
+          <p className="text-base sm:text-lg text-slate-200 max-w-2xl font-normal leading-relaxed mx-auto lg:mx-0">
+            <strong>We protect children when every second matters.</strong> ITIS unites families, schools, scholar transport operators, emergency services, and law enforcement into one coordinated protection ecosystem — ensuring every child arrives safely, learns safely, and returns home safely.
           </p>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
@@ -357,45 +357,45 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     <div className="space-y-3">
                       <h4 className="text-base font-bold text-white flex items-center gap-2">
                         <Shield className="w-5 h-5 text-brand-gold" />
-                        <span>National Child Safety Network</span>
+                        <span>South Africa's Intelligent Child Protection Network</span>
                       </h4>
                       <p>
-                        <strong>ITIS (Integrated Technology Intelligence & Safety)</strong> is South Africa's premier child safety and emergency response network. Built specifically for local transport routes, school campus attendance, and family peace of mind, ITIS connects parents, schools, and emergency services into a complete protection net.
+                        <strong>ITIS (Integrated Technology Intelligence & Safety)</strong> is South Africa's premier national child protection and rapid emergency response network. Built specifically to safeguard learners during daily transit, campus attendance, and community activities, ITIS unifies parents, school leaders, emergency services, and law enforcement into a compassionate, early-intervention safety net.
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Eye className="w-4 h-4 text-brand-gold" /> 24/7 Dedicated Safety Officers
+                          <Eye className="w-4 h-4 text-brand-gold" /> Human-Verified 24/7 Operations
                         </span>
                         <p className="text-xs text-slate-300">
-                          Every panic alert or route delay is evaluated by trained South African safety coordinators at our 24/7 Command Centre before emergency escalation.
+                          Every panic signal or route anomaly is evaluated in real time by trained South African safety officers at our 24/7 Command Centre before emergency dispatch.
                         </p>
                       </div>
 
                       <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Landmark className="w-4 h-4 text-brand-gold" /> Institutional Alliances
+                          <Landmark className="w-4 h-4 text-brand-gold" /> National Safety Ecosystem
                         </span>
                         <p className="text-xs text-slate-300">
-                          Collaborating with the Department of Basic Education (DBE), SAPS, Emergency Medical Services (EMS), and municipal transport authorities.
+                          Coordinated with the Department of Basic Education (DBE), SAPS, Emergency Medical Services (EMS), and accredited private security partners.
                         </p>
                       </div>
 
                       <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 space-y-2">
                         <span className="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                          <Lock className="w-4 h-4 text-brand-gold" /> Strict Privacy & Protection
+                          <Lock className="w-4 h-4 text-brand-gold" /> Privacy-First Protection
                         </span>
                         <p className="text-xs text-slate-300">
-                          100% POPIA compliant with strict South African privacy standards, protected accounts, and complete safety records.
+                          100% POPIA compliant (Act 4 of 2013) with role-based encryption, child data safeguards, and immutable audit logs.
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3 p-3.5 bg-brand-navy-heavy rounded-xl border border-brand-gold/30 text-xs text-slate-200">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Empowering every parent, school principal, transport operator, and emergency responder with trusted real-time visibility.</span>
+                      <span>Empowering every parent, school principal, transport operator, and first responder with trusted situational awareness when seconds matter.</span>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -468,30 +468,59 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                     <div className="space-y-3">
                       <h4 className="text-base font-bold text-white flex items-center gap-2">
                         <AlertTriangle className="w-5 h-5 text-red-400" />
-                        <span>The Vulnerability of Daily Learner Transit</span>
+                        <span>High-Risk Threats & Critical Vulnerabilities</span>
                       </h4>
                       <p>
-                        Millions of South African school children travel daily via private scholar vans, public buses, or walking routes without verified tracking. When delays, vehicle breakdowns, or emergencies occur, parents and school administrators often remain unaware for hours.
+                        Every day, millions of South African school children face acute risks during daily transit and school attendance. Without coordinated situational awareness, critical minutes are lost during life-threatening emergencies.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                      <div className="p-4 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 block">1. Unmonitored Transit</span>
-                        <p className="text-slate-400">Absence of verified boarding and drop-off logs for scholar transport vans and buses.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> Kidnappings & Disappearances
+                        </span>
+                        <p className="text-slate-400">Unmonitored transit routes create dangerous blindspots where children can go missing without immediate detection.</p>
                       </div>
-                      <div className="p-4 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 block">2. Delayed Emergency Action</span>
-                        <p className="text-slate-400">Panic situations rely on phone calls instead of live GPS coordinates and medical profiles sent to responders.</p>
+
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-red-400" /> Unreported Absenteeism
+                        </span>
+                        <p className="text-slate-400">Manual paper roll calls mean parents and principals only discover a child hasn't arrived safely hours after school starts.</p>
                       </div>
-                      <div className="p-4 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
-                        <span className="font-bold text-red-300 block">3. Administrative Overhead</span>
-                        <p className="text-slate-400">Manual paper roll calls delay discovery of absent children until late in the afternoon.</p>
+
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <Stethoscope className="w-3.5 h-3.5 text-red-400" /> Medical & Violence Emergencies
+                        </span>
+                        <p className="text-slate-400">Accidents, asthma attacks, or violence near schools suffer delayed dispatch when responders lack precise live coordinates.</p>
+                      </div>
+
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <AlertCircle className="w-3.5 h-3.5 text-red-400" /> Communication Breakdown
+                        </span>
+                        <p className="text-slate-400">Panic situations cause fragmented phone calls between panic-stricken parents, confused drivers, and busy schools.</p>
+                      </div>
+
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <Users className="w-3.5 h-3.5 text-red-400" /> Child Exploitation & Bullying
+                        </span>
+                        <p className="text-slate-400">Off-campus transport stops without verified adult supervision increase exposure to exploitation or violence.</p>
+                      </div>
+
+                      <div className="p-3.5 bg-red-950/30 rounded-xl border border-red-500/30 space-y-1.5">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <Compass className="w-3.5 h-3.5 text-red-400" /> Lack of Coordinated Response
+                        </span>
+                        <p className="text-slate-400">Fragmented security providers lack a central, human-verified dispatch standard dedicated strictly to child protection.</p>
                       </div>
                     </div>
 
-                    <div className="p-4 bg-brand-navy/60 rounded-xl border border-slate-800 text-xs text-slate-300">
-                      <strong>The Solution Needed:</strong> An intelligent, dedicated safety network that connects parents, principals, and first responders to eliminate blindspots and ensure instantaneous care.
+                    <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/30 text-xs text-slate-200">
+                      <strong>The Solution ITIS Delivers:</strong> An intelligent national network connecting parents, principals, SAPS, and EMS to eliminate transit blindspots and mobilize instant emergency response when every second matters.
                     </div>
                   </motion.div>
                 </motion.div>
@@ -696,6 +725,35 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                         <span className="text-2xl font-black text-brand-gold font-mono">24 / 7</span>
                         <h5 className="font-bold text-white">Continuous Oversight</h5>
                         <p className="text-xs text-slate-300">Human command centre oversight during daily commutes, school excursions, and sports events.</p>
+                      </div>
+                    </div>
+
+                    {/* Guiding Principles & Safety Commitment */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-brand-gold/25 space-y-2">
+                        <h5 className="text-xs font-bold text-brand-gold uppercase tracking-wider font-mono flex items-center gap-1.5">
+                          <Heart className="w-4 h-4 text-brand-gold" /> Our Guiding Principles
+                        </h5>
+                        <ul className="text-xs space-y-1.5 text-slate-300">
+                          <li><strong className="text-white">• Every Child Matters:</strong> Protection is a fundamental right for every learner in South Africa.</li>
+                          <li><strong className="text-white">• Human Decisions First:</strong> Technology alerts, but trained human officers verify every emergency.</li>
+                          <li><strong className="text-white">• Technology with Purpose:</strong> Advanced GIS and AI exist strictly to serve child safety.</li>
+                          <li><strong className="text-white">• Privacy by Design:</strong> Minor data is protected by sovereign encryption and POPIA standards.</li>
+                          <li><strong className="text-white">• Compassion & Accountability:</strong> Immediate, empathetic family reassurance during crises.</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 bg-brand-navy/80 rounded-xl border border-emerald-500/25 space-y-2">
+                        <h5 className="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                          <ShieldCheck className="w-4 h-4 text-emerald-400" /> Our Safety Commitment
+                        </h5>
+                        <ul className="text-xs space-y-1.5 text-slate-300">
+                          <li><strong className="text-white">1. Early Awareness:</strong> Detecting route delays and campus absences before they escalate.</li>
+                          <li><strong className="text-white">2. Verified Information:</strong> Eliminating false alarms through operator verification.</li>
+                          <li><strong className="text-white">3. Coordinated Response:</strong> Instant dispatch link to SAPS, EMS, and private security.</li>
+                          <li><strong className="text-white">4. Family Reassurance:</strong> Keeping parents informed at every stage of an incident.</li>
+                          <li><strong className="text-white">5. Continuous Review:</strong> Post-incident audits to strengthen community prevention.</li>
+                        </ul>
                       </div>
                     </div>
 
@@ -1400,7 +1458,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
                         <Users className="w-8 h-8 text-brand-gold group-hover:scale-110 transition-transform" />
                         <div>
                           <span className="font-bold text-white block text-sm">Parent / Guardian</span>
-                          <span className="text-[11px] text-slate-400 block mt-0.5">Child location tracking & notification portal</span>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">Child protection & safety notification portal</span>
                         </div>
                         <div className="text-[10px] text-brand-gold font-mono flex items-center gap-1 font-bold pt-1">
                           <span>Enter Portal</span>
@@ -1503,7 +1561,7 @@ export function LandingPage({ onOpenLogin }: LandingPageProps) {
               <Shield className="w-4 h-4 text-brand-gold" /> About ITIS
             </h4>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              ITIS is South Africa's national child safety technology platform, providing real-time telemetry, scholar transit geofencing, and emergency dispatch for over 2.4 million learners.
+              ITIS is South Africa's Intelligent Child Protection Network, delivering real-time transit safeguarding, campus attendance protection, and emergency dispatch for over 2.4 million learners.
             </p>
             <ul className="space-y-2 pt-1 font-sans text-slate-300">
               <li>
