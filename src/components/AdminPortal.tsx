@@ -11,6 +11,7 @@ import {
 } from '../types';
 import { authService, ProductionUserRecord } from '../services/authService';
 import { EmailInspectorModal } from './EmailInspectorModal';
+import { SchoolOnboardingWizard } from './SchoolOnboardingWizard';
 import { EmailNotificationFactory } from '../services/emailService';
 import { requestPasswordResetLink, unlockAccount, setAccountStatus } from '../services/identityEngine';
 
@@ -21,7 +22,7 @@ interface AdminPortalProps {
 }
 
 export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: AdminPortalProps) {
-  const [activeTab, setActiveTab] = useState<'users' | 'learners' | 'devices' | 'idcards' | 'audit' | 'emails'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'orgs' | 'schools' | 'learners' | 'devices' | 'idcards' | 'audit' | 'emails'>('users');
   const [isEmailInspectorOpen, setIsEmailInspectorOpen] = useState(false);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
@@ -30,6 +31,17 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
   const [userSearch, setUserSearch] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState<string>('ALL');
   const [lastEnrolledToken, setLastEnrolledToken] = useState<{ name: string; email: string; token: string } | null>(null);
+
+  // Organisations & Schools State
+  const [organisations, setOrganisations] = useState(() => authService.getOrganisations());
+  const [schools, setSchools] = useState(() => authService.getSchools());
+  const [showAddOrgModal, setShowAddOrgModal] = useState(false);
+  const [showAddSchoolModal, setShowAddSchoolModal] = useState(false);
+  const [newOrg, setNewOrg] = useState({ name: '', type: 'Government Department', domain: '', contactEmail: '' });
+  const [newSchool, setNewSchool] = useState({ schoolName: '', schoolCode: '', province: 'Gauteng', principalName: '' });
+
+  // Audit Logs State
+  const [auditSearch, setAuditSearch] = useState('');
 
   // Device Assignments State
   const [devices, setDevices] = useState<DeviceAssignment[]>(initialDevices);
@@ -40,6 +52,7 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
   const [idCardSearch, setIdCardSearch] = useState('');
 
   // Modal / Form States
+  const [showOnboardingWizard, setShowOnboardingWizard] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showAddLearnerModal, setShowAddLearnerModal] = useState(false);
   const [showPairDeviceModal, setShowPairDeviceModal] = useState(false);
@@ -122,6 +135,55 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
       });
     } else {
       alert(res.error || 'Failed to enroll user.');
+    }
+  };
+
+  // Handle Assign / Revoke Role
+  const handleAssignRole = (userId: string, newRole: any) => {
+    const res = authService.assignRole(userId, newRole, 'Founder SuperAdmin');
+    if (res.success) {
+      setUsers(authService.getUsers());
+      setActionNotice(res.message);
+      setTimeout(() => setActionNotice(null), 3000);
+    }
+  };
+
+  // Handle Account Status Toggle (Suspend / Reactivate)
+  const handleToggleStatus = (userId: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'SUSPENDED' || currentStatus === 'DISABLED' ? 'ACTIVE' : 'SUSPENDED';
+    const res = authService.updateUserStatus(userId, nextStatus, 'Founder SuperAdmin');
+    if (res.success) {
+      setUsers(authService.getUsers());
+      setActionNotice(res.message);
+      setTimeout(() => setActionNotice(null), 3000);
+    }
+  };
+
+  // Handle Create Organisation
+  const handleCreateOrg = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrg.name) return;
+    const res = authService.createOrganisation({ ...newOrg, operatorName: 'Founder SuperAdmin' });
+    if (res.success) {
+      setOrganisations(authService.getOrganisations());
+      setShowAddOrgModal(false);
+      setActionNotice(res.message);
+      setNewOrg({ name: '', type: 'Government Department', domain: '', contactEmail: '' });
+      setTimeout(() => setActionNotice(null), 3000);
+    }
+  };
+
+  // Handle Create School
+  const handleCreateSchool = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSchool.schoolName) return;
+    const res = authService.createSchool({ ...newSchool, operatorName: 'Founder SuperAdmin' });
+    if (res.success) {
+      setSchools(authService.getSchools());
+      setShowAddSchoolModal(false);
+      setActionNotice(res.message);
+      setNewSchool({ schoolName: '', schoolCode: '', province: 'Gauteng', principalName: '' });
+      setTimeout(() => setActionNotice(null), 3000);
     }
   };
 
@@ -309,6 +371,14 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
         {/* Action Button Bar */}
         <div className="flex flex-wrap items-center gap-2 z-10">
           <button
+            onClick={() => setShowOnboardingWizard(true)}
+            className="px-3.5 py-2 bg-gradient-to-r from-brand-gold-dark via-brand-gold to-amber-300 text-brand-dark font-extrabold rounded-xl text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-xl transform active:scale-95 hover:brightness-110"
+          >
+            <Sparkles className="w-4 h-4 text-brand-dark fill-brand-dark" />
+            <span>Launch Pilot School Wizard</span>
+          </button>
+
+          <button
             onClick={() => setIsEmailInspectorOpen(true)}
             className="px-3 py-2 bg-emerald-950/80 border border-emerald-500/40 hover:bg-emerald-900 text-emerald-300 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-lg"
           >
@@ -400,7 +470,31 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>User & Parent Enrollment ({users.length})</span>
+          <span>Users & Roles ({users.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('orgs')}
+          className={`px-4 py-2 rounded-xl font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'orgs' 
+              ? 'bg-brand-gold text-brand-dark shadow-lg' 
+              : 'bg-brand-navy/60 text-slate-300 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Building2 className="w-4 h-4" />
+          <span>Organisations ({organisations.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('schools')}
+          className={`px-4 py-2 rounded-xl font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'schools' 
+              ? 'bg-brand-gold text-brand-dark shadow-lg' 
+              : 'bg-brand-navy/60 text-slate-300 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>Schools ({schools.length})</span>
         </button>
 
         <button
@@ -524,6 +618,8 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                 <option value="Government">Government Oversight</option>
                 <option value="Executive">Executive Partner</option>
                 <option value="Admin">System Admin</option>
+                <option value="SuperAdmin">SUPER_ADMIN (Founder)</option>
+                <option value="Responder">First Responder</option>
               </select>
             </div>
           </div>
@@ -534,7 +630,7 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                 <thead className="bg-brand-dark/90 text-brand-gold text-[10px] uppercase border-b border-brand-gold/20">
                   <tr>
                     <th className="p-3.5">User Details</th>
-                    <th className="p-3.5">Role</th>
+                    <th className="p-3.5">Assigned Role</th>
                     <th className="p-3.5">RSA ID Number</th>
                     <th className="p-3.5">Contact Details</th>
                     <th className="p-3.5">Organization / Family</th>
@@ -550,16 +646,21 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                         <div className="text-[10px] text-slate-400">{user.email}</div>
                       </td>
                       <td className="p-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
-                          user.role === 'Parent' ? 'bg-indigo-950 text-indigo-400 border-indigo-500/30' :
-                          user.role === 'School' ? 'bg-amber-950 text-amber-400 border-amber-500/30' :
-                          user.role === 'Command' ? 'bg-cyan-950 text-cyan-400 border-cyan-500/30' :
-                          user.role === 'Technician' ? 'bg-purple-950 text-purple-400 border-purple-500/30' :
-                          user.role === 'Admin' ? 'bg-rose-950 text-rose-400 border-rose-500/30' :
-                          'bg-emerald-950 text-emerald-400 border-emerald-500/30'
-                        }`}>
-                          {user.role}
-                        </span>
+                        <select
+                          value={user.role}
+                          onChange={(e) => handleAssignRole(user.id, e.target.value as any)}
+                          className="bg-brand-dark border border-slate-700 text-brand-gold font-bold text-[10px] rounded px-1.5 py-1 focus:outline-none focus:border-brand-gold cursor-pointer"
+                        >
+                          <option value="Parent">Parent</option>
+                          <option value="School">School</option>
+                          <option value="Command">Command</option>
+                          <option value="Technician">Technician</option>
+                          <option value="Government">Government</option>
+                          <option value="Executive">Executive</option>
+                          <option value="Admin">Admin</option>
+                          <option value="SuperAdmin">SuperAdmin</option>
+                          <option value="Responder">Responder</option>
+                        </select>
                       </td>
                       <td className="p-3.5 font-mono text-[11px] text-slate-400">{user.rsaIdNumber}</td>
                       <td className="p-3.5 text-slate-300 text-[11px]">{user.phone}</td>
@@ -618,6 +719,15 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                           Force Reset
                         </button>
 
+                        <button
+                          onClick={() => handleToggleStatus(user.id, user.status)}
+                          className={`text-[10px] uppercase font-bold cursor-pointer hover:underline ${
+                            user.status === 'SUSPENDED' || user.status === 'DISABLED' ? 'text-emerald-400' : 'text-rose-400'
+                          }`}
+                        >
+                          {user.status === 'SUSPENDED' || user.status === 'DISABLED' ? 'Reactivate' : 'Suspend'}
+                        </button>
+
                         {user.status === 'LOCKED' && (
                           <button
                             onClick={async () => {
@@ -631,6 +741,116 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                             Unlock Account
                           </button>
                         )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: ORGANISATIONS */}
+      {activeTab === 'orgs' && (
+        <div className="space-y-4 font-mono">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-brand-navy/60 p-4 rounded-xl border border-brand-gold/20">
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-brand-gold" />
+                Enterprise Organisations & Tenant Governance
+              </h3>
+              <p className="text-[10px] text-slate-400">Multi-tenant isolated government departments, private networks, and municipal emergency services.</p>
+            </div>
+            <button
+              onClick={() => setShowAddOrgModal(true)}
+              className="px-3.5 py-2 bg-brand-gold text-brand-dark hover:bg-amber-400 font-extrabold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Organisation</span>
+            </button>
+          </div>
+
+          <div className="bg-brand-navy rounded-2xl border border-brand-gold/20 overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-brand-dark/90 text-brand-gold text-[10px] uppercase border-b border-brand-gold/20">
+                  <tr>
+                    <th className="p-3.5">Organisation Name</th>
+                    <th className="p-3.5">Type</th>
+                    <th className="p-3.5">Tenant ID</th>
+                    <th className="p-3.5">Domain</th>
+                    <th className="p-3.5">Contact Email</th>
+                    <th className="p-3.5">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800 text-slate-300">
+                  {organisations.map((org) => (
+                    <tr key={org.id} className="hover:bg-brand-dark/40 transition-colors">
+                      <td className="p-3.5 font-bold text-white">{org.name}</td>
+                      <td className="p-3.5 text-slate-400">{org.type}</td>
+                      <td className="p-3.5 text-brand-gold font-bold">{org.tenantId}</td>
+                      <td className="p-3.5 text-slate-300">{org.domain}</td>
+                      <td className="p-3.5 text-slate-400">{org.contactEmail}</td>
+                      <td className="p-3.5">
+                        <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/30 rounded text-[9px] font-bold uppercase">
+                          {org.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: SCHOOLS */}
+      {activeTab === 'schools' && (
+        <div className="space-y-4 font-mono">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-brand-navy/60 p-4 rounded-xl border border-brand-gold/20">
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Layers className="w-4 h-4 text-brand-gold" />
+                Registered Safety Schools & EMIS Directory
+              </h3>
+              <p className="text-[10px] text-slate-400">South African Department of Basic Education registered schools with embedded child safety shielding.</p>
+            </div>
+            <button
+              onClick={() => setShowAddSchoolModal(true)}
+              className="px-3.5 py-2 bg-brand-gold text-brand-dark hover:bg-amber-400 font-extrabold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create School</span>
+            </button>
+          </div>
+
+          <div className="bg-brand-navy rounded-2xl border border-brand-gold/20 overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-brand-dark/90 text-brand-gold text-[10px] uppercase border-b border-brand-gold/20">
+                  <tr>
+                    <th className="p-3.5">School Name</th>
+                    <th className="p-3.5">EMIS Code</th>
+                    <th className="p-3.5">Province</th>
+                    <th className="p-3.5">Principal</th>
+                    <th className="p-3.5">Created Date</th>
+                    <th className="p-3.5">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800 text-slate-300">
+                  {schools.map((s) => (
+                    <tr key={s.id} className="hover:bg-brand-dark/40 transition-colors">
+                      <td className="p-3.5 font-bold text-white">{s.schoolName}</td>
+                      <td className="p-3.5 text-brand-gold font-bold">{s.schoolCode}</td>
+                      <td className="p-3.5 text-slate-300">{s.province}</td>
+                      <td className="p-3.5 text-slate-400">{s.principalName}</td>
+                      <td className="p-3.5 text-slate-400">{s.createdAt}</td>
+                      <td className="p-3.5">
+                        <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/30 rounded text-[9px] font-bold uppercase">
+                          {s.status}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -963,35 +1183,62 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
 
       {/* TAB 5: AUDIT LOGS */}
       {activeTab === 'audit' && (
-        <div className="bg-brand-navy p-6 rounded-2xl border border-brand-gold/20 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-extrabold text-white font-mono flex items-center gap-2">
+        <div className="bg-brand-navy p-6 rounded-2xl border border-brand-gold/20 space-y-4 font-mono">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
               <Lock className="w-4 h-4 text-brand-gold" />
               POPIA Data Privacy & System Identity Audit Directory
             </h3>
-            <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-mono">
+            <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">
               AUDIT TRAIL UNTAMPERABLE
             </span>
           </div>
 
-          <div className="space-y-2 text-xs font-mono">
-            {[
-              { time: '2026-08-04 21:08:12', action: 'NEW_LEARNER_ENROLLED', actor: 'SysAdmin Lead', details: 'Enrolled learner Thandi Khumalo, Paired Tracker IMEI 861099238471128' },
-              { time: '2026-08-04 20:45:00', action: 'SMART_CARD_ISSUED', actor: 'Admin Enclave', details: 'Issued PVC Smart Card Badge IDC-GHS-2026-001 with Tracker IMEI 861023948571239' },
-              { time: '2026-08-04 19:12:30', action: 'IMEI_SIM_BINDING', actor: 'Bhengu Sithole', details: 'Bound Vodacom APN SIM +27714459012 to Wearable IMEI 861023948571239' },
-              { time: '2026-08-04 18:30:15', action: 'PARENT_IDENTITY_VERIFIED', actor: 'Admin Enclave', details: 'Verified RSA ID 8204125890087 for Parent Thabo Ndlovu (POPIA Compliant)' }
-            ].map((log, i) => (
-              <div key={i} className="p-3 bg-brand-dark/80 rounded-xl border border-slate-800 flex items-center justify-between text-slate-300">
-                <div className="space-y-0.5">
-                  <span className="text-brand-gold font-bold mr-2">{log.action}</span>
-                  <span className="text-slate-400 text-[11px]">{log.details}</span>
+          <div className="relative w-full">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text" 
+              placeholder="Filter audit logs by action, user name, role, or details..." 
+              value={auditSearch}
+              onChange={e => setAuditSearch(e.target.value)}
+              className="w-full bg-brand-dark border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
+            />
+          </div>
+
+          <div className="space-y-2 text-xs">
+            {authService.getAuditLogs()
+              .filter(log => {
+                if (!auditSearch) return true;
+                const query = auditSearch.toLowerCase();
+                return (
+                  log.action.toLowerCase().includes(query) ||
+                  log.userName.toLowerCase().includes(query) ||
+                  log.role.toLowerCase().includes(query) ||
+                  log.details.toLowerCase().includes(query)
+                );
+              })
+              .map((log) => (
+                <div key={log.id} className="p-3 bg-brand-dark/80 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-slate-300">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-brand-gold font-bold">{log.action}</span>
+                      <span className={`px-1.5 py-0.2 text-[9px] font-bold rounded ${
+                        log.status === 'SUCCESS' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/30' :
+                        log.status === 'DENIED' ? 'bg-rose-950 text-rose-400 border border-rose-500/30' :
+                        'bg-amber-950 text-amber-400 border border-amber-500/30'
+                      }`}>
+                        {log.status}
+                      </span>
+                      <span className="text-[10px] text-slate-400">({log.role})</span>
+                    </div>
+                    <div className="text-slate-300 text-[11px]">{log.details}</div>
+                  </div>
+                  <div className="text-[10px] text-slate-500 sm:text-right shrink-0">
+                    <div className="text-slate-400 font-bold">{log.userName}</div>
+                    <div>{log.timestamp}</div>
+                  </div>
                 </div>
-                <div className="text-[10px] text-slate-500 text-right">
-                  <div>{log.actor}</div>
-                  <div>{log.time}</div>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       )}
@@ -1140,13 +1387,15 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
                     onChange={e => setNewUser({...newUser, role: e.target.value as EnrolledUser['role']})}
                     className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-brand-gold focus:outline-none focus:border-brand-gold"
                   >
-                    <option value="Parent">Parent</option>
-                    <option value="School">School Admin</option>
-                    <option value="Command">Command Center</option>
-                    <option value="Technician">Technician</option>
-                    <option value="Government">Government</option>
-                    <option value="Executive">Executive</option>
-                    <option value="Admin">Admin</option>
+                    <option value="Parent">Parent / Guardian</option>
+                    <option value="School">School Admin / Principal</option>
+                    <option value="Command">Command Center Operator</option>
+                    <option value="Technician">Field Technician</option>
+                    <option value="Government">Government Official</option>
+                    <option value="Executive">Executive Partner</option>
+                    <option value="Admin">System Admin</option>
+                    <option value="SuperAdmin">SUPER_ADMIN (Founder)</option>
+                    <option value="Responder">First Responder</option>
                   </select>
                 </div>
 
@@ -1445,11 +1694,192 @@ export function AdminPortal({ learners, onAddLearner, onUpdateLearnerStatus }: A
         </div>
       )}
 
+      {/* MODAL: CREATE ORGANISATION */}
+      {showAddOrgModal && (
+        <div className="fixed inset-0 z-50 bg-brand-dark/90 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-brand-navy-heavy border-2 border-brand-gold/40 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono">
+            <div className="flex items-center justify-between border-b border-brand-gold/20 pb-3">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-brand-gold" />
+                Register Enterprise Organisation
+              </h3>
+              <button onClick={() => setShowAddOrgModal(false)} className="text-slate-400 hover:text-white text-xs">✕</button>
+            </div>
+
+            <form onSubmit={handleCreateOrg} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-400 mb-1">Organisation Name</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g. City of Tshwane Emergency Services" 
+                  value={newOrg.name}
+                  onChange={e => setNewOrg({...newOrg, name: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Organisation Type</label>
+                <select 
+                  value={newOrg.type}
+                  onChange={e => setNewOrg({...newOrg, type: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-brand-gold focus:outline-none focus:border-brand-gold"
+                >
+                  <option value="Government Department">Government Department</option>
+                  <option value="Municipal Dispatch">Municipal Dispatch</option>
+                  <option value="Private Security Network">Private Security Network</option>
+                  <option value="Educational District">Educational District</option>
+                  <option value="Founder Security Enclave">Founder Security Enclave</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Domain Name (Optional)</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. tshwane.gov.za" 
+                  value={newOrg.domain}
+                  onChange={e => setNewOrg({...newOrg, domain: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Contact Email</label>
+                <input 
+                  type="email" 
+                  placeholder="e.g. admin@tshwane.gov.za" 
+                  value={newOrg.contactEmail}
+                  onChange={e => setNewOrg({...newOrg, contactEmail: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button 
+                  type="button" 
+                  onClick={() => setShowAddOrgModal(false)}
+                  className="px-4 py-2 bg-brand-dark border border-slate-800 text-slate-400 rounded-xl hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-brand-gold text-brand-dark font-bold rounded-xl uppercase tracking-wider"
+                >
+                  Register Organisation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CREATE SCHOOL */}
+      {showAddSchoolModal && (
+        <div className="fixed inset-0 z-50 bg-brand-dark/90 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-brand-navy-heavy border-2 border-brand-gold/40 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono">
+            <div className="flex items-center justify-between border-b border-brand-gold/20 pb-3">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Layers className="w-4 h-4 text-brand-gold" />
+                Register Safety School (EMIS)
+              </h3>
+              <button onClick={() => setShowAddSchoolModal(false)} className="text-slate-400 hover:text-white text-xs">✕</button>
+            </div>
+
+            <form onSubmit={handleCreateSchool} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-400 mb-1">School Name</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g. Pretoria Boys High School" 
+                  value={newSchool.schoolName}
+                  onChange={e => setNewSchool({...newSchool, schoolName: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">EMIS School Code</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g. EMIS-700103" 
+                  value={newSchool.schoolCode}
+                  onChange={e => setNewSchool({...newSchool, schoolCode: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Province</label>
+                <select 
+                  value={newSchool.province}
+                  onChange={e => setNewSchool({...newSchool, province: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-brand-gold focus:outline-none focus:border-brand-gold"
+                >
+                  <option value="Gauteng">Gauteng</option>
+                  <option value="Western Cape">Western Cape</option>
+                  <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                  <option value="Eastern Cape">Eastern Cape</option>
+                  <option value="Free State">Free State</option>
+                  <option value="Limpopo">Limpopo</option>
+                  <option value="Mpumalanga">Mpumalanga</option>
+                  <option value="Northern Cape">Northern Cape</option>
+                  <option value="North West">North West</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Principal Name</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Principal D. Marais" 
+                  value={newSchool.principalName}
+                  onChange={e => setNewSchool({...newSchool, principalName: e.target.value})}
+                  className="w-full bg-brand-dark border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-brand-gold"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button 
+                  type="button" 
+                  onClick={() => setShowAddSchoolModal(false)}
+                  className="px-4 py-2 bg-brand-dark border border-slate-800 text-slate-400 rounded-xl hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-brand-gold text-brand-dark font-bold rounded-xl uppercase tracking-wider"
+                >
+                  Register School
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Email Service Inspector Modal */}
       <EmailInspectorModal
         isOpen={isEmailInspectorOpen}
         onClose={() => setIsEmailInspectorOpen(false)}
       />
+
+      {/* Guided School Onboarding Wizard Modal */}
+      {showOnboardingWizard && (
+        <SchoolOnboardingWizard
+          onClose={() => setShowOnboardingWizard(false)}
+          onComplete={() => {
+            setUsers(authService.getUsers());
+            setOrganisations(authService.getOrganisations());
+            setSchools(authService.getSchools());
+          }}
+        />
+      )}
 
     </div>
   );

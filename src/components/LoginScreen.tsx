@@ -57,6 +57,13 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
     setEmail(DEFAULT_PERSONAS[role].email);
+    if (role === 'SuperAdmin') {
+      setPassword('@ItisFounder2026!');
+      setMfaCode('123456');
+    } else {
+      setPassword('@ItisSafety2026!');
+      setMfaCode('123456');
+    }
     setError(null);
     setSuccessMessage(null);
   };
@@ -242,7 +249,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               <button
                 type="button"
                 onClick={() => { setAuthMode('login'); setError(null); setSuccessMessage(null); }}
-                className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer text-center ${
+                aria-label="Switch to Sign In mode"
+                className={`flex-1 min-h-[44px] py-2 rounded-lg font-bold transition-all cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-navy ${
                   authMode === 'login' 
                     ? 'bg-brand-gold text-brand-dark shadow' 
                     : 'text-slate-300 hover:text-white'
@@ -253,7 +261,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               <button
                 type="button"
                 onClick={() => { setAuthMode('activate'); setError(null); setSuccessMessage(null); }}
-                className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer text-center ${
+                aria-label="Switch to Activate Account mode"
+                className={`flex-1 min-h-[44px] py-2 rounded-lg font-bold transition-all cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-navy ${
                   authMode === 'activate' 
                     ? 'bg-brand-gold text-brand-dark shadow' 
                     : 'text-slate-300 hover:text-white'
@@ -264,7 +273,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               <button
                 type="button"
                 onClick={() => { setAuthMode('reset'); setError(null); setSuccessMessage(null); }}
-                className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer text-center ${
+                aria-label="Switch to Reset Password mode"
+                className={`flex-1 min-h-[44px] py-2 rounded-lg font-bold transition-all cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-navy ${
                   authMode === 'reset' 
                     ? 'bg-brand-gold text-brand-dark shadow' 
                     : 'text-slate-300 hover:text-white'
@@ -276,14 +286,14 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
             {/* Status Messages */}
             {error && (
-              <div className="mb-4 p-3 bg-rose-950/90 border border-rose-500/60 rounded-xl text-xs text-rose-200 font-mono flex items-start gap-2 animate-fade-in">
+              <div role="alert" aria-live="assertive" className="mb-4 p-3 bg-rose-950/90 border border-rose-500/60 rounded-xl text-xs text-rose-200 font-mono flex items-start gap-2 animate-fade-in">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
                 <span>{error}</span>
               </div>
             )}
 
             {successMessage && (
-              <div className="mb-4 p-3 bg-emerald-950/90 border border-emerald-500/60 rounded-xl text-xs text-emerald-200 font-mono flex items-start gap-2 animate-fade-in">
+              <div role="status" aria-live="polite" className="mb-4 p-3 bg-emerald-950/90 border border-emerald-500/60 rounded-xl text-xs text-emerald-200 font-mono flex items-start gap-2 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
                 <span>{successMessage}</span>
               </div>
@@ -298,12 +308,13 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                     Select Target Portal Identity
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 font-mono text-[10px]">
-                    {(['Parent', 'School', 'Command', 'Technician', 'Government', 'Executive', 'Admin'] as UserRole[]).map((role) => (
+                    {(['Parent', 'School', 'Command', 'Technician', 'Government', 'Executive', 'Admin', 'SuperAdmin'] as UserRole[]).map((role) => (
                       <button
                         key={role}
                         type="button"
                         onClick={() => handleRoleSelect(role)}
-                        className={`p-1.5 rounded-lg border font-bold text-center transition-all cursor-pointer ${
+                        aria-label={`Select ${role} identity portal`}
+                        className={`min-h-[44px] p-2 rounded-lg border font-bold text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${
                           selectedRole === role 
                             ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-md' 
                             : 'bg-brand-navy/80 text-slate-300 border-slate-800 hover:border-brand-gold/40 hover:text-white'
@@ -314,7 +325,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                          role === 'Command' ? '🛰️ Command' : 
                          role === 'Technician' ? '🔧 Tech' : 
                          role === 'Government' ? '🏛️ Gov' : 
-                         role === 'Executive' ? '📊 Exec' : '⚙️ Admin'}
+                         role === 'Executive' ? '📊 Exec' : 
+                         role === 'SuperAdmin' ? '👑 Founder' : '⚙️ Admin'}
                       </button>
                     ))}
                   </div>
@@ -386,7 +398,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
                   <button
                     type="submit"
-                    className="w-full py-3 mt-1 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transform active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                    aria-label={`Authenticate and lock session for ${selectedRole}`}
+                    className="w-full min-h-[44px] py-3 mt-1 bg-gradient-to-r from-brand-gold-dark to-brand-gold hover:from-brand-gold hover:to-brand-gold-dark text-brand-dark font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transform active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-brand-dark"
                   >
                     <ShieldCheck className="w-4 h-4 text-brand-dark" />
                     <span>Authenticate & Lock Session ({selectedRole})</span>

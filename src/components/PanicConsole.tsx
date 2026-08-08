@@ -160,7 +160,8 @@ export function PanicConsole({ learner, onCancel, onLoggedIncident }: PanicConso
 
             <button
               onClick={handleCancelCountdown}
-              className="px-8 py-4 bg-slate-900 hover:bg-slate-850 border border-slate-700 hover:border-brand-gold text-brand-gold font-bold rounded-xl text-xs uppercase tracking-widest cursor-pointer shadow-lg active:scale-95 transition-all"
+              aria-label="Cancel emergency countdown and declare false alarm"
+              className="min-h-[44px] px-8 py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-brand-gold text-brand-gold font-bold rounded-xl text-xs uppercase tracking-widest cursor-pointer shadow-lg active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
               id="panic-cancel-btn"
             >
               Cancel Countdown (False Alarm)
@@ -168,10 +169,10 @@ export function PanicConsole({ learner, onCancel, onLoggedIncident }: PanicConso
           </div>
         ) : (
           /* ACTIVE SOS MONITORING ROOM */
-          <div className="w-full space-y-5" id="panic-triggered-view">
+          <div className="w-full space-y-5" id="panic-triggered-view" role="alert" aria-live="assertive">
             
             {/* 5-SECOND EMERGENCY SITUATIONAL AWARENESS BANNER */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-red-950/90 border-2 border-red-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-emergency-alert">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-red-950/90 border-2 border-red-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-emergency-alert" role="region" aria-label="Emergency Situation Summary">
               <div className="bg-slate-950/80 border border-red-500/40 p-3.5 rounded-xl">
                 <span className="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
@@ -327,7 +328,8 @@ export function PanicConsole({ learner, onCancel, onLoggedIncident }: PanicConso
             <div className="flex justify-center pt-2">
               <button
                 onClick={onCancel}
-                className="px-6 py-3.5 bg-green-900 hover:bg-green-800 text-green-200 border border-green-500/40 hover:border-green-500 rounded-xl text-xs font-mono uppercase tracking-widest flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-green-500/10 transition-all"
+                aria-label="Mark emergency as under control and resolve SOS signal"
+                className="min-h-[44px] px-6 py-3.5 bg-green-900 hover:bg-green-800 text-green-100 border border-green-500/40 hover:border-green-500 rounded-xl text-xs font-mono uppercase tracking-widest flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-green-500/10 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
                 id="panic-resolve-btn"
               >
                 <Shield className="w-4 h-4 text-green-400" />

@@ -146,13 +146,14 @@ export function ResponderView({ incident, learner, onUpdateIncident }: Responder
           {!isArrivalConfirmed ? (
             <button
               onClick={handleConfirmArrival}
-              className="px-5 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-mono font-bold text-xs uppercase rounded-xl shadow-lg border border-emerald-400 flex items-center gap-2 animate-bounce cursor-pointer"
+              aria-label="Confirm scene arrival at current GPS coordinates"
+              className="min-h-[44px] px-5 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-mono font-bold text-xs uppercase rounded-xl shadow-lg border border-emerald-400 flex items-center gap-2 animate-bounce cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-brand-navy"
             >
               <CheckCircle2 className="w-5 h-5" />
               CONFIRM SCENE ARRIVAL
             </button>
           ) : (
-            <div className="px-4 py-2 bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 font-mono text-xs font-bold rounded-xl flex items-center gap-2">
+            <div className="min-h-[44px] px-4 py-2.5 bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 font-mono text-xs font-bold rounded-xl flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               RESPONDER ON SCENE (GPS VERIFIED)
             </div>

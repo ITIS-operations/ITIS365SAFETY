@@ -164,25 +164,29 @@ export function CommandCentre({
         <div className="grid grid-cols-4 border-b border-brand-gold/15 text-[10px] font-mono font-bold tracking-wider uppercase text-center bg-brand-dark/40">
           <button 
             onClick={() => setActiveSubTab('incidents')}
-            className={`py-3 ${activeSubTab === 'incidents' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
+            aria-label="View Live Incident Cases"
+            className={`min-h-[44px] py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${activeSubTab === 'incidents' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
           >
             Live Cases
           </button>
           <button 
             onClick={() => setActiveSubTab('national')}
-            className={`py-3 ${activeSubTab === 'national' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
+            aria-label="View National Telemetry Statistics"
+            className={`min-h-[44px] py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${activeSubTab === 'national' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
           >
             Stats
           </button>
           <button 
             onClick={() => setActiveSubTab('risk')}
-            className={`py-3 ${activeSubTab === 'risk' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
+            aria-label="View Cognitive AI Risk Threats"
+            className={`min-h-[44px] py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${activeSubTab === 'risk' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
           >
             AI Risk
           </button>
           <button 
             onClick={() => setActiveSubTab('supervisor')}
-            className={`py-3 ${activeSubTab === 'supervisor' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
+            aria-label="View Supervisor Audit and Oversight"
+            className={`min-h-[44px] py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${activeSubTab === 'supervisor' ? 'bg-brand-gold text-brand-dark font-extrabold' : 'text-brand-silver hover:bg-brand-navy-light'}`}
           >
             Audit
           </button>
@@ -415,7 +419,7 @@ export function CommandCentre({
                   </span>
                 </div>
 
-                <div className="grid grid-cols-9 gap-1.5">
+                <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-1.5">
                   {stagesList.map((st) => {
                     const isCompleted = currentStage > st.num;
                     const isCurrent = currentStage === st.num;
@@ -423,12 +427,13 @@ export function CommandCentre({
                       <button
                         key={st.num}
                         onClick={() => updateStage(selectedIncident.id, st.num)}
-                        className={`py-2 px-1 rounded text-[10px] font-mono font-bold uppercase transition-all border text-center flex flex-col items-center justify-center gap-0.5 cursor-pointer ${
+                        aria-label={`Jump to stage ${st.num}: ${st.title}`}
+                        className={`min-h-[44px] py-2 px-1.5 rounded text-[10px] font-mono font-bold uppercase transition-all border text-center flex flex-col items-center justify-center gap-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 focus:ring-offset-brand-dark ${
                           isCurrent 
                             ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-md font-extrabold ring-2 ring-brand-gold/40' 
                             : isCompleted 
                               ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/40' 
-                              : 'bg-brand-dark/60 text-slate-500 border-slate-800 hover:border-slate-700'
+                              : 'bg-brand-dark/60 text-slate-300 border-slate-700 hover:border-slate-500'
                         }`}
                       >
                         <span>{st.num}. {st.title}</span>

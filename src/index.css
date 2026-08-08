@@ -14,11 +14,25 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
   body {
     background-color: #050e1b;
     color: #f1f5f9;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+    decoding: async;
   }
 
   /* Custom glassmorphism panels with executive borders */
@@ -155,6 +169,15 @@
     }
   }
 
+  .animate-modal-backdrop {
+    animation: backdropEnter 0.2s ease-out forwards;
+    will-change: opacity;
+  }
+  @keyframes backdropEnter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   .animate-drawer-enter {
     animation: drawerEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: transform;
@@ -183,19 +206,60 @@
     }
   }
 
-  .animate-accordion-expand {
-    animation: accordionExpand 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    will-change: max-height, opacity, transform;
+  .animate-page-transition {
+    animation: pageEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
   }
-  @keyframes accordionExpand {
+  @keyframes pageEnter {
     from {
-      opacity: 0;
-      transform: translateY(-4px);
+      opacity: 0.2;
+      transform: translateY(6px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  .animate-notification-enter {
+    animation: notificationEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes notificationEnter {
+    from {
+      opacity: 0;
+      transform: translateX(16px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  .animate-accordion-expand {
+    animation: accordionExpand 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes accordionExpand {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Calm Loading Skeleton Shimmer */
+  .skeleton-pulse {
+    background: linear-gradient(90deg, rgba(14, 34, 61, 0.6) 25%, rgba(22, 50, 85, 0.8) 50%, rgba(14, 34, 61, 0.6) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.8s infinite ease-in-out;
+  }
+  @keyframes skeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   /* Emergency Alert Animation (250-350ms) */

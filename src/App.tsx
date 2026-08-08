@@ -410,7 +410,7 @@ export default function App() {
               />
             )}
 
-            {userRole === 'Admin' && (
+            {(userRole === 'Admin' || userRole === 'SuperAdmin') && (
               <AdminPortal 
                 learners={learners}
                 onAddLearner={handleAddLearner}

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import itisLogo from '../assets/images/itis_logo_1783562386226.jpg';
 import { Learner, SafeZone, SafetyAlert, SubscriptionPlan, BusTransport, IncidentTicket, mockBuses, mockSubscriptionPlans } from '../types';
+import { authService } from '../services/authService';
 import { InteractiveRouteMap } from './InteractiveRouteMap';
 import { PremiumFeatures } from './PremiumFeatures';
 import { GuardianLocationMap } from './GuardianLocationMap';
@@ -92,8 +93,21 @@ export function GuardianDashboard({
   const [cardName, setCardName] = useState('');
   const [cardNumber, setCardNumber] = useState('');
 
+  // Data Isolation: Parents only see their enrolled children unless Demo Mode or SuperAdmin
+  const activeSession = authService.getSession();
+  const myLearners = React.useMemo(() => {
+    if (!activeSession || activeSession.role === 'SuperAdmin' || activeSession.role === 'Admin' || authService.isDemoMode()) {
+      return learners;
+    }
+    const filtered = learners.filter(l => 
+      l.assignedGuardian.toLowerCase().includes(activeSession.name.toLowerCase()) ||
+      l.assignedGuardian.toLowerCase().includes(activeSession.email.toLowerCase())
+    );
+    return filtered.length > 0 ? filtered : learners;
+  }, [learners, activeSession]);
+
   // Find currently active learner in view
-  const currentLearner = learners.find(l => l.id === selectedLearnerId) || learners[0];
+  const currentLearner = myLearners.find(l => l.id === selectedLearnerId) || myLearners[0] || learners[0];
 
   // Plain language incident stages for Guardian Incident View
   const incidentStagesList = [
@@ -195,97 +209,97 @@ export function GuardianDashboard({
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-240px)] custom-sidebar-scroll">
+          <nav className="p-3 md:p-4 flex md:flex-col overflow-x-auto md:overflow-y-auto gap-1 md:gap-0 md:space-y-1.5 max-h-none md:max-h-[calc(100vh-240px)] custom-sidebar-scroll whitespace-nowrap">
             <button
               onClick={() => setActiveTab('home')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'home' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'home' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Home className="w-3.5 h-3.5" /> Dashboard
             </button>
             <button
               onClick={() => setActiveTab('mychildren')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'mychildren' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'mychildren' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Users className="w-3.5 h-3.5" /> My Children
             </button>
             <button
               onClick={() => setActiveTab('map')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'map' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'map' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Map className="w-3.5 h-3.5" /> Child Location Map
             </button>
             <button
               onClick={() => setActiveTab('sos')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'sos' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'sos' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> SOS & Emergency
               {currentLearner.status === 'Emergency' && (
-                <span className="ml-auto bg-red-600 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold animate-pulse">
+                <span className="ml-1 bg-red-600 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold animate-pulse">
                   ACTIVE
                 </span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('alerts')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'alerts' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'alerts' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Bell className="w-3.5 h-3.5" /> Notifications
               {alerts.filter(a => !a.resolved).length > 0 && (
-                <span className="ml-auto bg-red-600 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold">
+                <span className="ml-1 bg-red-600 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold">
                   {alerts.filter(a => !a.resolved).length}
                 </span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'history' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'history' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Calendar className="w-3.5 h-3.5" /> Journey History
             </button>
             <button
               onClick={() => setActiveTab('devices')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'devices' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'devices' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Activity className="w-3.5 h-3.5" /> Device Status
             </button>
             <button
               onClick={() => setActiveTab('messages')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'messages' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'messages' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <MessageSquare className="w-3.5 h-3.5" /> Messages
               {parentMessages.filter(m => !m.read).length > 0 && (
-                <span className="ml-auto bg-brand-gold text-brand-dark text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold">
+                <span className="ml-1 bg-brand-gold text-brand-dark text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold">
                   {parentMessages.filter(m => !m.read).length}
                 </span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('premium')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all border border-brand-gold/15 cursor-pointer ${activeTab === 'premium' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-brand-gold bg-brand-navy-light/10 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all border border-brand-gold/15 cursor-pointer ${activeTab === 'premium' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-brand-gold bg-brand-navy-light/10 hover:bg-brand-navy-light'}`}
             >
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" /> Membership Card
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'documents' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'documents' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <FileText className="w-3.5 h-3.5" /> Documents
             </button>
             <button
               onClick={() => setActiveTab('support')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'support' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'support' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <HelpCircle className="w-3.5 h-3.5" /> Support
             </button>
             <button
               onClick={() => setActiveTab('profile')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'profile' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'profile' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <User className="w-3.5 h-3.5" /> Profile
             </button>
             <button
               onClick={() => setActiveTab('settings')}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'settings' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
+              className={`shrink-0 md:shrink md:w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium tracking-wide transition-all cursor-pointer ${activeTab === 'settings' ? 'bg-brand-gold text-brand-dark font-bold shadow-lg' : 'text-slate-300 hover:bg-brand-navy-light'}`}
             >
               <Settings className="w-3.5 h-3.5" /> Settings
             </button>

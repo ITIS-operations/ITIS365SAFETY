@@ -10,7 +10,9 @@ export type UserRole =
   | 'Command' 
   | 'Government' 
   | 'Executive' 
-  | 'Admin';
+  | 'Admin'
+  | 'SuperAdmin'
+  | 'Responder';
 
 export interface UserSession {
   userId: string;
@@ -56,9 +58,14 @@ export interface AuditLogEntry {
     | 'PORTAL_ACCESS'
     | 'ACCOUNT_ENROLLED'
     | 'ACCOUNT_ACTIVATED'
+    | 'ROLE_ASSIGNED'
+    | 'ROLE_REVOKED'
     | 'PASSWORD_RESET_REQUESTED'
     | 'PASSWORD_RESET'
-    | 'ACCOUNT_LOCKED';
+    | 'ACCOUNT_LOCKED'
+    | 'ACCOUNT_SUSPENDED'
+    | 'ORGANISATION_CREATED'
+    | 'SCHOOL_CREATED';
   status: 'SUCCESS' | 'DENIED' | 'WARN';
   ipAddress: string;
   device: string;
@@ -76,7 +83,11 @@ export interface ProductionUserRecord {
   role: UserRole;
   organization: string;
   school?: string;
-  status: 'INVITED' | 'ACTIVE' | 'SUSPENDED' | 'DISABLED';
+  status: 'INVITED' | 'ACTIVE' | 'SUSPENDED' | 'DISABLED' | 'Pending Invitation' | 'Invitation Sent' | 'Email Verified' | 'Password Created' | 'MFA Pending' | 'Deactivated';
+  emailVerified?: boolean;
+  passwordCreated?: boolean;
+  mfaPending?: boolean;
+  mfaEnabled?: boolean;
   activationToken?: string;
   resetToken?: string;
   passwordHash?: string;
@@ -86,6 +97,29 @@ export interface ProductionUserRecord {
   lastLogin?: string;
   enrolledDate: string;
   enrolledBy: string;
+}
+
+export interface OrganisationRecord {
+  id: string;
+  name: string;
+  type: string;
+  tenantId: string;
+  domain?: string;
+  contactEmail?: string;
+  status: 'ACTIVE' | 'PENDING';
+  createdAt: string;
+  createdBy: string;
+}
+
+export interface SchoolRecord {
+  id: string;
+  schoolName: string;
+  schoolCode: string;
+  province: string;
+  principalName?: string;
+  status: 'ACTIVE' | 'PENDING';
+  createdAt: string;
+  createdBy: string;
 }
 
 // Password Policy Enforcement
@@ -458,18 +492,50 @@ export const DEFAULT_PERSONAS: Record<UserRole, {
     claims: ['admin:enrollment', 'admin:users', 'admin:learners', 'admin:devices', 'admin:idcards', 'admin:audit_logs'],
     permissions: ['ENROLL_USERS', 'ENROLL_LEARNERS', 'ASSIGN_TRACKER_IMEI', 'ISSUE_SCHOOL_ID_CARDS', 'SYSTEM_AUDIT'],
     mfaRequired: true,
+  },
+  SuperAdmin: {
+    name: 'Founder Administrator',
+    email: (typeof process !== 'undefined' && (process.env?.VITE_FOUNDER_EMAIL || process.env?.FOUNDER_EMAIL)) || 'founder@itis365.co.za',
+    roleTitle: 'Founder & Chief System Administrator (SUPER_ADMIN)',
+    organization: 'ITIS Global Founder Enclave',
+    tenantId: 'TENANT-FOUNDER-SUPERADMIN',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+    claims: ['superadmin:all', 'admin:all', 'org:manage', 'school:manage', 'users:manage', 'roles:manage', 'audit:view'],
+    permissions: ['SUPER_ADMIN_ACCESS', 'CREATE_ORGANISATIONS', 'CREATE_SCHOOLS', 'MANAGE_USERS', 'ASSIGN_ROLES', 'SUSPEND_ACCOUNTS', 'VIEW_AUDIT_LOGS'],
+    mfaRequired: true,
+  },
+  Responder: {
+    name: 'Tactical Responder Lead',
+    email: 'responder@itis.gov.za',
+    roleTitle: 'SAPS / Armed Security First Responder',
+    organization: 'SAPS Rapid Response Unit',
+    tenantId: 'TENANT-RESPONDER-SAPS',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    claims: ['responder:receive_dispatch', 'responder:live_nav', 'responder:status_update'],
+    permissions: ['VIEW_ACTIVE_DISPATCHES', 'UPDATE_RESPONDER_LOCATION', 'CONFIRM_PURSUIT_ARRIVAL'],
+    mfaRequired: true,
   }
 };
 
 const STORAGE_KEY_SESSION = 'itis_active_session_v2';
 const STORAGE_KEY_AUDIT = 'itis_audit_logs_v2';
 const STORAGE_KEY_USERS = 'itis_production_users_v2';
+const STORAGE_KEY_ORGS = 'itis_organisations_v2';
+const STORAGE_KEY_SCHOOLS = 'itis_schools_v2';
 const STORAGE_KEY_DEMO = 'itis_demo_mode_enabled';
+
+const FOUNDER_EMAIL = (typeof process !== 'undefined' && (process.env?.VITE_FOUNDER_EMAIL || process.env?.FOUNDER_EMAIL)) || 'founder@itis365.co.za';
+
+export function getFounderEmail(): string {
+  return FOUNDER_EMAIL;
+}
 
 class AuthService {
   private activeSession: UserSession | null = null;
   private auditLogs: AuditLogEntry[] = [];
   private userDatabase: ProductionUserRecord[] = [];
+  private organisationsDatabase: OrganisationRecord[] = [];
+  private schoolsDatabase: SchoolRecord[] = [];
   private demoMode: boolean = false;
 
   constructor() {
@@ -488,6 +554,9 @@ class AuthService {
         this.userDatabase = INITIAL_USER_REPOSITORY;
         this.saveUserDatabase();
       }
+
+      // Ensure Founder Bootstrap SUPER_ADMIN Account
+      this.ensureBootstrapSuperAdmin();
 
       // Load session
       const storedSession = localStorage.getItem(STORAGE_KEY_SESSION);
@@ -857,11 +926,15 @@ class AuthService {
 
     // Role Enforcement Check
     if (user.role !== role) {
-      this.logAudit('LOGIN_FAILED', user.id, user.fullName, role, 'DENIED', `Role mismatch. User assigned role ${user.role} attempted login to ${role} Portal.`);
-      return {
-        success: false,
-        error: `Role Access Violation: Account ${user.email} is registered for the ${user.role} Portal only.`
-      };
+      if (user.role === 'SuperAdmin' && (role === 'Admin' || role === 'SuperAdmin')) {
+        // SuperAdmin possesses universal administrative clearance across Admin & SuperAdmin portals
+      } else {
+        this.logAudit('LOGIN_FAILED', user.id, user.fullName, role, 'DENIED', `Role mismatch. User assigned role ${user.role} attempted login to ${role} Portal.`);
+        return {
+          success: false,
+          error: `Role Access Violation: Account ${user.email} is registered for the ${user.role} Portal.`
+        };
+      }
     }
 
     // MFA Check
@@ -1047,6 +1120,197 @@ class AuthService {
     if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(this.userDatabase));
+    } catch {}
+  }
+
+  private ensureBootstrapSuperAdmin(): void {
+    const founderEmailClean = FOUNDER_EMAIL.trim().toLowerCase();
+    const superAdminExists = this.userDatabase.some(
+      u => u.role === 'SuperAdmin' || u.email.trim().toLowerCase() === founderEmailClean
+    );
+
+    if (!superAdminExists) {
+      const founderSuperAdmin: ProductionUserRecord = {
+        id: 'USR-SUPER-001',
+        firstName: 'Founder',
+        lastName: 'Administrator',
+        fullName: 'Founder Administrator',
+        rsaIdNumber: '8001015000088',
+        email: FOUNDER_EMAIL,
+        phone: '+27 82 999 0000',
+        role: 'SuperAdmin',
+        organization: 'ITIS Global Founder Enclave',
+        status: 'ACTIVE',
+        emailVerified: true,
+        mfaEnabled: true,
+        passwordHash: hashPassword('@ItisFounder2026!', DEFAULT_SALT),
+        salt: DEFAULT_SALT,
+        failedLoginCount: 0,
+        enrolledDate: '2026-01-01',
+        enrolledBy: 'SYSTEM_BOOTSTRAP'
+      };
+
+      this.userDatabase.unshift(founderSuperAdmin);
+      this.saveUserDatabase();
+
+      this.logAudit(
+        'ACCOUNT_ENROLLED',
+        founderSuperAdmin.id,
+        founderSuperAdmin.fullName,
+        'SuperAdmin',
+        'SUCCESS',
+        `Founder Bootstrap Administrator (SUPER_ADMIN) created for ${FOUNDER_EMAIL}. Secure password hash and MFA configured.`
+      );
+    }
+  }
+
+  public assignRole(targetUserId: string, newRole: UserRole, operatorName: string = 'System Admin'): { success: boolean; message: string } {
+    if (this.activeSession && this.activeSession.userId === targetUserId && this.activeSession.role !== 'SuperAdmin') {
+      this.logAudit(
+        'ACCESS_DENIED',
+        targetUserId,
+        this.activeSession.name,
+        this.activeSession.role,
+        'DENIED',
+        `Security Policy Violation: User attempted self-role elevation to '${newRole}'. Blocked by RBAC Guard.`
+      );
+      return { success: false, message: 'Security Policy Violation: Self-role elevation is prohibited.' };
+    }
+
+    const userIndex = this.userDatabase.findIndex(u => u.id === targetUserId);
+    if (userIndex === -1) {
+      return { success: false, message: 'User record not found.' };
+    }
+
+    const targetUser = this.userDatabase[userIndex];
+    const previousRole = targetUser.role;
+    if (previousRole === newRole) {
+      return { success: true, message: `User is already assigned the ${newRole} role.` };
+    }
+
+    this.userDatabase[userIndex] = {
+      ...targetUser,
+      role: newRole
+    };
+    this.saveUserDatabase();
+
+    this.logAudit(
+      'ROLE_ASSIGNED',
+      targetUser.id,
+      targetUser.fullName,
+      newRole,
+      'SUCCESS',
+      `Role changed from '${previousRole}' to '${newRole}' by '${operatorName}'.`
+    );
+
+    return { success: true, message: `Role updated to ${newRole} for ${targetUser.fullName}.` };
+  }
+
+  public updateUserStatus(targetUserId: string, newStatus: 'ACTIVE' | 'SUSPENDED' | 'DISABLED', operatorName: string = 'System Admin'): { success: boolean; message: string } {
+    const userIndex = this.userDatabase.findIndex(u => u.id === targetUserId);
+    if (userIndex === -1) {
+      return { success: false, message: 'User record not found.' };
+    }
+
+    const targetUser = this.userDatabase[userIndex];
+    const oldStatus = targetUser.status;
+    this.userDatabase[userIndex] = {
+      ...targetUser,
+      status: newStatus
+    };
+    this.saveUserDatabase();
+
+    const action = newStatus === 'SUSPENDED' || newStatus === 'DISABLED' ? 'ACCOUNT_SUSPENDED' : 'ACCOUNT_ACTIVATED';
+    this.logAudit(
+      action,
+      targetUser.id,
+      targetUser.fullName,
+      targetUser.role,
+      'SUCCESS',
+      `Account status changed from '${oldStatus}' to '${newStatus}' by '${operatorName}'.`
+    );
+
+    if ((newStatus === 'SUSPENDED' || newStatus === 'DISABLED') && this.activeSession?.userId === targetUser.id) {
+      this.logout();
+    }
+
+    return { success: true, message: `Account status updated to ${newStatus} for ${targetUser.fullName}.` };
+  }
+
+  public createOrganisation(data: { name: string; type: string; domain?: string; contactEmail?: string; operatorName?: string }): { success: boolean; org?: OrganisationRecord; message: string } {
+    const newOrg: OrganisationRecord = {
+      id: `ORG-${Date.now().toString().substring(6)}`,
+      name: data.name,
+      type: data.type,
+      tenantId: `TENANT-ORG-${Math.floor(1000 + Math.random() * 9000)}`,
+      domain: data.domain || `${data.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.co.za`,
+      contactEmail: data.contactEmail || `admin@${data.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.co.za`,
+      status: 'ACTIVE',
+      createdAt: new Date().toISOString().split('T')[0],
+      createdBy: data.operatorName || 'Founder SuperAdmin'
+    };
+
+    this.organisationsDatabase.unshift(newOrg);
+    this.saveOrganisations();
+
+    this.logAudit(
+      'ORGANISATION_CREATED',
+      newOrg.id,
+      newOrg.name,
+      'SuperAdmin',
+      'SUCCESS',
+      `New Enterprise Organisation '${newOrg.name}' created with Tenant ID '${newOrg.tenantId}'.`
+    );
+
+    return { success: true, org: newOrg, message: `Organisation '${data.name}' created successfully.` };
+  }
+
+  public getOrganisations(): OrganisationRecord[] {
+    return [...this.organisationsDatabase];
+  }
+
+  private saveOrganisations() {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(STORAGE_KEY_ORGS, JSON.stringify(this.organisationsDatabase));
+    } catch {}
+  }
+
+  public createSchool(data: { schoolName: string; schoolCode: string; province: string; principalName?: string; operatorName?: string }): { success: boolean; school?: SchoolRecord; message: string } {
+    const newSchool: SchoolRecord = {
+      id: `SCH-${Date.now().toString().substring(6)}`,
+      schoolName: data.schoolName,
+      schoolCode: data.schoolCode,
+      province: data.province,
+      principalName: data.principalName || 'Principal Assigned',
+      status: 'ACTIVE',
+      createdAt: new Date().toISOString().split('T')[0],
+      createdBy: data.operatorName || 'Founder SuperAdmin'
+    };
+
+    this.schoolsDatabase.unshift(newSchool);
+    this.saveSchools();
+
+    this.logAudit(
+      'SCHOOL_CREATED',
+      newSchool.id,
+      newSchool.schoolName,
+      'SuperAdmin',
+      'SUCCESS',
+      `New Safety School '${newSchool.schoolName}' registered under EMIS Code '${newSchool.schoolCode}' (${newSchool.province}).`
+    );
+
+    return { success: true, school: newSchool, message: `School '${data.schoolName}' registered successfully.` };
+  }
+
+  public getSchools(): SchoolRecord[] {
+    return [...this.schoolsDatabase];
+  }
+
+  private saveSchools() {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(STORAGE_KEY_SCHOOLS, JSON.stringify(this.schoolsDatabase));
     } catch {}
   }
 }

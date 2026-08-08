@@ -91,7 +91,7 @@ export function AIChat({ isOpen, onClose }: AIChatProps) {
 
   return (
     <div 
-      className="fixed right-4 bottom-20 w-full max-w-md h-[550px] glass-panel-heavy rounded-2xl shadow-2xl z-40 border border-brand-gold/30 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
+      className="fixed inset-x-2 sm:left-auto sm:right-6 bottom-20 max-w-md h-[500px] sm:h-[550px] glass-panel-heavy rounded-2xl shadow-2xl z-40 border border-brand-gold/30 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
       id="itis-ai-assistant-panel"
     >
       {/* Header */}
